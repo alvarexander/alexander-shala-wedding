@@ -1,0 +1,292 @@
+/* Text Utility Classes */
+
+/* Font weight */
+.fw-bold {
+    font-weight: bold !important;
+}
+
+.fw-bolder {
+    font-weight: bolder !important;
+}
+
+.fw-normal {
+    font-weight: normal !important;
+}
+
+.fw-light {
+    font-weight: 300 !important;
+}
+
+.fw-lighter {
+    font-weight: lighter !important;
+}
+
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+/* Font style */
+.fst-italic {
+    font-style: italic !important;
+}
+
+.fst-normal {
+    font-style: normal !important;
+}
+
+/* Text alignment */
+.text-center {
+    text-align: center !important;
+}
+
+.text-start {
+    text-align: left !important;
+}
+
+.text-end {
+    text-align: right !important;
+}
+
+.text-justify {
+    text-align: justify !important;
+}
+
+/* Line height */
+.lh-1 {
+    line-height: 1 !important;
+}
+
+.lh-sm {
+    line-height: 1.25 !important;
+}
+
+.lh-base {
+    line-height: 1.5 !important;
+}
+
+.lh-lg {
+    line-height: 2 !important;
+}
+
+/* Text transform */
+.text-lowercase {
+    text-transform: lowercase !important;
+}
+
+.text-uppercase {
+    text-transform: uppercase !important;
+}
+
+.text-capitalize {
+    text-transform: capitalize !important;
+}
+
+/* Text decoration */
+.text-decoration-none {
+    text-decoration: none !important;
+}
+
+.text-decoration-underline {
+    text-decoration: underline !important;
+}
+
+.text-decoration-line-through {
+    text-decoration: line-through !important;
+}
+
+/* Text wrapping and overflow */
+.text-wrap {
+    white-space: normal !important;
+}
+
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
+.text-truncate {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* Font size */
+.fs-1 {
+    font-size: 2.5rem !important;
+}
+
+.fs-2 {
+    font-size: 2rem !important;
+}
+
+.fs-3 {
+    font-size: 1.75rem !important;
+}
+
+.fs-4 {
+    font-size: 1.5rem !important;
+}
+
+.fs-5 {
+    font-size: 1.25rem !important;
+}
+
+.fs-6 {
+    font-size: 1rem !important;
+}
+
+/* Text color (examples of common Bootstrap colors) */
+.text-primary {
+    color: #0d6efd !important;
+}
+
+.text-secondary {
+    color: #6c757d !important;
+}
+
+.text-success {
+    color: #198754 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.text-warning {
+    color: #ffc107 !important;
+}
+
+.text-info {
+    color: #0dcaf0 !important;
+}
+
+.text-light {
+    color: #f8f9fa !important;
+}
+
+.text-dark {
+    color: #212529 !important;
+}
+
+.text-body {
+    color: #212529 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-white {
+    color: #fff !important;
+}
+
+.text-black {
+    color: #000 !important;
+}
+
+/* Text opacity */
+.text-opacity-25 {
+    --bs-text-opacity: 0.25 !important;
+}
+
+.text-opacity-50 {
+    --bs-text-opacity: 0.5 !important;
+}
+
+.text-opacity-75 {
+    --bs-text-opacity: 0.75 !important;
+}
+
+.text-opacity-100 {
+    --bs-text-opacity: 1 !important;
+}
+
+/* Word break */
+.word-break {
+    word-break: break-word !important;
+}
+
+/* Vertical alignment */
+.align-baseline {
+    vertical-align: baseline !important;
+}
+
+.align-top {
+    vertical-align: top !important;
+}
+
+.align-middle {
+    vertical-align: middle !important;
+}
+
+.align-bottom {
+    vertical-align: bottom !important;
+}
+
+.align-text-bottom {
+    vertical-align: text-bottom !important;
+}
+
+.align-text-top {
+    vertical-align: text-top !important;
+}
+
+/* Responsive alignment classes */
+@media (min-width: 576px) {
+    .text-sm-start {
+        text-align: left !important;
+    }
+    .text-sm-end {
+        text-align: right !important;
+    }
+    .text-sm-center {
+        text-align: center !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .text-md-start {
+        text-align: left !important;
+    }
+    .text-md-end {
+        text-align: right !important;
+    }
+    .text-md-center {
+        text-align: center !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .text-lg-start {
+        text-align: left !important;
+    }
+    .text-lg-end {
+        text-align: right !important;
+    }
+    .text-lg-center {
+        text-align: center !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .text-xl-start {
+        text-align: left !important;
+    }
+    .text-xl-end {
+        text-align: right !important;
+    }
+    .text-xl-center {
+        text-align: center !important;
+    }
+}
+
+@media (min-width: 1400px) {
+    .text-xxl-start {
+        text-align: left !important;
+    }
+    .text-xxl-end {
+        text-align: right !important;
+    }
+    .text-xxl-center {
+        text-align: center !important;
+    }
+}

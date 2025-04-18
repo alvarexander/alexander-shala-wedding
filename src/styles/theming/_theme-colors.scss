@@ -1,0 +1,153 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+$_palettes: (
+    primary: (
+        0: #000000,
+        10: #3d0025,
+        20: #5b123c,
+        25: #691e48,
+        30: #772a53,
+        35: #86365f,
+        40: #94426c,
+        50: #b25a85,
+        60: #d0739f,
+        70: #ee8dba,
+        80: #ffafd2,
+        90: #ffd8e7,
+        95: #ffecf1,
+        98: #fff8f8,
+        99: #fffbff,
+        100: #ffffff,
+    ),
+    secondary: (
+        0: #000000,
+        10: #301120,
+        20: #482636,
+        25: #543041,
+        30: #613b4c,
+        35: #6e4758,
+        40: #7b5364,
+        50: #966b7d,
+        60: #b28497,
+        70: #ce9eb2,
+        80: #ecb9cd,
+        90: #ffd8e7,
+        95: #ffecf1,
+        98: #fff8f8,
+        99: #fffbff,
+        100: #ffffff,
+    ),
+    tertiary: (
+        0: #000000,
+        10: #3d0700,
+        20: #5c1909,
+        25: #6b2413,
+        30: #7a2f1d,
+        35: #893a27,
+        40: #994531,
+        50: #b85d47,
+        60: #d7765e,
+        70: #f78f76,
+        80: #ffb4a3,
+        90: #ffdad2,
+        95: #ffede9,
+        98: #fff8f6,
+        99: #fffbff,
+        100: #ffffff,
+    ),
+    neutral: (
+        0: #000000,
+        10: #21191c,
+        20: #372e31,
+        25: #42393c,
+        30: #4e4447,
+        35: #5a5053,
+        40: #665c5f,
+        50: #807478,
+        60: #9a8e91,
+        70: #b5a8ac,
+        80: #d1c3c7,
+        90: #eedfe3,
+        95: #fcedf1,
+        98: #fff8f8,
+        99: #fffbff,
+        100: #ffffff,
+        4: #130c0f,
+        6: #191114,
+        12: #251d20,
+        17: #30282b,
+        22: #3b3236,
+        24: #40373a,
+        87: #e5d6da,
+        92: #f4e4e8,
+        94: #f9eaee,
+        96: #fff0f4,
+    ),
+    neutral-variant: (
+        0: #000000,
+        10: #25181d,
+        20: #3b2c32,
+        25: #46373d,
+        30: #524249,
+        35: #5f4e54,
+        40: #6b5a60,
+        50: #857279,
+        60: #9f8c92,
+        70: #bba6ad,
+        80: #d7c1c8,
+        90: #f4dde4,
+        95: #ffecf1,
+        98: #fff8f8,
+        99: #fffbff,
+        100: #ffffff,
+    ),
+    error: (
+        0: #000000,
+        10: #410002,
+        20: #690005,
+        25: #7e0007,
+        30: #93000a,
+        35: #a80710,
+        40: #ba1a1a,
+        50: #de3730,
+        60: #ff5449,
+        70: #ff897d,
+        80: #ffb4ab,
+        90: #ffdad6,
+        95: #ffedea,
+        98: #fff8f7,
+        99: #fffbff,
+        100: #ffffff,
+    ),
+);
+$_rest: (
+    secondary: map.get($_palettes, secondary),
+    neutral: map.get($_palettes, neutral),
+    neutral-variant: map.get($_palettes, neutral-variant),
+    error: map.get($_palettes, error),
+);
+
+$primary-palette: map.merge(map.get($_palettes, primary), $_rest);
+$tertiary-palette: map.merge(map.get($_palettes, tertiary), $_rest);
+
+// Define a custom typography config
+$typography-config: (
+    plain-family: '"Helvetica Neue", sans-serif',
+);
+
+@function create-theme($type) {
+    @return mat.define-theme(
+        (
+            color: (
+                primary: $primary-palette,
+                tertiary: $tertiary-palette,
+                theme-type: $type,
+            ),
+            typography: $typography-config,
+            density: (
+                scale: 0,
+            ),
+        )
+    );
+}

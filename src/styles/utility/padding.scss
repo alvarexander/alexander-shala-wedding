@@ -1,0 +1,42 @@
+// Bootstrap's spacing scale in rem
+$spacing: (
+    0: 0rem,
+    1: 0.25rem,
+    2: 0.5rem,
+    3: 1rem,
+    4: 1.5rem,
+    5: 3rem,
+);
+
+// Padding utility classes
+@each $key, $value in $spacing {
+    .p-#{$key} {
+        padding: $value !important;
+    }
+
+    .px-#{$key} {
+        padding-left: $value !important;
+        padding-right: $value !important;
+    }
+
+    .py-#{$key} {
+        padding-top: $value !important;
+        padding-bottom: $value !important;
+    }
+
+    .pt-#{$key} {
+        padding-top: $value !important;
+    }
+
+    .pe-#{$key} {
+        padding-right: $value !important;
+    }
+
+    .pb-#{$key} {
+        padding-bottom: $value !important;
+    }
+
+    .ps-#{$key} {
+        padding-left: $value !important;
+    }
+}

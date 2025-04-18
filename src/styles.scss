@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    &:not(.material-icons) {
+        font-family: 'Roboto Slab', serif !important;
+    }
+}
+html, body { height: 100%; }
+body { margin: 0; }
