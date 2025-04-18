@@ -5,7 +5,7 @@
 
 .app {
     &__nav-brand {
-        gap: .8rem !important;
+        gap: 0.8rem !important;
         display: flex;
         align-items: center;
     }
@@ -22,8 +22,14 @@
         &--active {
             font-weight: bold;
             &:before {
-                background-color: var(--mdc-list-list-item-hover-state-layer-color, var(--mat-sys-on-surface));
-                opacity: var(--mdc-list-list-item-hover-state-layer-opacity, var(--mat-sys-hover-state-layer-opacity));
+                background-color: var(
+                    --mdc-list-list-item-hover-state-layer-color,
+                    var(--mat-sys-on-surface)
+                );
+                opacity: var(
+                    --mdc-list-list-item-hover-state-layer-opacity,
+                    var(--mat-sys-hover-state-layer-opacity)
+                );
             }
         }
     }
