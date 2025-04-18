@@ -1,0 +1,100 @@
+<!-- Side nav container -->
+<mat-sidenav-container class="app__nav-container">
+    <!-- Mat side nav -->
+    <mat-sidenav #sidenav mode="over" [autoFocus]="false" opened="opened">
+        <mat-nav-list>
+            <div class="app__nav-brand p-4 ms-2">
+                <mat-icon class="material-symbols-outlined">bookmark_heart</mat-icon>
+                <span>Alexander & Shala's Wedding </span>
+            </div>
+            <mat-list-item
+                role="link"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [routerLink]="['/']"
+                [routerLinkActive]="['app__nav-item--active']"
+                #routerLink1="routerLinkActive"
+            >
+                <mat-icon
+                    class="material-symbols-outlined"
+                    matListItemIcon
+                >
+                    home
+                </mat-icon>
+                <a matListItemTitle>Home</a>
+            </mat-list-item>
+            <mat-list-item
+                role="link"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [routerLink]="['/a']"
+                [routerLinkActive]="['application__active-link']"
+                #routerLink2="routerLinkActive"
+            >
+                <mat-icon
+                    class="material-symbols-outlined"
+                    matListItemIcon
+                >
+                    auto_stories
+                </mat-icon>
+                <a matListItemTitle>Our Story</a>
+            </mat-list-item>
+            <mat-list-item
+                role="link"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [routerLink]="['/a']"
+                [routerLinkActive]="['application__active-link']"
+                #routerLink2="routerLinkActive"
+            >
+                <mat-icon
+                    class="material-symbols-outlined"
+                    matListItemIcon
+                >
+                    featured_seasonal_and_gifts
+                </mat-icon>
+                <a matListItemTitle>Wedding Registry</a>
+            </mat-list-item>
+            <mat-list-item
+                role="link"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [routerLink]="['/a']"
+                [routerLinkActive]="['application__active-link']"
+                #routerLink3="routerLinkActive"
+            >
+                <mat-icon
+                    class="material-symbols-outlined"
+                    matListItemIcon
+                >
+                    photo_library
+                </mat-icon>
+                <a matListItemTitle>Photos</a>
+            </mat-list-item>
+            <mat-list-item
+                role="link"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [routerLink]="['/a']"
+                [routerLinkActive]="['application__active-link']"
+                #routerLink2="routerLinkActive"
+            >
+                <mat-icon
+                    class="material-symbols-outlined"
+                    matListItemIcon
+                >
+                    quiz
+                </mat-icon>
+                <a matListItemTitle>Q&A</a>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="app__toolbar">
+            <button mat-icon-button class="example-icon" aria-label="Navigation drawer button"
+                    (click)="sidenav.toggle()">
+                <mat-icon class="material-symbols-outlined">menu</mat-icon>
+            </button>
+            <span class="m-auto">Alexander & Shala's Wedding</span>
+        </mat-toolbar>
+        <!-- Contents of application -->
+        <div class="p-4">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

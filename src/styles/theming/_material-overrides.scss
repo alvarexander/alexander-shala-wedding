@@ -1,0 +1,48 @@
+/** Icons **/
+.material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    display: inline-block;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+
+    font-variation-settings: 'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+}
+
+/** Components **/
+.mat-drawer {
+    border-top-right-radius: 2.5rem !important;
+    border-bottom-right-radius: 2.5rem !important;
+}
+
+.mat-drawer-inner-container {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+.mat-drawer-transition .mat-drawer-backdrop {
+    transition-duration: 170ms !important;
+    backdrop-filter: blur(.4rem) !important;
+}
+
+.mat-mdc-list-base {
+    gap: 8px;
+    display: flex !important;
+    flex-direction: column;
+}
+
+.mdc-list-item {
+    padding: 1.8rem !important;
+    align-items: center !important;
+    gap: .8rem !important;
+    width: 98% !important;
+    margin: auto !important;
+}

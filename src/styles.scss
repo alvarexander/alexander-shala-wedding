@@ -1,10 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/utility/display';
+@use 'styles/utility/gap';
+@use 'styles/utility/margins';
+@use 'sass:map';
+@use 'styles/utility/padding';
+@use 'styles/utility/overflow';
+@use 'styles/utility/text';
+@use 'styles/utility/flex';
+@use 'styles/variables';
+@use 'styles/utility/width';
+@use '@angular/material' as mat;
+@use 'styles/theming/material-overrides';
+@use 'styles/theming/theme-colors' as app-theme;
+
+// Light theme
+$light-theme: app-theme.create-theme(
+    $type: light,
+);
+
+// Dark theme
+$dark-theme: app-theme.create-theme(
+    $type: dark,
+);
+
 * {
     -webkit-tap-highlight-color: transparent !important;
     -webkit-touch-callout: none !important;
+
     &:not(.material-icons) {
         font-family: 'Roboto Slab', serif !important;
     }
 }
-html, body { height: 100%; }
-body { margin: 0; }
+
+html {
+    height: 100%;
+    color-scheme: light dark;
+    @include mat.all-component-themes($light-theme);
+}
+
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.system-theme {
+    // Media query to change theme type based on system preference
+    @media (prefers-color-scheme: dark) {
+        @include mat.all-component-colors($dark-theme);
+    }
+}

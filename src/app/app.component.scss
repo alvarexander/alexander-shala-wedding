@@ -1,0 +1,35 @@
+:host {
+    height: 100%;
+    display: flex;
+}
+
+.app {
+    &__nav-brand {
+        gap: .8rem !important;
+        display: flex;
+        align-items: center;
+    }
+
+    &__nav-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    &__nav-item {
+        &--active {
+            font-weight: bold;
+            &:before {
+                background-color: var(--mdc-list-list-item-hover-state-layer-color, var(--mat-sys-on-surface));
+                opacity: var(--mdc-list-list-item-hover-state-layer-opacity, var(--mat-sys-hover-state-layer-opacity));
+            }
+        }
+    }
+
+    &__toolbar {
+        width: 100%;
+        background: var(--mdc-chip-flat-disabled-selected-container-color);
+    }
+}

@@ -1,15 +1,24 @@
-import { ApplicationConfig, provideZoneChangeDetection, isDevMode } from '@angular/core';
+import {
+    ApplicationConfig,
+    provideZoneChangeDetection,
+    isDevMode,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideRouter(routes), provideServiceWorker('ngsw-worker.js', {
+        provideRouter(routes),
+        provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }),
+            registrationStrategy: 'registerWhenStable:30000',
+        }),
     ],
 };
