@@ -1,5 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+    NavigationEnd,
+    Router,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+} from '@angular/router';
 import {
     MatDrawer,
     MatSidenav,
@@ -42,11 +48,10 @@ export class AppComponent {
      */
     toolbarTitle = 'Home';
 
-
     constructor(private readonly _router: Router) {
-        this._router.events.pipe(
-            filter((event) => event instanceof NavigationEnd),
-        ).subscribe(() => this.sideNav?.close());
+        this._router.events
+            .pipe(filter(event => event instanceof NavigationEnd))
+            .subscribe(() => this.sideNav?.close());
     }
 
     /**

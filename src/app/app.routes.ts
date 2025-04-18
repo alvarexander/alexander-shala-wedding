@@ -7,7 +7,11 @@ import { RegistryComponent } from './views/registry/registry.component';
 export const routes: Routes = [
     { path: 'home', component: HomeComponent, pathMatch: 'full' },
     { path: 'our-story', component: OurStoryComponent, pathMatch: 'full' },
-    { path: 'questions-and-answers', component: QuestionsAndAnswersComponent, pathMatch: 'full' },
+    {
+        path: 'questions-and-answers',
+        component: QuestionsAndAnswersComponent,
+        pathMatch: 'full',
+    },
     { path: 'photos', component: PhotosComponent, pathMatch: 'full' },
     { path: 'registry', component: RegistryComponent, pathMatch: 'full' },
     { path: '', component: HomeComponent, pathMatch: 'full' },
