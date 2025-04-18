@@ -4,10 +4,17 @@
 }
 
 .app {
+    &__nav-button {
+        margin-right: -2rem;
+    }
+
     &__nav-brand {
         gap: 0.8rem !important;
         display: flex;
         align-items: center;
+        &__img {
+            border-radius: 100%;
+        }
     }
 
     &__nav-container {
@@ -21,6 +28,7 @@
     &__nav-item {
         &--active {
             font-weight: bold;
+
             &:before {
                 background-color: var(
                     --mdc-list-list-item-hover-state-layer-color,

@@ -1,12 +1,10 @@
 <!-- Side nav container -->
 <mat-sidenav-container class="app__nav-container">
     <!-- Mat side nav -->
-    <mat-sidenav #sidenav mode="over" [autoFocus]="false" opened="opened">
+    <mat-sidenav #sidenav mode="over" [autoFocus]="false">
         <mat-nav-list>
             <div class="app__nav-brand p-4 ms-2">
-                <mat-icon class="material-symbols-outlined"
-                    >bookmark_heart</mat-icon
-                >
+               <img class="app__nav-brand__img" src="/icons/icon.webp" width="30" height="30" alt="Website logo">
                 <span>Alexander & Shala's Wedding </span>
             </div>
             <mat-list-item
@@ -24,8 +22,8 @@
             <mat-list-item
                 role="link"
                 [routerLinkActiveOptions]="{ exact: true }"
-                [routerLink]="['/a']"
-                [routerLinkActive]="['application__active-link']"
+                [routerLink]="['/our-story']"
+                [routerLinkActive]="['app__nav-item--active']"
                 #routerLink2="routerLinkActive"
             >
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
@@ -36,8 +34,8 @@
             <mat-list-item
                 role="link"
                 [routerLinkActiveOptions]="{ exact: true }"
-                [routerLink]="['/a']"
-                [routerLinkActive]="['application__active-link']"
+                [routerLink]="['/registry']"
+                [routerLinkActive]="['app__nav-item--active']"
                 #routerLink2="routerLinkActive"
             >
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
@@ -48,8 +46,8 @@
             <mat-list-item
                 role="link"
                 [routerLinkActiveOptions]="{ exact: true }"
-                [routerLink]="['/a']"
-                [routerLinkActive]="['application__active-link']"
+                [routerLink]="['/photos']"
+                [routerLinkActive]="['app__nav-item--active']"
                 #routerLink3="routerLinkActive"
             >
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
@@ -60,8 +58,8 @@
             <mat-list-item
                 role="link"
                 [routerLinkActiveOptions]="{ exact: true }"
-                [routerLink]="['/a']"
-                [routerLinkActive]="['application__active-link']"
+                [routerLink]="['/questions-and-answers']"
+                [routerLinkActive]="['app__nav-item--active']"
                 #routerLink2="routerLinkActive"
             >
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
@@ -75,17 +73,19 @@
         <mat-toolbar class="app__toolbar">
             <button
                 mat-icon-button
-                class="example-icon"
+                class="app__nav-button"
                 aria-label="Navigation drawer button"
                 (click)="sidenav.toggle()"
             >
                 <mat-icon class="material-symbols-outlined">menu</mat-icon>
             </button>
-            <span class="m-auto">Alexander & Shala's Wedding</span>
+            <span class="m-auto"> {{ toolbarTitle }} </span>
         </mat-toolbar>
         <!-- Contents of application -->
         <div class="p-4">
-            <router-outlet></router-outlet>
+            <router-outlet
+                (activate)="updateToolbarTitle($event)"
+            ></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

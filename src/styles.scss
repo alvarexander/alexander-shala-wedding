@@ -26,8 +26,8 @@ $dark-theme: app-theme.create-theme(
     -webkit-tap-highlight-color: transparent !important;
     -webkit-touch-callout: none !important;
 
-    &:not(.material-icons) {
-        font-family: 'Roboto Slab', serif !important;
+    &:not(.material-icons):not(h1) {
+        font-family: "Playfair Display", serif !important;
     }
 }
 

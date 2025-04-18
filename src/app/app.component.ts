@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, ViewChild } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
+    MatDrawer,
     MatSidenav,
     MatSidenavContainer,
     MatSidenavModule,
 } from '@angular/material/sidenav';
 import { MatListItem, MatNavList } from '@angular/material/list';
-import { NgClass } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
+import { filter } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -23,9 +24,7 @@ import { MatToolbar } from '@angular/material/toolbar';
         RouterLinkActive,
         RouterLink,
         MatIcon,
-        NgClass,
         MatIcon,
-        MatButton,
         MatIconButton,
         MatToolbar,
     ],
@@ -33,5 +32,29 @@ import { MatToolbar } from '@angular/material/toolbar';
     styleUrl: './app.component.scss',
 })
 export class AppComponent {
-    title = "Alexander & Shala's Wedding";
+    /**
+     * The Angular Material navigation drawer reference in the template
+     */
+    @ViewChild('sidenav') sideNav?: MatDrawer;
+
+    /**
+     * The title for the toolbar
+     */
+    toolbarTitle = 'Home';
+
+
+    constructor(private readonly _router: Router) {
+        this._router.events.pipe(
+            filter((event) => event instanceof NavigationEnd),
+        ).subscribe(() => this.sideNav?.close());
+    }
+
+    /**
+     * Updates the toolbar title to reflect current active route
+     * @param event The router event
+     */
+    updateToolbarTitle(event: any): void {
+        console.log('Event:', event);
+        this.toolbarTitle = event?.title;
+    }
 }

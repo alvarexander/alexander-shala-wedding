@@ -22,6 +22,7 @@
 
 /** Components **/
 .mat-drawer {
+    max-width: 76% !important;
     border-top-right-radius: 2.5rem !important;
     border-bottom-right-radius: 2.5rem !important;
 }
@@ -34,6 +35,7 @@
 .mat-drawer-transition .mat-drawer-backdrop {
     transition-duration: 170ms !important;
     backdrop-filter: blur(0.4rem) !important;
+    filter: brightness(90%) !important;
 }
 
 .mat-mdc-list-base {
