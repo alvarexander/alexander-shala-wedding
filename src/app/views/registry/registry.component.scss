@@ -20,12 +20,44 @@
         );
     }
 
+    &__post-it-note {
+        padding: 1.3rem;
+        margin: auto;
+        max-width: 300px;
+        font-size: 1rem;
+        background: var( --mat-datepicker-calendar-date-in-overlap-range-state-background-color);
+        position: relative;
+        min-height: 10em;
+
+        &:after {
+            content: "";
+            position: absolute;
+            bottom: -1.9em;
+            left: 0;
+            right: 2em;
+            border-width: 1em;
+            border-style: solid;
+            border-color: var( --mat-datepicker-calendar-date-in-overlap-range-state-background-color);
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            bottom: -2em;
+            right: 0;
+            border-width: 2em 2em 0 0;
+            border-style: solid;
+            border-color: var( --mat-datepicker-calendar-date-in-overlap-range-state-background-color) transparent;
+            filter: brightness(90%);
+        }
+    }
+
     &__item {
         flex: 0 0 30%;
         box-sizing: border-box;
         min-width: 100%;
         @media (min-width: 768px) {
-            min-width: 350px;
+            min-width: 30%;
         }
 
         &-avatar {
