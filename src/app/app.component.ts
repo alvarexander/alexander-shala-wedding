@@ -59,7 +59,6 @@ export class AppComponent {
      * @param event The router event
      */
     updateToolbarTitle(event: any): void {
-        console.log('Event:', event);
         this.toolbarTitle = event?.title;
     }
 }

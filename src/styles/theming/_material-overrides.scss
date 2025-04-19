@@ -21,10 +21,27 @@
 }
 
 /** Components **/
+.mat-icon {
+    min-width: fit-content !important;
+}
+
+.mat-expansion-panel {
+    background-color: var(
+        --mat-expansion-header-hover-state-layer-color
+    ) !important;
+}
+
 .mat-drawer {
     max-width: 76% !important;
     border-top-right-radius: 2.5rem !important;
     border-bottom-right-radius: 2.5rem !important;
+}
+
+.mat-mdc-card {
+    border-radius: 30px !important;
+    background-color: var(
+        --mat-expansion-header-hover-state-layer-color
+    ) !important;
 }
 
 .mat-drawer-inner-container {

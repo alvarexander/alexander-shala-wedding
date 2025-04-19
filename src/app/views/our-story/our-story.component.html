@@ -1,1 +1,17 @@
-<p>our-story works!</p>
+<div class="story">
+    <div class="story__grid-wrapper">
+        @for (img of imageSources$ | async; track $index) {
+            <div [ngClass]="img.wrapperClass">
+                <img
+                    [priority]="$first"
+                    [style.animation-duration]="($index + 50) * 10 + 'ms'"
+                    class="story__img animate__animated animate__zoomIn"
+                    [ngSrc]="img.source"
+                    [width]="img.width"
+                    [height]="img.height"
+                    alt="Photo Memory"
+                />
+            </div>
+        }
+    </div>
+</div>
