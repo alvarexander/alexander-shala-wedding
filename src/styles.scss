@@ -56,3 +56,61 @@ body {
         @include mat.all-component-colors($dark-theme);
     }
 }
+
+.clover {
+    height: 250px;
+    width: 250px;
+    filter: contrast(1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__container {
+        display: flex;
+        position: relative;
+        width: 250px;
+        margin: -1.5rem auto -0.85rem;
+        flex-direction: column;
+    }
+
+    &__img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        box-shadow:
+            0 1px 3px rgba(0, 0, 0, 0.12),
+            0 1px 2px rgba(0, 0, 0, 0.24);
+        border-radius: 100%;
+        position: absolute;
+        z-index: 1;
+        left: 3.1rem;
+        bottom: 3.1rem;
+    }
+
+    &__box {
+        height: 60%;
+        width: 60%;
+        background-color: var(--mdc-outlined-card-outline-color);
+        position: absolute;
+        border-radius: 20px;
+        filter: brightness(115%);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        &__box {
+            filter: brightness(150%);
+        }
+    }
+
+    &__box-one {
+        transform: rotate(45deg);
+    }
+
+    &__box-two {
+        transform: rotate(75deg);
+    }
+
+    &__box-three {
+        transform: rotate(105deg);
+    }
+}
