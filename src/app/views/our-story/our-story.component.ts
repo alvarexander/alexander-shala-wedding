@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AsyncPipe, NgClass, NgOptimizedImage } from '@angular/common';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MatFabButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -10,7 +10,6 @@ import { MatIcon } from '@angular/material/icon';
     styleUrl: './our-story.component.scss',
     imports: [
         NgOptimizedImage,
-        NgClass,
         AsyncPipe,
         MatIcon,
         MatFabButton,
@@ -66,22 +65,6 @@ export class OurStoryComponent implements OnInit {
     }
 
     /**
-     * Determines collage image wrapper class for grid based on aspect ratio of image
-     * @param aspectRatio The aspect ratio of the image
-     */
-    private _determineWrapperClass(aspectRatio: number): string {
-        let wrapperClass = 'story__grid-wrapper--big';
-
-        if (aspectRatio > 1) {
-            wrapperClass = 'story__grid-wrapper--big';
-        } else if (aspectRatio <= 0.75) {
-            wrapperClass = 'story__grid-wrapper--tall';
-        }
-
-        return wrapperClass;
-    }
-
-    /**
      * Obtains image meta-data based on image source
      * @param source The image source URL
      */
@@ -92,15 +75,11 @@ export class OurStoryComponent implements OnInit {
             img.onload = () => {
                 const width = img.naturalWidth;
                 const height = img.naturalHeight;
-                const aspectRatio = width / height;
-                const wrapperClass = this._determineWrapperClass(aspectRatio);
 
                 observer.next({
                     source,
                     width,
                     height,
-                    aspectRatio,
-                    wrapperClass,
                 } as IPhotoData);
                 observer.complete();
             };
@@ -118,6 +97,4 @@ interface IPhotoData {
     source: string;
     width: number;
     height: number;
-    aspectRatio: number;
-    wrapperClass: string;
 }

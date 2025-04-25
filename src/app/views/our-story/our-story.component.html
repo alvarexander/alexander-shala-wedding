@@ -3,21 +3,16 @@
         <div class="story__title-area">
             <div
                 [style.animation-duration]="'500ms'"
-                class="clover__container animate__animated animate__zoomIn"
+                class="d-flex justify-content-center animate__animated animate__fadeIn"
             >
                 <img
-                    class="clover__img"
+                    class="story__top-img mb-2"
                     src="/images/clover_2.webp"
                     alt="A screenshot of our video chat"
                 />
-                <div class="clover">
-                    <div class="clover__box clover__box-one"></div>
-                    <div class="clover__box clover__box-two"></div>
-                    <div class="clover__box clover__box-three"></div>
-                </div>
             </div>
             <h1
-                [style.animation-duration]="'1200ms'"
+                [style.animation-duration]="'900ms'"
                 class="title text-center animate__animated animate__slow animate__fadeIn"
             >
                 Our Journey Together
@@ -25,7 +20,7 @@
         </div>
         <div class="story__content-area">
             <p
-                [style.animation-duration]="'2000ms'"
+                [style.animation-duration]="'1200ms'"
                 class="story__text animate__animated animate__fadeIn"
             >
                 Who would’ve guessed that the greatest thing we’d ever find on
@@ -76,13 +71,6 @@
                 thankful to share this moment with you. Thank you for being part
                 of our ever-evolving love story.
             </p>
-            <!--            <button (click)="toggleCollage()" mat-flat-button>-->
-            <!--                <mat-icon class="material-symbols-outlined">-->
-            <!--                    photo_library-->
-            <!--                </mat-icon>-->
-            <!--                See Some Of Our Memories-->
-            <!--            </button>-->
-
             <button
                 [style.animation-duration]="'400ms'"
                 class="story__fab animate__animated animate__zoomIn"
@@ -110,7 +98,7 @@
         </button>
         <div class="story__grid-wrapper">
             @for (img of imageSources$ | async; track $index) {
-                <div [ngClass]="img.wrapperClass">
+                <div class="story__grid-wrapper">
                     <img
                         [priority]="$index === 2"
                         [style.animation-duration]="($index + 50) * 10 + 'ms'"

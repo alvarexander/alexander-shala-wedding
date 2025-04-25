@@ -47,7 +47,8 @@
     font-weight: bold !important;
 }
 
-.mat-expansion-panel {
+.mat-expansion-panel,
+.mat-expansion-panel-header {
     background-color: var(
         --mat-expansion-header-hover-state-layer-color
     ) !important;
@@ -65,6 +66,15 @@
 
 .mat-mdc-card {
     border-radius: 2rem !important;
+    border: none !important;
+    background-color: var(
+        --mdc-elevated-card-container-color,
+        var(--mat-sys-surface-container-low)
+    ) !important;
+    filter: brightness(98%);
+    @media (prefers-color-scheme: dark) {
+        filter: brightness(170%);
+    }
 }
 
 .mat-drawer-inner-container {
