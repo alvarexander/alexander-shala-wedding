@@ -1,4 +1,12 @@
 .registry {
+    &__title-area {
+        max-width: 800px;
+        margin: auto;
+        p {
+            font-size: 1.1rem;
+        }
+    }
+
     &__container {
         display: flex;
         flex-wrap: wrap;
@@ -20,70 +28,15 @@
         );
     }
 
-    &__post-it-note {
-        padding: 1.3rem;
-        margin: auto;
-        max-width: 300px;
-        font-size: 1rem;
-        background: var( --mat-datepicker-calendar-date-in-overlap-range-state-background-color);
-        position: relative;
-        min-height: 10em;
-
-        &:after {
-            content: "";
-            position: absolute;
-            bottom: -1.9em;
-            left: 0;
-            right: 2em;
-            border-width: 1em;
-            border-style: solid;
-            border-color: var( --mat-datepicker-calendar-date-in-overlap-range-state-background-color);
-        }
-
-        &:before {
-            content: "";
-            position: absolute;
-            bottom: -2em;
-            right: 0;
-            border-width: 2em 2em 0 0;
-            border-style: solid;
-            border-color: var( --mat-datepicker-calendar-date-in-overlap-range-state-background-color) transparent;
-            filter: brightness(90%);
-        }
-    }
-
     &__item {
         flex: 0 0 30%;
         box-sizing: border-box;
         min-width: 100%;
+
         @media (min-width: 768px) {
             min-width: 30%;
         }
 
-        &-avatar {
-            &--walmart {
-                background-image: url('/images/walmart_logo.webp');
-                scale: 0.8;
-            }
-
-            &--target {
-                background-image: url('/images/target_logo.webp');
-                margin-top: 0.3rem;
-            }
-
-            &--amazon {
-                background-image: url('/images/amazon_logo.webp');
-                margin-top: 0.15rem;
-                border-radius: 100%;
-                scale: 0.8;
-            }
-
-            object-fit: contain;
-            width: 30px;
-            height: 30px;
-            background-repeat: no-repeat;
-            margin-right: 10px;
-        }
         &-image {
             height: 200px;
             object-fit: cover;

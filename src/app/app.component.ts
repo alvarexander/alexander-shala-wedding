@@ -43,22 +43,9 @@ export class AppComponent {
      */
     @ViewChild('sidenav') sideNav?: MatDrawer;
 
-    /**
-     * The title for the toolbar
-     */
-    toolbarTitle = 'Home';
-
     constructor(private readonly _router: Router) {
         this._router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => this.sideNav?.close());
-    }
-
-    /**
-     * Updates the toolbar title to reflect current active route
-     * @param event The router event
-     */
-    updateToolbarTitle(event: any): void {
-        this.toolbarTitle = event?.title;
     }
 }

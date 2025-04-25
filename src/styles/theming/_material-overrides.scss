@@ -25,6 +25,30 @@
     min-width: fit-content !important;
 }
 
+.mat-mdc-fab-base {
+    &:active {
+        border-radius: 48px !important;
+        transition:
+            border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
+            background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+    }
+}
+
+.mat-mdc-button-base:not(.mat-mdc-fab-base) {
+    &:active {
+        * {
+            border-radius: 10px !important;
+        }
+        transition:
+            border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
+            background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+    }
+}
+
+.mat-mdc-card-title {
+    font-weight: bold !important;
+}
+
 .mat-expansion-panel {
     background-color: var(
         --mat-expansion-header-hover-state-layer-color
@@ -38,10 +62,19 @@
 }
 
 .mat-mdc-card {
-    border-radius: 30px !important;
+    border-radius: 2rem !important;
     background-color: var(
-        --mat-expansion-header-hover-state-layer-color
+        --mdc-elevated-card-container-color,
+        var(--mat-sys-surface-container-low)
     ) !important;
+    filter: brightness(98%);
+    @media (prefers-color-scheme: dark) {
+        filter: brightness(170%);
+    }
+}
+
+.mdc-fab--extended {
+    padding: 2rem !important;
 }
 
 .mat-drawer-inner-container {

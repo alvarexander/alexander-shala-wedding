@@ -1,6 +1,15 @@
 .q-a {
-    &__panel {
-        max-width: 600px;
+    &__title-area {
+        max-width: 800px;
+        margin: auto;
+        p {
+            font-size: 1.1rem;
+        }
+    }
+
+    &__content-area {
+        font-size: 1.2rem;
+        max-width: 800px;
         margin: auto;
     }
 }

@@ -4,17 +4,11 @@
     <mat-sidenav #sidenav mode="over" [autoFocus]="false">
         <mat-nav-list>
             <div class="app__nav-brand p-4 ms-2">
-                <img
-                    class="app__nav-brand__img"
-                    src="/icons/icon.webp"
-                    width="30"
-                    height="30"
-                    alt="Website logo"
-                />
-                <span>Alexander & Shala's Wedding </span>
+                <span class="fw-bold"> Alex & Shala's Wedding </span>
             </div>
             <mat-list-item
                 role="link"
+                class="app__nav-item"
                 [routerLinkActiveOptions]="{ exact: true }"
                 [routerLink]="['/']"
                 [routerLinkActive]="['app__nav-item--active']"
@@ -27,6 +21,7 @@
             </mat-list-item>
             <mat-list-item
                 role="link"
+                class="app__nav-item"
                 [routerLinkActiveOptions]="{ exact: true }"
                 [routerLink]="['/our-story']"
                 [routerLinkActive]="['app__nav-item--active']"
@@ -39,10 +34,11 @@
             </mat-list-item>
             <mat-list-item
                 role="link"
+                class="app__nav-item"
                 [routerLinkActiveOptions]="{ exact: true }"
                 [routerLink]="['/registry']"
                 [routerLinkActive]="['app__nav-item--active']"
-                #routerLink2="routerLinkActive"
+                #routerLink3="routerLinkActive"
             >
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
                     featured_seasonal_and_gifts
@@ -52,21 +48,9 @@
             <mat-list-item
                 role="link"
                 [routerLinkActiveOptions]="{ exact: true }"
-                [routerLink]="['/photos']"
-                [routerLinkActive]="['app__nav-item--active']"
-                #routerLink3="routerLinkActive"
-            >
-                <mat-icon class="material-symbols-outlined" matListItemIcon>
-                    photo_library
-                </mat-icon>
-                <a matListItemTitle>Photos</a>
-            </mat-list-item>
-            <mat-list-item
-                role="link"
-                [routerLinkActiveOptions]="{ exact: true }"
                 [routerLink]="['/questions-and-answers']"
                 [routerLinkActive]="['app__nav-item--active']"
-                #routerLink2="routerLinkActive"
+                #routerLink4="routerLinkActive"
             >
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
                     quiz
@@ -85,13 +69,11 @@
             >
                 <mat-icon class="material-symbols-outlined">menu</mat-icon>
             </button>
-            <span class="m-auto"> {{ toolbarTitle }} </span>
+            <span class="m-auto"> Alex & Shala's Wedding </span>
         </mat-toolbar>
         <!-- Contents of application -->
         <div class="app p-4">
-            <router-outlet
-                (activate)="updateToolbarTitle($event)"
-            ></router-outlet>
+            <router-outlet></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

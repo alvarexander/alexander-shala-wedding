@@ -1,13 +1,94 @@
 .story {
+    &__title-area {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    &__content-area {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: auto;
+        font-weight: 300;
+    }
+
+    &__fab {
+        position: fixed;
+        right: 1.5rem;
+        bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    &__text {
+        padding-bottom: 3rem;
+        @media (min-width: 768px) {
+            padding: 0;
+        }
+    }
+
+    &__clover-container {
+        display: flex;
+        position: relative;
+        width: 250px;
+        margin: -1.5rem auto -0.85rem;
+        flex-direction: column;
+    }
+
+    &__clover {
+        height: 250px;
+        width: 250px;
+        filter: contrast(1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__clover-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        box-shadow:
+            0 1px 3px rgba(0, 0, 0, 0.12),
+            0 1px 2px rgba(0, 0, 0, 0.24);
+        border-radius: 100%;
+        position: absolute;
+        z-index: 1;
+        left: 3.1rem;
+        bottom: 3.1rem;
+    }
+
+    &__box {
+        height: 60%;
+        width: 60%;
+        background-color: var(--mdc-outlined-card-outline-color);
+        filter: brightness(115%);
+        @media (prefers-color-scheme: dark) {
+            filter: brightness(150%);
+        }
+        position: absolute;
+        border-radius: 20px;
+    }
+
+    &__box-one {
+        transform: rotate(45deg);
+    }
+
+    &__box-two {
+        transform: rotate(75deg);
+    }
+
+    &__box-three {
+        transform: rotate(105deg);
+    }
+
     &__img {
         max-width: 100%;
         aspect-ratio: auto;
         height: auto;
+        width: auto;
         vertical-align: middle;
         display: inline-block;
     }
 
-    /* Main CSS */
     &__grid-wrapper {
         display: grid;
         grid-gap: 10px;

@@ -1,9 +1,23 @@
 <div class="registry">
-    <h1 class="title text-center">Our Wedding Registries</h1>
-    <p class="text-center mb-5">
-        Thank you for celebrating with us! We've created registries at the
-        following stores to make gift-giving easier for you.
-    </p>
+    <div class="registry__title-area">
+        <h1
+            [style.animation-duration]="'800ms'"
+            class="title text-center animate__animated animate__slower animate__fadeIn"
+        >
+            Our Wedding Registries
+        </h1>
+        <p
+            [style.animation-duration]="'1200ms'"
+            class="text-center fst-italic mb-4 animate__animated animate__slower animate__fadeIn"
+        >
+            Thank you for celebrating with us! We've created registries at the
+            following stores to make gift-giving easier for you. Please know
+            that your presence at our wedding means the world to us — it’s truly
+            the greatest gift we could ask for. We’re so grateful for your love
+            and support that there’s absolutely no expectation beyond sharing
+            this special moment with us. <br />
+        </p>
+    </div>
     <div class="registry__container">
         <mat-card
             [style.animation-duration]="'500ms'"
@@ -11,10 +25,6 @@
             appearance="outlined"
         >
             <mat-card-header class="mb-3">
-                <div
-                    mat-card-avatar
-                    class="registry__item-avatar registry__item-avatar--walmart"
-                ></div>
                 <mat-card-title>Walmart</mat-card-title>
                 <mat-card-subtitle>Home essentials & more</mat-card-subtitle>
             </mat-card-header>
@@ -33,8 +43,8 @@
             <mat-card-actions>
                 <button (click)="openLink('Walmart')" mat-button>
                     <mat-icon class="material-symbols-outlined"
-                        >open_in_new</mat-icon
-                    >
+                        >open_in_new
+                    </mat-icon>
                     Browse Registry
                 </button>
                 <button (click)="shareLink('Walmart')" mat-button>
@@ -44,15 +54,11 @@
             </mat-card-actions>
         </mat-card>
         <mat-card
-            [style.animation-duration]="'700ms'"
+            [style.animation-duration]="'500ms'"
             class="registry__item animate__animated animate__zoomIn"
             appearance="outlined"
         >
             <mat-card-header class="mb-3">
-                <div
-                    mat-card-avatar
-                    class="registry__item-avatar registry__item-avatar--target"
-                ></div>
                 <mat-card-title>Target</mat-card-title>
                 <mat-card-subtitle>Modern home & lifestyle</mat-card-subtitle>
             </mat-card-header>
@@ -71,8 +77,8 @@
             <mat-card-actions>
                 <button (click)="openLink('Target')" mat-button>
                     <mat-icon class="material-symbols-outlined"
-                        >open_in_new</mat-icon
-                    >
+                        >open_in_new
+                    </mat-icon>
                     Browse Registry
                 </button>
                 <button (click)="shareLink('Target')" mat-button>
@@ -82,15 +88,11 @@
             </mat-card-actions>
         </mat-card>
         <mat-card
-            [style.animation-duration]="'1000ms'"
+            [style.animation-duration]="'500ms'"
             class="registry__item animate__animated animate__zoomIn"
             appearance="outlined"
         >
             <mat-card-header class="mb-3">
-                <div
-                    mat-card-avatar
-                    class="registry__item-avatar registry__item-avatar--amazon"
-                ></div>
                 <mat-card-title>Amazon</mat-card-title>
                 <mat-card-subtitle>Home essentials & more</mat-card-subtitle>
             </mat-card-header>
@@ -109,8 +111,8 @@
             <mat-card-actions>
                 <button (click)="openLink('Amazon')" mat-button>
                     <mat-icon class="material-symbols-outlined"
-                        >open_in_new</mat-icon
-                    >
+                        >open_in_new
+                    </mat-icon>
                     Browse Registry
                 </button>
                 <button (click)="shareLink('Amazon')" mat-button>
@@ -119,24 +121,5 @@
                 </button>
             </mat-card-actions>
         </mat-card>
-    </div>
-    <div
-        [style.animation-duration]="'1200ms'"
-        class="registry__post-it-note animate__animated animate__zoomIn mt-4"
-    >
-        <p>
-            <i
-                >Your presence at our wedding means the world to us — it’s truly
-                the greatest gift we could ask for. We’re so grateful for your
-                love and support, and please know that there’s absolutely no
-                expectation beyond sharing this special moment with us.
-            </i>
-            <br />
-            <br />
-            <b
-                >— With Love, <br />
-                Alex & Shala Alvarez</b
-            >
-        </p>
     </div>
 </div>

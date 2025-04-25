@@ -1,17 +1,127 @@
 <div class="story">
-    <div class="story__grid-wrapper">
-        @for (img of imageSources$ | async; track $index) {
-            <div [ngClass]="img.wrapperClass">
+    @if (!showCollage) {
+        <div class="story__title-area">
+            <div
+                [style.animation-duration]="'500ms'"
+                class="story__clover-container animate__animated animate__zoomIn"
+            >
                 <img
-                    [priority]="$first"
-                    [style.animation-duration]="($index + 50) * 10 + 'ms'"
-                    class="story__img animate__animated animate__zoomIn"
-                    [ngSrc]="img.source"
-                    [width]="img.width"
-                    [height]="img.height"
-                    alt="Photo Memory"
+                    class="story__clover-img"
+                    src="/images/clover_2.webp"
+                    alt="A screenshot of our video chat"
                 />
+                <div class="story__clover">
+                    <div class="story__box story__box-one"></div>
+                    <div class="story__box story__box-two"></div>
+                    <div class="story__box story__box-three"></div>
+                </div>
             </div>
-        }
-    </div>
+            <h1
+                [style.animation-duration]="'1200ms'"
+                class="title text-center animate__animated animate__slow animate__fadeIn"
+            >
+                Our Journey Together
+            </h1>
+        </div>
+        <div class="story__content-area">
+            <p
+                [style.animation-duration]="'2000ms'"
+                class="story__text animate__animated animate__fadeIn"
+            >
+                Who would’ve guessed that the greatest thing we’d ever find on
+                the internet… was each other? <br /><br />
+                It all started with a swipe on Bumble, and quickly turned into
+                an exchange of messages so long, we probably could’ve printed
+                them into a novel. Each text was a chapter, as we tried to share
+                our stories, quirks, and dreams—one message at a time. <br />
+                <br />
+                Then came our first in-person meeting at Icon Park. We were both
+                nervous—me, distracting myself with some truly terrible bread,
+                and him, fidgeting with his glasses. But soon, awkward turned
+                into exciting as we wandered through the Illusion Museum taking
+                goofy photos and chatting non-stop as the Wheel of Orlando
+                slowly spun over the city. Somewhere between the laughter and
+                the quiet pauses, we found something real. And deep down, we
+                both knew—we weren’t going to let it go. <br />
+                <br />
+                What followed were endless nights on the phone, staying up until
+                one of us drifted off to sleep mid-conversation. <br />
+                <br />
+                During our many Disney trips, we explored every corner of the
+                parks and walked countless miles through Disney Springs. And in
+                a moment that felt so us, we ran—not toward the fireworks like
+                everyone else—but straight to the funnel cake stand. Because
+                sometimes, powdery goodness > fireworks. <br />
+                <br />
+                Alex introduced me to shows like Friends and Sherlock, which we
+                binge-watched for days. And I introduced him to the wonderfully
+                dramatic, tearjerking world of K-Dramas—where he quickly became
+                emotionally invested (and maybe just a little teary-eyed).
+                <br />
+                <br />
+                We later discovered a shared love for escape rooms, where we
+                learned that we make a pretty great team—even under pressure and
+                behind locked doors.<br />
+                <br />
+                We shared our favorite restaurants—our "holy grails"—and
+                discovered new spots together. But more than anything, we shared
+                our days, our laughs, and our lives. We laughed with each other
+                and at each other, in equal measure. Somehow, four years have
+                passed, and it feels like a lifetime wrapped in a blink. We’re
+                still learning new things about each other, still growing, still
+                laughing—and more excited than ever for what’s next.
+                <br />
+                <br />
+                We can’t wait to spend forever together—and we’re so incredibly
+                thankful to share this moment with you. Thank you for being part
+                of our ever-evolving love story.
+            </p>
+            <!--            <button (click)="toggleCollage()" mat-flat-button>-->
+            <!--                <mat-icon class="material-symbols-outlined">-->
+            <!--                    photo_library-->
+            <!--                </mat-icon>-->
+            <!--                See Some Of Our Memories-->
+            <!--            </button>-->
+
+            <button
+                [style.animation-duration]="'400ms'"
+                class="story__fab animate__animated animate__zoomIn"
+                mat-fab
+                extended
+                (click)="toggleCollage()"
+            >
+                <mat-icon class="material-symbols-outlined">
+                    favorite
+                </mat-icon>
+                View Memories
+            </button>
+        </div>
+    }
+    @if (showCollage) {
+        <button
+            [style.animation-duration]="'400ms'"
+            class="animate__animated animate__zoomIn mb-3"
+            mat-mini-fab
+            (click)="toggleCollage()"
+        >
+            <mat-icon class="m-0 material-symbols-outlined">
+                arrow_back
+            </mat-icon>
+        </button>
+        <div class="story__grid-wrapper">
+            @for (img of imageSources$ | async; track $index) {
+                <div [ngClass]="img.wrapperClass">
+                    <img
+                        [priority]="$index === 2"
+                        [style.animation-duration]="($index + 50) * 10 + 'ms'"
+                        class="story__img animate__animated animate__zoomIn"
+                        [ngSrc]="img.source"
+                        [width]="img.width"
+                        [height]="img.height"
+                        alt="Photo Memory"
+                    />
+                </div>
+            }
+        </div>
+    }
 </div>
