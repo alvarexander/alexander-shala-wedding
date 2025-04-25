@@ -59,20 +59,12 @@
     border-bottom-right-radius: 2.5rem !important;
 }
 
-.mat-mdc-card {
-    border-radius: 2rem !important;
-    background-color: var(
-        --mdc-elevated-card-container-color,
-        var(--mat-sys-surface-container-low)
-    ) !important;
-    filter: brightness(98%);
-    @media (prefers-color-scheme: dark) {
-        filter: brightness(170%);
-    }
+.mat-mdc-card-actions {
+    flex-wrap: wrap !important;
 }
 
-.mdc-fab--extended {
-    padding: 2rem !important;
+.mat-mdc-card {
+    border-radius: 2rem !important;
 }
 
 .mat-drawer-inner-container {
