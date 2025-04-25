@@ -8,13 +8,7 @@ import { MatIcon } from '@angular/material/icon';
     selector: 'app-our-story',
     templateUrl: './our-story.component.html',
     styleUrl: './our-story.component.scss',
-    imports: [
-        NgOptimizedImage,
-        AsyncPipe,
-        MatIcon,
-        MatFabButton,
-        MatMiniFabButton,
-    ],
+    imports: [NgOptimizedImage, AsyncPipe, MatIcon, MatFabButton],
 })
 export class OurStoryComponent implements OnInit {
     /**
@@ -48,12 +42,6 @@ export class OurStoryComponent implements OnInit {
                     this._getImageMetadata(url),
             ),
         ).pipe(catchError(() => of([])));
-
-        if (
-            JSON.parse(localStorage.getItem('showCollage') ?? 'false') === true
-        ) {
-            this.showCollage = true;
-        }
     }
 
     /**
@@ -61,7 +49,6 @@ export class OurStoryComponent implements OnInit {
      */
     toggleCollage(): void {
         this.showCollage = !this.showCollage;
-        localStorage.setItem('showCollage', JSON.stringify(this.showCollage));
     }
 
     /**

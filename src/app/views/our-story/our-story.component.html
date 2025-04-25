@@ -4,13 +4,7 @@
             <div
                 [style.animation-duration]="'500ms'"
                 class="d-flex justify-content-center animate__animated animate__fadeIn"
-            >
-                <img
-                    class="story__top-img mb-2"
-                    src="/images/clover_2.webp"
-                    alt="A screenshot of our video chat"
-                />
-            </div>
+            ></div>
             <h1
                 [style.animation-duration]="'900ms'"
                 class="title text-center animate__animated animate__slow animate__fadeIn"
@@ -86,16 +80,6 @@
         </div>
     }
     @if (showCollage) {
-        <button
-            [style.animation-duration]="'400ms'"
-            class="animate__animated animate__zoomIn mb-3"
-            mat-mini-fab
-            (click)="toggleCollage()"
-        >
-            <mat-icon class="m-0 material-symbols-outlined">
-                arrow_back
-            </mat-icon>
-        </button>
         <div class="story__grid-wrapper">
             @for (img of imageSources$ | async; track $index) {
                 <div class="story__grid-wrapper">

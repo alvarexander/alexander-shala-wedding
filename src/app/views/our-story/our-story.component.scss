@@ -1,12 +1,12 @@
 .story {
     &__title-area {
-        max-width: 800px;
+        max-width: 650px;
         margin: auto;
     }
 
     &__content-area {
         font-size: 1.2rem;
-        max-width: 800px;
+        max-width: 650px;
         margin: auto;
         font-weight: 300;
     }
@@ -23,10 +23,6 @@
         @media (min-width: 768px) {
             padding: 0;
         }
-    }
-
-    &__top-img {
-        border-radius: 100%;
     }
 
     &__img {
