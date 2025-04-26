@@ -1,22 +1,18 @@
 <div class="story">
     @if (!showCollage) {
         <div class="story__title-area">
-            <div
-                [style.animation-duration]="'500ms'"
-                class="d-flex justify-content-center animate__animated animate__fadeIn"
-            ></div>
             <h1
-                [style.animation-duration]="'900ms'"
+                [style.animation-duration]="'800ms'"
                 class="title text-center animate__animated animate__slow animate__fadeIn"
             >
                 Our Journey Together
             </h1>
         </div>
-        <div class="story__content-area">
-            <p
-                [style.animation-duration]="'1200ms'"
-                class="story__text animate__animated animate__fadeIn"
-            >
+        <div
+            [style.animation-duration]="'800ms'"
+            class="story__content-area animate__animated animate__fadeIn"
+        >
+            <p class="story__text">
                 Who would’ve guessed that the greatest thing we’d ever find on
                 the internet… was each other? <br /><br />
                 It all started with a swipe on Bumble, and quickly turned into
@@ -66,23 +62,26 @@
                 of our ever-evolving love story.
             </p>
             <button
-                [style.animation-duration]="'400ms'"
-                class="story__fab animate__animated animate__zoomIn"
+                class="story__fab"
                 mat-fab
                 extended
                 (click)="toggleCollage()"
             >
-                <mat-icon class="material-symbols-outlined">
-                    favorite
-                </mat-icon>
+                <mat-icon class="material-symbols-outlined"> favorite</mat-icon>
                 View Memories
             </button>
         </div>
     }
+
     @if (showCollage) {
+        <button mat-button (click)="toggleCollage()">
+            <mat-icon class="m-0 material-symbols-outlined">
+                arrow_back
+            </mat-icon>
+        </button>
         <div class="story__grid-wrapper">
             @for (img of imageSources$ | async; track $index) {
-                <div class="story__grid-wrapper">
+                <div class="story__grid-wrapper mt-4">
                     <img
                         [priority]="$index === 2"
                         [style.animation-duration]="($index + 50) * 10 + 'ms'"

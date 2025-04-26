@@ -67,13 +67,17 @@
                 aria-label="Navigation drawer button"
                 (click)="sidenav.toggle()"
             >
-                <mat-icon class="material-symbols-outlined">menu</mat-icon>
+                <mat-icon #toolbarIcon class="material-symbols-outlined"
+                    >menu</mat-icon
+                >
             </button>
-            <span class="m-auto"> Alvarez Tolbert Wedding </span>
+            <span class="m-auto"> {{ toolbarTitle }} </span>
         </mat-toolbar>
         <!-- Contents of application -->
         <div class="app p-4">
-            <router-outlet></router-outlet>
+            <router-outlet
+                (activate)="updateToolbarTitle($event)"
+            ></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

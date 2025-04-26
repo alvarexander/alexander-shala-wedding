@@ -1,14 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
-import { MatFabButton, MatMiniFabButton } from '@angular/material/button';
+import {
+    MatButton,
+    MatFabButton,
+} from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { ContentScrollService } from '../../components/services/content-scroll.service';
 
 @Component({
     selector: 'app-our-story',
     templateUrl: './our-story.component.html',
     styleUrl: './our-story.component.scss',
-    imports: [NgOptimizedImage, AsyncPipe, MatIcon, MatFabButton],
+    imports: [
+        NgOptimizedImage,
+        AsyncPipe,
+        MatIcon,
+        MatFabButton,
+        MatButton,
+    ],
 })
 export class OurStoryComponent implements OnInit {
     /**
@@ -31,6 +41,8 @@ export class OurStoryComponent implements OnInit {
      */
     private readonly _imageUrls: string[] = [];
 
+    constructor(private readonly _scrollService: ContentScrollService) {}
+
     ngOnInit() {
         for (let i = 1; i < 34; i++) {
             this._imageUrls.push('/images/IMG_' + i + '.webp');
@@ -49,6 +61,13 @@ export class OurStoryComponent implements OnInit {
      */
     toggleCollage(): void {
         this.showCollage = !this.showCollage;
+    }
+
+    /**
+     * Scrolls to the top of the view
+     */
+    scrollToTop() {
+        this._scrollService.scrollToTop();
     }
 
     /**

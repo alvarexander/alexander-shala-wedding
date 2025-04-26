@@ -43,7 +43,7 @@ export class RegistryComponent {
      * Target registry URL
      */
     private readonly T_REGISTRY =
-        'https://www.target.com/gift-registry/dashboard?type=WEDDING&registryId=64c1eb90-1ca4-11f0-90a8-d7d92f946a09&createdRegistry=true';
+        'https://www.target.com/gift-registry/gift-giver?registryId=64c1eb90-1ca4-11f0-90a8-d7d92f946a09&type=WEDDING';
 
     /**
      * Amazon registry URL

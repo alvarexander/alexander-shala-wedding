@@ -1,4 +1,5 @@
 .story {
+    /** Main Story Area **/
     &__title-area {
         max-width: 650px;
         margin: auto;
@@ -23,15 +24,6 @@
         @media (min-width: 768px) {
             padding: 0;
         }
-    }
-
-    &__img {
-        max-width: 100%;
-        aspect-ratio: auto;
-        height: auto;
-        width: auto;
-        vertical-align: middle;
-        display: inline-block;
     }
 
     &__grid-wrapper {

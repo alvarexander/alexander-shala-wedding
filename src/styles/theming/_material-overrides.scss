@@ -13,10 +13,11 @@
     white-space: nowrap;
     direction: ltr;
 
-    font-variation-settings: 'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48;
 }
 
 /** Components **/
@@ -27,15 +28,18 @@
 .mat-mdc-fab-base {
     &:active {
         border-radius: 48px !important;
-        transition: border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
-        background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+        transition:
+            border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
+            background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
     }
 }
 
-.mdc-button, .mat-mdc-button-base:not(.mat-mdc-fab-base) {
+.mdc-button,
+.mat-mdc-button-base:not(.mat-mdc-fab-base) {
     border-radius: 30px !important;
-    transition: border-radius 0.25s cubic-bezier(0.2, 0, 0, 1),
-    background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+    transition:
+        border-radius 0.25s cubic-bezier(0.2, 0, 0, 1),
+        background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
 
     .mat-mdc-button-persistent-ripple {
         border-radius: 30px !important;
@@ -59,7 +63,7 @@
 .mat-expansion-panel,
 .mat-expansion-panel-header {
     background-color: var(
-            --mat-expansion-header-hover-state-layer-color
+        --mat-expansion-header-hover-state-layer-color
     ) !important;
 }
 

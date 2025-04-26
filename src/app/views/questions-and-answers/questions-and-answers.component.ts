@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
@@ -9,5 +9,4 @@ import { MatExpansionModule } from '@angular/material/expansion';
 })
 export class QuestionsAndAnswersComponent {
     protected readonly title = 'Questions & Answers';
-    protected readonly panelOpenState = signal(false);
 }
