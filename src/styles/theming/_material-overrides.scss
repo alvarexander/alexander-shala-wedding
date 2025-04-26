@@ -13,11 +13,10 @@
     white-space: nowrap;
     direction: ltr;
 
-    font-variation-settings:
-        'FILL' 0,
-        'wght' 400,
-        'GRAD' 0,
-        'opsz' 48;
+    font-variation-settings: 'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
 }
 
 /** Components **/
@@ -28,18 +27,28 @@
 .mat-mdc-fab-base {
     &:active {
         border-radius: 48px !important;
-        transition:
-            border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
-            background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+        transition: border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
+        background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
     }
 }
 
-.mat-mdc-button-base:not(.mat-mdc-fab-base) {
-    &:active {
+.mdc-button, .mat-mdc-button-base:not(.mat-mdc-fab-base) {
+    border-radius: 30px !important;
+    transition: border-radius 0.25s cubic-bezier(0.2, 0, 0, 1),
+    background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+
+    .mat-mdc-button-persistent-ripple {
+        border-radius: 30px !important;
+        transition: border-radius 0.25s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    &:active,
+    &:target {
         border-radius: 10px !important;
-        transition:
-            border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
-            background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
+
+        .mat-mdc-button-persistent-ripple {
+            border-radius: 10px !important;
+        }
     }
 }
 
@@ -50,7 +59,7 @@
 .mat-expansion-panel,
 .mat-expansion-panel-header {
     background-color: var(
-        --mat-expansion-header-hover-state-layer-color
+            --mat-expansion-header-hover-state-layer-color
     ) !important;
 }
 
@@ -66,15 +75,6 @@
 
 .mat-mdc-card {
     border-radius: 2rem !important;
-    border: none !important;
-    background-color: var(
-        --mdc-elevated-card-container-color,
-        var(--mat-sys-surface-container-low)
-    ) !important;
-    filter: brightness(98%);
-    @media (prefers-color-scheme: dark) {
-        filter: brightness(170%);
-    }
 }
 
 .mat-drawer-inner-container {
@@ -84,8 +84,8 @@
 
 .mat-drawer-transition .mat-drawer-backdrop {
     transition-duration: 170ms !important;
-    backdrop-filter: blur(0.4rem) !important;
-    filter: brightness(90%) !important;
+    filter: brightness(-40%) !important;
+    background-color: #2b322d8f !important;
 }
 
 .mat-mdc-list-base {
