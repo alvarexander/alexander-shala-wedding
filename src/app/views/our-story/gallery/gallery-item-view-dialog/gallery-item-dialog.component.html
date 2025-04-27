@@ -1,0 +1,10 @@
+@if (data.item) {
+    <h2 mat-dialog-title>Image: {{ data.item.source }}</h2>
+    <mat-dialog-content
+        >This will delete all elements that are currently on this page and
+        cannot be undone.</mat-dialog-content
+    >
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close>Close</button>
+    </mat-dialog-actions>
+}

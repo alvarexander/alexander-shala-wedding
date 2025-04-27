@@ -25,37 +25,6 @@
     min-width: fit-content !important;
 }
 
-.mat-mdc-fab-base {
-    &:active {
-        border-radius: 25px !important;
-        transition:
-            border-radius 0.5s cubic-bezier(0.2, 0, 0, 1),
-            background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
-    }
-}
-
-.mdc-button,
-.mat-mdc-button-base:not(.mat-mdc-fab-base) {
-    border-radius: 30px !important;
-    transition:
-        border-radius 0.25s cubic-bezier(0.2, 0, 0, 1),
-        background-color 0.3s cubic-bezier(0.2, 0, 0, 1) !important;
-
-    .mat-mdc-button-persistent-ripple {
-        border-radius: 30px !important;
-        transition: border-radius 0.25s cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    &:active,
-    &:target {
-        border-radius: 10px !important;
-
-        .mat-mdc-button-persistent-ripple {
-            border-radius: 10px !important;
-        }
-    }
-}
-
 .mat-mdc-card-title {
     font-weight: bold !important;
 }
@@ -104,4 +73,8 @@
     gap: 0.8rem !important;
     width: 98% !important;
     margin: auto !important;
+}
+
+.cdk-overlay-dark-backdrop {
+    background: rgba(0, 0, 0, 0.72) !important;
 }

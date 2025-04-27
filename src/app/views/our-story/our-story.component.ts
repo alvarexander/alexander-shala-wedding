@@ -1,15 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { ContentScrollService } from '../../components/services/content-scroll.service';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { IGalleryItem } from '../../interfaces/gallery-items.interface';
+import { GalleryComponent } from './gallery/gallery.component';
 
 @Component({
     selector: 'app-our-story',
     templateUrl: './our-story.component.html',
     styleUrl: './our-story.component.scss',
-    imports: [NgOptimizedImage, AsyncPipe, MatIcon, MatFabButton, MatButton],
+    imports: [
+        AsyncPipe,
+        MatIcon,
+        MatFabButton,
+        MatButton,
+        MatSlideToggle,
+        GalleryComponent,
+    ],
 })
 export class OurStoryComponent implements OnInit {
     /**
@@ -20,19 +29,22 @@ export class OurStoryComponent implements OnInit {
     /**
      * Array containing image sources for collage
      */
-    protected imageSources$?: Observable<IPhotoData[]>;
+    protected imageSources$?: Observable<IGalleryItem[]>;
 
     /**
      * Denotes whether to show the collage
      */
-    protected showCollage = false;
+    protected showGallery = false;
+
+    /**
+     * Denotes whether to show the collage
+     */
+    protected galleryViewMode: 'gallery' | 'carousel' = 'gallery';
 
     /**
      * Array of image URLs
      */
     private readonly _imageUrls: string[] = [];
-
-    constructor(private readonly _scrollService: ContentScrollService) {}
 
     ngOnInit() {
         for (let i = 1; i < 34; i++) {
@@ -41,7 +53,7 @@ export class OurStoryComponent implements OnInit {
 
         this.imageSources$ = forkJoin(
             this._imageUrls.map(
-                (url: string): Observable<IPhotoData> =>
+                (url: string): Observable<IGalleryItem> =>
                     this._getImageMetadata(url),
             ),
         ).pipe(catchError(() => of([])));
@@ -51,21 +63,25 @@ export class OurStoryComponent implements OnInit {
      * Toggles collage view
      */
     toggleCollage(): void {
-        this.showCollage = !this.showCollage;
+        this.showGallery = !this.showGallery;
     }
 
     /**
-     * Scrolls to the top of the view
+     * Toggles the gallery's view mode
      */
-    scrollToTop() {
-        this._scrollService.scrollToTop();
+    toggleGalleryMode(): void {
+        if (this.galleryViewMode === 'gallery') {
+            this.galleryViewMode = 'carousel';
+        } else if (this.galleryViewMode === 'carousel') {
+            this.galleryViewMode = 'gallery';
+        }
     }
 
     /**
      * Obtains image meta-data based on image source
      * @param source The image source URL
      */
-    private _getImageMetadata(source: string): Observable<IPhotoData> {
+    private _getImageMetadata(source: string): Observable<IGalleryItem> {
         return new Observable(observer => {
             const img = new Image();
 
@@ -74,10 +90,11 @@ export class OurStoryComponent implements OnInit {
                 const height = img.naturalHeight;
 
                 observer.next({
+                    alt: 'Photo memory of Alexander and Shala',
                     source,
                     width,
                     height,
-                } as IPhotoData);
+                } as IGalleryItem);
                 observer.complete();
             };
 
@@ -88,10 +105,4 @@ export class OurStoryComponent implements OnInit {
             img.src = source;
         });
     }
-}
-
-interface IPhotoData {
-    source: string;
-    width: number;
-    height: number;
 }

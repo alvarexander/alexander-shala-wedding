@@ -1,0 +1,59 @@
+<div class="gallery animate__animated animate__fadeIn">
+    @switch (viewMode) {
+        @case ('carousel') {
+            <div class="gallery__main">
+                <div class="gallery__carousel-container" #carouselContainer>
+                    <div class="gallery__carousel" #carousel>
+                        @for (item of galleryItems; track item.source) {
+                            <div class="gallery__image-wrapper">
+                                <img
+                                    [src]="item.source"
+                                    [alt]="item.alt"
+                                    class="gallery__image"
+                                />
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <mat-card
+                [style.animation-duration]="'500ms'"
+                class="gallery__descriptor-card animate__animated animate__zoomIn"
+                appearance="outlined"
+            >
+                <mat-card-header>
+                    <mat-card-title
+                        >Current Image:
+                        {{ galleryItems[currentIndex].source }}</mat-card-title
+                    >
+                </mat-card-header>
+                <mat-card-content>
+                    This is a description of the currently selected image!
+                </mat-card-content>
+            </mat-card>
+        }
+        @case ('gallery') {
+            <div class="gallery__grid-wrapper">
+                @for (item of galleryItems; track $index) {
+                    <div
+                        matRipple
+                        (click)="openItemModal(item)"
+                        class="gallery__grid-wrapper"
+                    >
+                        <img
+                            [priority]="$index === 2"
+                            [style.animation-duration]="
+                                ($index + 50) * 10 + 'ms'
+                            "
+                            class="gallery__img animate__animated animate__zoomIn"
+                            [ngSrc]="item.source"
+                            [width]="item.width"
+                            [height]="item.height"
+                            alt="Photo Memory"
+                        />
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

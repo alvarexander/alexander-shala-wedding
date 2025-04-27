@@ -4,7 +4,7 @@ import {
     isDevMode,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import {
@@ -15,6 +15,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideAnimations(),
         provideHttpClient(withInterceptorsFromDi()),
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         provideZoneChangeDetection({ eventCoalescing: true }),

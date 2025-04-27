@@ -1,15 +1,13 @@
 <div class="story">
-    @if (!showCollage) {
-        <div class="story__title-area">
-            <h1
-                [style.animation-duration]="'800ms'"
-                class="title text-center animate__animated animate__slow animate__fadeIn"
-            >
-                Our Journey Together
-            </h1>
+    @if (!showGallery) {
+        <div
+            [style.animation-duration]="'1000ms'"
+            class="story__title-area animate__animated animate__fadeIn"
+        >
+            <h1 class="title text-center">Our Journey Together</h1>
         </div>
         <div
-            [style.animation-duration]="'800ms'"
+            [style.animation-duration]="'1400ms'"
             class="story__content-area animate__animated animate__fadeIn"
         >
             <p class="story__text">
@@ -61,47 +59,54 @@
                 thankful to share this moment with you. Thank you for being part
                 of our ever-evolving love story.
             </p>
-            <button
-                class="story__fab"
-                mat-fab
-                extended
-                (click)="toggleCollage()"
-            >
-                <mat-icon class="material-symbols-outlined"> favorite</mat-icon>
-                View Memories
-            </button>
         </div>
+        <button
+            [style.animation-duration]="'500ms'"
+            class="story__fab animate__animated animate__zoomIn"
+            mat-fab
+            extended
+            (click)="toggleCollage()"
+        >
+            <mat-icon class="material-symbols-outlined"> favorite</mat-icon>
+            View Memories
+        </button>
     }
 
-    @if (showCollage) {
+    @if (showGallery) {
+        <div class="d-flex align-items-center justify-content-between">
+            <button mat-button (click)="toggleCollage()">
+                <mat-icon class="m-0 material-symbols-outlined">
+                    arrow_back
+                </mat-icon>
+            </button>
+            <div class="d-flex align-items-center gap-2">
+                <mat-icon class="material-symbols-outlined">
+                    grid_view
+                </mat-icon>
+                <mat-slide-toggle
+                    [hideIcon]="true"
+                    (toggleChange)="toggleGalleryMode()"
+                ></mat-slide-toggle>
+                <mat-icon class="material-symbols-outlined">
+                    view_apps
+                </mat-icon>
+            </div>
+        </div>
         <div
             [style.animation-duration]="'1000ms'"
-            class="text-center mb-5 animate__animated animate__slow animate__fadeIn"
+            class="story__title-area text-center animate__animated animate__slow animate__fadeIn"
         >
-            <div class="d-flex align-items-center">
-                <button mat-button (click)="toggleCollage()">
-                    <mat-icon class="m-0 material-symbols-outlined">
-                        arrow_back
-                    </mat-icon>
-                </button>
-                <h1 class="title m-auto">Beautiful Memories</h1>
-            </div>
-            <p>Here is a gallery of some our memories over the years.</p>
+            <h1 class="title">Image Gallery</h1>
+            <p class="fst-italic">
+                Here are some of our memories over the years
+            </p>
         </div>
-        <div class="story__grid-wrapper">
-            @for (img of imageSources$ | async; track $index) {
-                <div class="story__grid-wrapper">
-                    <img
-                        [priority]="$index === 2"
-                        [style.animation-duration]="($index + 50) * 10 + 'ms'"
-                        class="story__img animate__animated animate__zoomIn"
-                        [ngSrc]="img.source"
-                        [width]="img.width"
-                        [height]="img.height"
-                        alt="Photo Memory"
-                    />
-                </div>
-            }
-        </div>
+        @let galleryItems = imageSources$ | async;
+        @if (galleryItems) {
+            <app-gallery
+                [galleryItems]="galleryItems"
+                [viewMode]="galleryViewMode"
+            ></app-gallery>
+        }
     }
 </div>
