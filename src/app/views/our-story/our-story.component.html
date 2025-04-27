@@ -74,14 +74,23 @@
     }
 
     @if (showCollage) {
-        <button mat-button (click)="toggleCollage()">
-            <mat-icon class="m-0 material-symbols-outlined">
-                arrow_back
-            </mat-icon>
-        </button>
+        <div
+            [style.animation-duration]="'1000ms'"
+            class="text-center mb-5 animate__animated animate__slow animate__fadeIn"
+        >
+            <div class="d-flex align-items-center">
+                <button mat-button (click)="toggleCollage()">
+                    <mat-icon class="m-0 material-symbols-outlined">
+                        arrow_back
+                    </mat-icon>
+                </button>
+                <h1 class="title m-auto">Beautiful Memories</h1>
+            </div>
+            <p>Here is a gallery of some our memories over the years.</p>
+        </div>
         <div class="story__grid-wrapper">
             @for (img of imageSources$ | async; track $index) {
-                <div class="story__grid-wrapper mt-4">
+                <div class="story__grid-wrapper">
                     <img
                         [priority]="$index === 2"
                         [style.animation-duration]="($index + 50) * 10 + 'ms'"

@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
-import {
-    MatButton,
-    MatFabButton,
-} from '@angular/material/button';
+import { MatButton, MatFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { ContentScrollService } from '../../components/services/content-scroll.service';
 
@@ -12,13 +9,7 @@ import { ContentScrollService } from '../../components/services/content-scroll.s
     selector: 'app-our-story',
     templateUrl: './our-story.component.html',
     styleUrl: './our-story.component.scss',
-    imports: [
-        NgOptimizedImage,
-        AsyncPipe,
-        MatIcon,
-        MatFabButton,
-        MatButton,
-    ],
+    imports: [NgOptimizedImage, AsyncPipe, MatIcon, MatFabButton, MatButton],
 })
 export class OurStoryComponent implements OnInit {
     /**
