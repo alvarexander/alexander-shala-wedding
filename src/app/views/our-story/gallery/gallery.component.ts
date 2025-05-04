@@ -13,7 +13,6 @@ import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import { IGalleryItem } from '../../../interfaces/gallery-items.interface';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { isNil } from 'lodash';
 import { MatRipple } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GalleryItemDialogComponent } from './gallery-item-view-dialog/gallery-item-dialog.component';
@@ -325,7 +324,6 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     /**
      * Cleans up carousel resources
-     * @private
      */
     private _cleanUpCarousel(): void {
         if (this._draggableInstance) {
@@ -345,7 +343,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
      * Handles different device orientations and screen sizes
      */
     private _initCarousel(): void {
-        if (isNil(this.carouselRef) || isNil(this.containerRef)) {
+        if (!this.carouselRef || !this.containerRef) {
             return;
         }
         const carousel = this.carouselRef.nativeElement;
@@ -476,11 +474,11 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
      * Ensures all cards can become the hero, including the first and last ones
      */
     private _updateBounds(): void {
-        if (isNil(this._draggableInstance) || this.viewMode !== 'carousel') {
+        if (!this._draggableInstance || this.viewMode !== 'carousel') {
             return;
         }
 
-        if (isNil(this.carouselRef) || isNil(this.containerRef)) {
+        if (!this.carouselRef || !this.containerRef) {
             return;
         }
 
