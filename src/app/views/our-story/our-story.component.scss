@@ -3,10 +3,16 @@
     &__title-area {
         max-width: 650px;
         margin: auto;
+
+        p {
+            font-size: 1.2rem;
+            font-weight: 300;
+            font-style: italic;
+        }
     }
 
     &__content-area {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         max-width: 650px;
         margin: auto;
         font-weight: 300;

@@ -27,13 +27,14 @@ $dark-theme: app-theme.create-theme(
     -webkit-touch-callout: none !important;
 
     &:not(.material-icons) {
-        font-family: 'Roboto Slab', serif !important;
+        font-family: 'Zilla Slab', serif !important;
     }
 }
 
 html {
     height: 100%;
     color-scheme: light dark;
+    -webkit-text-size-adjust: 100%;
     @include mat.all-component-themes($light-theme);
 }
 
@@ -43,11 +44,12 @@ body {
 }
 
 .title {
-    font-family: 'Special Gothic Expanded One', sans-serif !important;
-    font-size: 3rem;
+    font-family: 'Cal Sans', sans-serif !important;
+    font-size: 3.5rem;
+    font-weight: bolder;
     line-height: 1.1;
     margin: 0;
-    letter-spacing: 0.2rem;
+    letter-spacing: 0;
 }
 
 .system-theme {

@@ -11,6 +11,15 @@
         margin: auto;
     }
 
+    &__card-title {
+        font-size: 2rem;
+        font-weight: bolder;
+    }
+
+    &__card-body {
+        font-size: 1.3rem;
+    }
+
     &__title {
         color: white;
         text-align: center;
@@ -89,18 +98,14 @@
     }
 
     &__image {
-        width: 100%;
-        height: 100%;
+        width: auto;
+        height: auto;
         object-fit: cover;
         border-radius: inherit;
-    }
-
-    &__bottom-text {
-        position: fixed;
-        bottom: 16px;
-        right: 16px;
-        color: #e6e0e9;
-        font-size: 14px;
+        &--carousel {
+            width: 100%;
+            height: 100%;
+        }
     }
 
     &__grid-wrapper {

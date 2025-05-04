@@ -3,7 +3,7 @@
         max-width: 800px;
         margin: auto;
         p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 300;
             font-style: italic;
         }
@@ -14,20 +14,6 @@
         flex-wrap: wrap;
         gap: 1rem;
         justify-content: space-evenly;
-    }
-
-    &__notice {
-        font-size: 1.2rem;
-        padding: 2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        max-width: 600px;
-        margin: auto;
-        background-color: var(
-            --mat-datepicker-calendar-date-in-overlap-range-state-background-color
-        );
     }
 
     &__item {

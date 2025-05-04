@@ -1,0 +1,16 @@
+.dialog {
+    &__title {
+        font-size: 2rem;
+        font-weight: bolder;
+    }
+
+    &__img {
+        display: flex;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    &__body {
+        font-size: 1.3rem;
+    }
+}

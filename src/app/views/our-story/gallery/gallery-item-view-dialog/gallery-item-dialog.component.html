@@ -1,10 +1,18 @@
 @if (data.item) {
-    <h2 mat-dialog-title>Image: {{ data.item.source }}</h2>
-    <mat-dialog-content
-        >This will delete all elements that are currently on this page and
-        cannot be undone.</mat-dialog-content
-    >
-    <mat-dialog-actions>
-        <button mat-button mat-dialog-close>Close</button>
-    </mat-dialog-actions>
+    <div class="dialog">
+        <h1 class="dialog__title" mat-dialog-title>{{ data.item.date }}</h1>
+        <mat-dialog-content class="dialog__body">
+            <img
+                class="dialog__img"
+                [ngSrc]="data.item.source"
+                height="500"
+                width="500"
+                [alt]="data.item.alt"
+            />
+            <p>{{ data.item.description }}</p>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close>Close</button>
+        </mat-dialog-actions>
+    </div>
 }

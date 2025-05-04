@@ -24,6 +24,14 @@
         left: 0;
         right: 0;
         bottom: 0;
+        background: var(
+            --mat-sidenav-container-background-color,
+            var(--mat-sys-surface)
+        ) !important;
+        color: #424940 !important;
+        @media (prefers-color-scheme: dark) {
+            color: #edf6e9 !important;
+        }
     }
 
     &__nav-item {
@@ -44,7 +52,7 @@
     &__toolbar {
         width: 100%;
         z-index: 10000000;
-        height: 55px;
+        height: 65px;
         position: sticky;
         top: 0;
         background-color: var(--mdc-outlined-card-outline-color);

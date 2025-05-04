@@ -9,6 +9,7 @@ import {
 } from '@angular/material/dialog';
 import { IGalleryItem } from '../../../../interfaces/gallery-items.interface';
 import { MatButton } from '@angular/material/button';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
     selector: 'app-gallery-item-view-dialog',
@@ -18,6 +19,7 @@ import { MatButton } from '@angular/material/button';
         MatDialogActions,
         MatButton,
         MatDialogClose,
+        NgOptimizedImage,
     ],
     templateUrl: './gallery-item-dialog.component.html',
     styleUrl: './gallery-item-dialog.component.scss',
