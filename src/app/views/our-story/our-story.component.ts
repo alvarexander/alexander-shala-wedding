@@ -6,7 +6,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { IGalleryItem } from '../../interfaces/gallery-items.interface';
 import { GalleryComponent } from './gallery/gallery.component';
-import { isNil } from 'lodash';
 
 @Component({
     selector: 'app-our-story',
@@ -86,7 +85,7 @@ export class OurStoryComponent implements OnInit {
         return new Observable(observer => {
             const img = new Image();
             const localCache = localStorage.getItem(source);
-            if (!isNil(localCache)) {
+            if (localCache) {
                 const galleryItem = JSON.parse(localCache) as IGalleryItem;
                 observer.next(galleryItem);
                 observer.complete();
