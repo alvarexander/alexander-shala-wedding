@@ -177,9 +177,8 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
      */
     openItemModal(item: IGalleryItem): void {
         this._dialogRef.open(GalleryItemDialogComponent, {
-            width: '95%',
+            width: '100%',
             maxWidth: '650px',
-            maxHeight: '90vh',
             panelClass: 'gallery-dialog-container',
             data: { item },
         });
