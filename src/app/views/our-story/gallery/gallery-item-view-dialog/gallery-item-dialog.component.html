@@ -4,9 +4,7 @@
         <mat-dialog-content class="dialog__body">
             <img
                 class="dialog__img"
-                [ngSrc]="data.item.source"
-                height="500"
-                width="500"
+                [src]="data.item.source"
                 [alt]="data.item.alt"
             />
             <p>{{ data.item.description }}</p>
