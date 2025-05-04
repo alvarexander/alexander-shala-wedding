@@ -383,7 +383,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
             type: 'x',
             inertia: true,
             edgeResistance: 0.7,
-            dragResistance: 0.7,
+            dragResistance: 0.3,
             throwResistance: 0.7,
             bounds: bounds.draggableBounds,
             snap: {

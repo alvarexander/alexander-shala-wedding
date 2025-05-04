@@ -92,12 +92,23 @@
                 </mat-icon>
             </div>
         </div>
+        @let hint = galleryViewMode === 'carousel' ? 'Note: Drag the carousel left and right to scroll through the images.' : '';
         <div
             [style.animation-duration]="'1000ms'"
             class="story__title-area text-center animate__animated animate__slow animate__fadeIn"
         >
             <h1 class="title">Memory Gallery</h1>
-            <p>Here are some of our memories over the years</p>
+            <p>Here are some of our memories over the years. {{hint}}</p>
+            @if (galleryViewMode === 'carousel') {
+                <p class="m-0">  </p>
+                <div class="explain-me-how">
+                    <div class="track mb-3">
+                        <div class="hand animated move-the-hand">
+                            <span class="hand__finger-touch animated show-the-touch"></span>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         @let galleryItems = imageSources$ | async;
         @if (galleryItems) {
