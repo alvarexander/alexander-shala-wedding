@@ -25,9 +25,9 @@
                 appearance="outlined"
             >
                 <mat-card-header>
-                    <mat-card-title class="gallery__card-title">{{
-                        galleryItems[currentIndex].date
-                    }}</mat-card-title>
+                    <mat-card-title class="gallery__card-title"
+                        >{{ galleryItems[currentIndex].date }}
+                    </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="gallery__card-body">
                     <p>{{ galleryItems[currentIndex].description }}</p>
@@ -44,9 +44,7 @@
                     >
                         <img
                             [priority]="$index === 2"
-                            [style.animation-duration]="
-                                ($index + 50) * $index + 'ms'
-                            "
+                            [style.animation-duration]="450"
                             class="gallery__image animate__animated animate__zoomIn"
                             [ngSrc]="item.source"
                             [width]="item.width"

@@ -6,6 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { IGalleryItem } from '../../interfaces/gallery-items.interface';
 import { GalleryComponent } from './gallery/gallery.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-our-story',
@@ -45,6 +46,10 @@ export class OurStoryComponent implements OnInit {
      * Array of image URLs
      */
     private readonly _imageUrls: string[] = [];
+
+    constructor(private readonly _titleService: Title) {
+        this._titleService.setTitle(this.title);
+    }
 
     ngOnInit() {
         for (let i = 1; i < 41; i++) {

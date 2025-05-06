@@ -10,6 +10,7 @@ import {
 } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-registry',
@@ -50,6 +51,10 @@ export class RegistryComponent {
      */
     private readonly A_REGISTRY =
         'https://www.amazon.com/wedding/organize-registry?ref_=gr-home-wedding-viewyr';
+
+    constructor(private readonly _titleService: Title) {
+        this._titleService.setTitle(this.title);
+    }
 
     /**
      * Opens link to registry

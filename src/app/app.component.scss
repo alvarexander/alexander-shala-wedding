@@ -30,12 +30,14 @@
         ) !important;
         color: #424940 !important;
         @media (prefers-color-scheme: dark) {
+            background-color: #1c1f1c !important;
             color: #edf6e9 !important;
         }
     }
 
     &__nav-item {
         &--active {
+            font-weight: bolder;
             &:before {
                 background-color: var(
                     --mdc-list-list-item-hover-state-layer-color,

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-home',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
     protected readonly title = 'Home';
+
+    constructor(private readonly _titleService: Title) {
+        this._titleService.setTitle(this.title);
+    }
 }

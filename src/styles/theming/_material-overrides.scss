@@ -35,6 +35,11 @@
         --mat-expansion-header-hover-state-layer-color
     ) !important;
 }
+.mat-drawer-container {
+    @media (prefers-color-scheme: dark) {
+        background-color: #1c1f1c !important;
+    }
+}
 
 .mat-drawer {
     max-width: 76% !important;

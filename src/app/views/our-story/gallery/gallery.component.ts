@@ -382,7 +382,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
             type: 'x',
             inertia: true,
             edgeResistance: 0.7,
-            dragResistance: 0.3,
+            dragResistance: 0.5,
             throwResistance: 0.7,
             bounds: bounds.draggableBounds,
             snap: {
@@ -512,7 +512,7 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
         // Snap to current index with smoother animation
         gsap.to(carousel, {
             x: this._snapPoints[this.currentIndex] || bounds.initialOffset,
-            duration: 0.3,
+            duration: 0.2,
             ease: 'power2.out',
             onComplete: () => this.updateImageScales(),
         });

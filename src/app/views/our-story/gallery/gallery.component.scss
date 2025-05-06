@@ -197,11 +197,6 @@
             right: 0;
             width: 40px;
             height: min(320px, 45vh);
-            background: linear-gradient(
-                to right,
-                rgba(18, 18, 18, 0),
-                rgba(18, 18, 18, 0.8)
-            );
             transform: translateY(-50%);
             pointer-events: none;
             z-index: 2;
@@ -215,11 +210,6 @@
             left: 0;
             width: 40px;
             height: min(320px, 45vh);
-            background: linear-gradient(
-                to left,
-                rgba(18, 18, 18, 0),
-                rgba(18, 18, 18, 0.8)
-            );
             transform: translateY(-50%);
             pointer-events: none;
             z-index: 2;
