@@ -47,6 +47,13 @@
     border-bottom-right-radius: 2.5rem !important;
 }
 
+.mdc-fab {
+    transition: border-radius .35s cubic-bezier(.2, 0, 0, 1), background-color .3s cubic-bezier(.2, 0, 0, 1) !important;
+    &:active {
+        border-radius: 1.8rem;
+    }
+}
+
 .mat-mdc-card-actions {
     flex-wrap: wrap !important;
 }
