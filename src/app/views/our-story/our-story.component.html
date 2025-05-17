@@ -73,7 +73,11 @@
     }
 
     @if (showGallery) {
-        <div class="d-flex align-items-center justify-content-between">
+        @let hint =
+            galleryViewMode === 'carousel'
+                ? 'Drag the carousel left and right with your mouse or finger to scroll through the images.'
+                : 'Tap on an image to learn more about that memory.';
+        <div class="d-flex mb-2 align-items-center justify-content-between">
             <button mat-button (click)="toggleCollage()">
                 <mat-icon class="m-0 material-symbols-outlined">
                     arrow_back
@@ -92,10 +96,6 @@
                 </mat-icon>
             </div>
         </div>
-        @let hint =
-            galleryViewMode === 'carousel'
-                ? 'Drag the carousel left and right with your mouse or finger to scroll through the images.'
-                : 'Tap on an image to learn more about that memory.';
         <div
             [style.animation-duration]="'1000ms'"
             class="story__title-area text-center animate__animated animate__fadeIn"

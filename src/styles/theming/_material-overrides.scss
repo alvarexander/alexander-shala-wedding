@@ -47,13 +47,6 @@
     border-bottom-right-radius: 2.5rem !important;
 }
 
-.mdc-fab {
-    transition: border-radius .35s cubic-bezier(.2, 0, 0, 1), background-color .3s cubic-bezier(.2, 0, 0, 1) !important;
-    &:active {
-        border-radius: 1.8rem;
-    }
-}
-
 .mat-mdc-card-actions {
     flex-wrap: wrap !important;
 }
@@ -68,9 +61,8 @@
 }
 
 .mat-drawer-transition .mat-drawer-backdrop {
-    transition-duration: 170ms !important;
-    filter: brightness(-40%) !important;
-    background-color: #2b322d8f !important;
+    transition: all 0.18s ease-in-out !important;
+    backdrop-filter: blur(5px) !important;
 }
 
 .mat-mdc-list-base {
