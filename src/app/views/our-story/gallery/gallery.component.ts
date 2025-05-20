@@ -24,7 +24,7 @@ import {
     MatCardTitle,
 } from '@angular/material/card';
 import { timer } from 'rxjs';
-import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 /**
  * Material Design 3 styled image carousel component
@@ -44,7 +44,7 @@ import { MatProgressBar } from '@angular/material/progress-bar';
         MatCardTitle,
         MatCardHeader,
         MatCardContent,
-        MatProgressBar,
+        MatProgressSpinner,
     ],
 })
 export class GalleryComponent

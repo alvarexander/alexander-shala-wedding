@@ -1,9 +1,6 @@
 <div class="gallery">
-    @if (loading) {
-        <mat-progress-bar
-            mode="indeterminate"
-            class="gallery__loader"
-        ></mat-progress-bar>
+    @if (true) {
+        <mat-spinner class="gallery__loader" diameter="60"></mat-spinner>
     } @else {
         @switch (viewMode) {
             @case ('carousel') {
