@@ -77,25 +77,6 @@
             galleryViewMode === 'carousel'
                 ? 'Drag the carousel left and right with your mouse or finger to scroll through the images.'
                 : 'Tap on an image to learn more about that memory.';
-        <div class="d-flex mb-2 align-items-center justify-content-between">
-            <button mat-button (click)="toggleCollage()">
-                <mat-icon class="m-0 material-symbols-outlined">
-                    arrow_back
-                </mat-icon>
-            </button>
-            <div class="d-flex align-items-center gap-2">
-                <mat-icon class="material-symbols-outlined">
-                    grid_view
-                </mat-icon>
-                <mat-slide-toggle
-                    [hideIcon]="true"
-                    (toggleChange)="toggleGalleryMode()"
-                ></mat-slide-toggle>
-                <mat-icon class="material-symbols-outlined">
-                    view_apps
-                </mat-icon>
-            </div>
-        </div>
         <div
             [style.animation-duration]="'1000ms'"
             class="story__title-area text-center animate__animated animate__fadeIn"
@@ -108,6 +89,25 @@
         </div>
         @let galleryItems = imageSources$ | async;
         @if (galleryItems) {
+            <div class="d-flex justify-content-between mb-4 gap-2">
+                <button mat-button (click)="toggleCollage()">
+                    <mat-icon class="m-0 material-symbols-outlined">
+                        arrow_back
+                    </mat-icon>
+                </button>
+                <mat-button-toggle-group
+                    name="galleryView"
+                    [hideSingleSelectionIndicator]="true"
+                    [ngModel]="galleryViewMode"
+                    aria-label="Gallery View Mode"
+                    (change)="toggleGalleryMode()"
+                >
+                    <mat-button-toggle value="gallery">Grid</mat-button-toggle>
+                    <mat-button-toggle value="carousel"
+                        >Carousel</mat-button-toggle
+                    >
+                </mat-button-toggle-group>
+            </div>
             <app-gallery
                 [galleryItems]="galleryItems"
                 [viewMode]="galleryViewMode"

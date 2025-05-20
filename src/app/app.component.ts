@@ -1,5 +1,4 @@
 import {
-    AfterContentInit,
     AfterViewInit,
     Component,
     HostListener,
@@ -45,7 +44,7 @@ import { ContentScrollService } from './components/services/content-scroll.servi
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 })
-export class AppComponent implements AfterViewInit, AfterContentInit {
+export class AppComponent implements AfterViewInit {
     /**
      * The toolbar title
      */
@@ -81,15 +80,9 @@ export class AppComponent implements AfterViewInit, AfterContentInit {
 
     ngAfterViewInit() {
         this._scrollService.registerSidenavContent(this.content);
-    }
-
-    ngAfterContentInit(): void {
-        this._setDrawerState(window.innerWidth);
-    }
-
-    test(): void {
-        console.log('Side nav: ', this.sideNav);
-        this.sideNav?.toggle();
+        setTimeout(() => {
+            this._setDrawerState(window.innerWidth);
+        });
     }
 
     /**
@@ -101,7 +94,7 @@ export class AppComponent implements AfterViewInit, AfterContentInit {
     }
 
     @HostListener('window:resize', ['$event'])
-    onResize(event: UIEvent) {
+    onResize(event: UIEvent): void {
         const target = event.target as Window;
         this._setDrawerState(target.innerWidth);
     }

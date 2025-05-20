@@ -7,6 +7,11 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { IGalleryItem } from '../../interfaces/gallery-items.interface';
 import { GalleryComponent } from './gallery/gallery.component';
 import { Title } from '@angular/platform-browser';
+import {
+    MatButtonToggle,
+    MatButtonToggleGroup,
+} from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-our-story',
@@ -19,6 +24,9 @@ import { Title } from '@angular/platform-browser';
         MatButton,
         MatSlideToggle,
         GalleryComponent,
+        MatButtonToggleGroup,
+        MatButtonToggle,
+        FormsModule,
     ],
 })
 export class OurStoryComponent implements OnInit {
