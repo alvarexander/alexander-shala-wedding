@@ -1,9 +1,15 @@
 <!-- Side nav container -->
 <mat-sidenav-container class="app__nav-container">
     <!-- Mat side nav -->
-    <mat-sidenav #sidenav mode="over" [autoFocus]="false">
+    <mat-sidenav #sidenav [mode]="drawerMode" [autoFocus]="false">
         <mat-nav-list>
             <div class="app__nav-brand p-4 ms-2">
+                <img
+                    src="/icons/icon-72x72.webp"
+                    height="26"
+                    width="26"
+                    alt="Website logo"
+                />
                 <span class="fw-bold"> Alvarez Tolbert Wedding </span>
             </div>
             <mat-list-item
@@ -60,7 +66,7 @@
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <mat-toolbar class="app__toolbar">
+        <mat-toolbar class="app__toolbar d-md-flex d-none">
             <button
                 mat-icon-button
                 class="app__nav-button"

@@ -42,9 +42,27 @@
 }
 
 .mat-drawer {
-    max-width: 76% !important;
+    max-width: 70%;
+    background-color: var(
+        --mat-sidenav-container-background-color,
+        var(--mat-sys-surface)
+    ) !important;
     border-top-right-radius: 2.5rem !important;
     border-bottom-right-radius: 2.5rem !important;
+
+    @media (min-width: 768px) {
+        background-color: transparent !important;
+        max-width: 40%;
+    }
+}
+
+.mat-drawer-content {
+    background-color: var(--mat-fab-small-ripple-color);
+    @media (min-width: 768px) {
+        height: 98% !important;
+        border-radius: 4rem !important;
+        margin-top: 0.6rem !important;
+    }
 }
 
 .mat-mdc-card-actions {
@@ -62,7 +80,6 @@
 
 .mat-drawer-transition .mat-drawer-backdrop {
     transition: all 0.18s ease-in-out !important;
-    backdrop-filter: blur(5px) !important;
 }
 
 .mat-mdc-list-base {

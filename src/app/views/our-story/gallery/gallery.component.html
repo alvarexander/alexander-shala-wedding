@@ -1,59 +1,66 @@
 <div class="gallery">
-    @switch (viewMode) {
-        @case ('carousel') {
-            <div
-                [style.animation-duration]="'1000ms'"
-                class="gallery__main animate__animated animate__fadeIn"
-            >
-                <div class="gallery__carousel-container" #carouselContainer>
-                    <div class="gallery__carousel" #carousel>
-                        @for (item of galleryItems; track item.source) {
-                            <div class="gallery__image-wrapper">
-                                <img
-                                    [src]="item.source"
-                                    [alt]="item.alt"
-                                    class="gallery__image gallery__image--carousel"
-                                />
-                            </div>
-                        }
+    @if (loading) {
+        <mat-progress-bar
+            mode="indeterminate"
+            class="gallery__loader"
+        ></mat-progress-bar>
+    } @else {
+        @switch (viewMode) {
+            @case ('carousel') {
+                <div
+                    [style.animation-duration]="'1000ms'"
+                    class="gallery__main animate__animated animate__fadeIn"
+                >
+                    <div class="gallery__carousel-container" #carouselContainer>
+                        <div class="gallery__carousel" #carousel>
+                            @for (item of galleryItems; track item.source) {
+                                <div class="gallery__image-wrapper">
+                                    <img
+                                        [src]="item.source"
+                                        [alt]="item.alt"
+                                        class="gallery__image gallery__image--carousel"
+                                    />
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-            <mat-card
-                [style.animation-duration]="'500ms'"
-                class="gallery__descriptor-card animate__animated animate__zoomIn"
-                appearance="outlined"
-            >
-                <mat-card-header>
-                    <mat-card-title
-                        >{{ galleryItems[currentIndex].date }}
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <p>{{ galleryItems[currentIndex].description }}</p>
-                </mat-card-content>
-            </mat-card>
-        }
-        @case ('gallery') {
-            <div class="gallery__grid-wrapper">
-                @for (item of galleryItems; track $index) {
-                    <div
-                        matRipple
-                        (click)="openItemModal(item)"
-                        class="gallery__grid-wrapper"
-                    >
-                        <img
-                            [priority]="$index === 2"
-                            [style.animation-duration]="450"
-                            class="gallery__image animate__animated animate__zoomIn"
-                            [ngSrc]="item.source"
-                            [width]="item.width"
-                            [height]="item.height"
-                            alt="Photo Memory"
-                        />
-                    </div>
-                }
-            </div>
+                <mat-card
+                    [style.animation-duration]="'500ms'"
+                    class="gallery__descriptor-card animate__animated animate__zoomIn"
+                    appearance="outlined"
+                >
+                    <mat-card-header>
+                        <mat-card-title
+                            >{{ galleryItems[currentIndex].date }}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p>{{ galleryItems[currentIndex].description }}</p>
+                    </mat-card-content>
+                </mat-card>
+            }
+            @case ('gallery') {
+                <div class="gallery__grid-wrapper">
+                    @for (item of galleryItems; track $index) {
+                        <div
+                            matRipple
+                            (click)="openItemModal(item)"
+                            class="gallery__grid-wrapper"
+                        >
+                            <img
+                                [priority]="$index === 2"
+                                [style.animation-duration]="450"
+                                class="gallery__image animate__animated animate__zoomIn"
+                                [ngSrc]="item.source"
+                                [width]="item.width"
+                                [height]="item.height"
+                                alt="Photo Memory"
+                            />
+                        </div>
+                    }
+                </div>
+            }
         }
     }
 </div>

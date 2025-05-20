@@ -8,6 +8,7 @@ import {
     HostListener,
     OnChanges,
     SimpleChanges,
+    OnInit,
 } from '@angular/core';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
@@ -22,6 +23,8 @@ import {
     MatCardHeader,
     MatCardTitle,
 } from '@angular/material/card';
+import { timer } from 'rxjs';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 /**
  * Material Design 3 styled image carousel component
@@ -41,9 +44,12 @@ import {
         MatCardTitle,
         MatCardHeader,
         MatCardContent,
+        MatProgressBar,
     ],
 })
-export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class GalleryComponent
+    implements AfterViewInit, OnInit, OnDestroy, OnChanges
+{
     /**
      * The items to be included in the gallery carousel
      * Each gallery item should conform to the IGalleryItem interface
@@ -67,6 +73,11 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
      * Used for calculating bounds and responsive adjustments
      */
     @ViewChild('carouselContainer') containerRef!: ElementRef<HTMLDivElement>;
+
+    /**
+     * Denotes whether the images are loading
+     */
+    protected loading = true;
 
     /**
      * The index of the currently active/hero item in the gallery
@@ -105,10 +116,10 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     constructor(private readonly _dialogRef: MatDialog) {}
 
-    /**
-     * Initializes the carousel after the view has been initialized
-     * Sets up GSAP, initializes the carousel, and starts observing for resize events
-     */
+    ngOnInit() {
+        this._showLoader();
+    }
+
     ngAfterViewInit(): void {
         gsap.registerPlugin(Draggable);
 
@@ -177,10 +188,11 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
      */
     openItemModal(item: IGalleryItem): void {
         this._dialogRef.open(GalleryItemDialogComponent, {
-            width: '100%',
+            width: '95%',
             maxWidth: '650px',
-            panelClass: 'gallery-dialog-container',
             data: { item },
+            enterAnimationDuration: '0ms',
+            exitAnimationDuration: '0ms',
         });
     }
 
@@ -285,8 +297,17 @@ export class GalleryComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     /**
-     * Helper method to initialize carousel only when needed and when references exist
+     * Helper method to ensure the loading animation shows for at least one second
      * @private
+     */
+    private _showLoader(): void {
+        timer(600).subscribe(() => {
+            this.loading = false;
+        });
+    }
+
+    /**
+     * Helper method to initialize carousel only when needed and when references exist
      */
     private _initCarouselIfNeeded(): void {
         if (this.viewMode !== 'carousel') {

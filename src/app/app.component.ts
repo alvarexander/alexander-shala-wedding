@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    HostListener,
+    ViewChild,
+} from '@angular/core';
 import {
     NavigationEnd,
     Router,
@@ -18,7 +23,6 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { filter } from 'rxjs';
-import { ContentScrollService } from './components/services/content-scroll.service';
 
 @Component({
     selector: 'app-root',
@@ -55,17 +59,25 @@ export class AppComponent implements AfterViewInit {
      */
     @ViewChild(MatSidenavContent) content!: MatSidenavContent;
 
-    constructor(
-        private readonly _router: Router,
-        private readonly _scrollService: ContentScrollService,
-    ) {
+    /**
+     * The app drawer mode
+     */
+    protected drawerMode: 'over' | 'side' = 'over';
+
+    constructor(private readonly _router: Router) {
         this._router.events
             .pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(() => this.sideNav?.close());
+            .subscribe(() => {
+                if (this.drawerMode === 'over') {
+                    this.sideNav?.close();
+                }
+            });
     }
 
     ngAfterViewInit() {
-        this._scrollService.registerSidenavContent(this.content);
+        setTimeout(() => {
+            this._setDrawerState(window.innerWidth);
+        });
     }
 
     /**
@@ -74,5 +86,24 @@ export class AppComponent implements AfterViewInit {
      */
     updateToolbarTitle(event: any): void {
         this.toolbarTitle = event.title;
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: UIEvent) {
+        const target = event.target as Window;
+        this._setDrawerState(target.innerWidth);
+    }
+
+    /**
+     * Utility method to set navigation drawer mode based on current window size
+     * @param width The current width of the window
+     */
+    private _setDrawerState(width: number): void {
+        this.drawerMode = width >= 768 ? 'side' : 'over';
+        if (this.drawerMode === 'side' && !this.sideNav?.opened) {
+            this.sideNav?.toggle();
+        } else if (this.drawerMode === 'over' && this.sideNav?.opened) {
+            this.sideNav?.close();
+        }
     }
 }
