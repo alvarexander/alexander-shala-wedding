@@ -1,4 +1,5 @@
 import {
+    AfterContentInit,
     AfterViewInit,
     Component,
     HostListener,
@@ -23,6 +24,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatToolbar } from '@angular/material/toolbar';
 import { filter } from 'rxjs';
+import { ContentScrollService } from './components/services/content-scroll.service';
 
 @Component({
     selector: 'app-root',
@@ -43,7 +45,7 @@ import { filter } from 'rxjs';
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, AfterContentInit {
     /**
      * The toolbar title
      */
@@ -64,7 +66,10 @@ export class AppComponent implements AfterViewInit {
      */
     protected drawerMode: 'over' | 'side' = 'over';
 
-    constructor(private readonly _router: Router) {
+    constructor(
+        private readonly _router: Router,
+        private readonly _scrollService: ContentScrollService,
+    ) {
         this._router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => {
@@ -75,9 +80,16 @@ export class AppComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        setTimeout(() => {
-            this._setDrawerState(window.innerWidth);
-        });
+        this._scrollService.registerSidenavContent(this.content);
+    }
+
+    ngAfterContentInit(): void {
+        this._setDrawerState(window.innerWidth);
+    }
+
+    test(): void {
+        console.log('Side nav: ', this.sideNav);
+        this.sideNav?.toggle();
     }
 
     /**
