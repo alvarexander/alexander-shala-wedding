@@ -40,6 +40,18 @@
             </mat-list-item>
             <mat-list-item
                 role="link"
+                [routerLinkActiveOptions]="{ exact: true }"
+                [routerLink]="['/gallery']"
+                [routerLinkActive]="['app__nav-item--active']"
+                #routerLink4="routerLinkActive"
+            >
+                <mat-icon class="material-symbols-outlined" matListItemIcon>
+                    photo_prints
+                </mat-icon>
+                <a matListItemTitle>Memories</a>
+            </mat-list-item>
+            <mat-list-item
+                role="link"
                 class="app__nav-item"
                 [routerLinkActiveOptions]="{ exact: true }"
                 [routerLink]="['/registry']"
@@ -49,7 +61,7 @@
                 <mat-icon class="material-symbols-outlined" matListItemIcon>
                     featured_seasonal_and_gifts
                 </mat-icon>
-                <a matListItemTitle>Wedding Registry</a>
+                <a matListItemTitle>Registry</a>
             </mat-list-item>
             <mat-list-item
                 role="link"
@@ -80,7 +92,7 @@
             <span class="m-auto"> {{ toolbarTitle }} </span>
         </mat-toolbar>
         <!-- Contents of application -->
-        <div class="app p-4">
+        <div class="app">
             <router-outlet
                 (activate)="updateToolbarTitle($event)"
             ></router-outlet>

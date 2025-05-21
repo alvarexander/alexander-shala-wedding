@@ -42,7 +42,7 @@
 }
 
 .mat-drawer {
-    max-width: 70%;
+    max-width: 80%;
     background-color: var(
         --mat-sidenav-container-background-color,
         var(--mat-sys-surface)
@@ -52,7 +52,8 @@
 
     @media (min-width: 768px) {
         background-color: transparent !important;
-        max-width: 40%;
+        width: 30%;
+        max-width: 285px;
     }
 }
 

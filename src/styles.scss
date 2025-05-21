@@ -43,18 +43,47 @@ body {
     margin: 0;
 }
 
-.title {
-    font-family: 'Cal Sans', sans-serif !important;
-    font-size: 3.5rem;
-    font-weight: bolder;
-    line-height: 1.1;
-    margin: 0;
-    letter-spacing: 0;
-}
-
 .system-theme {
     // Media query to change theme type based on system preference
     @media (prefers-color-scheme: dark) {
         @include mat.all-component-colors($dark-theme);
+    }
+}
+
+.title {
+    font-family: 'Cal Sans', sans-serif !important;
+    font-size: 2.5rem;
+    font-weight: bolder;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: 0;
+    @media (min-width: 992px) {
+        font-size: 3.5rem;
+    }
+}
+
+.sheet {
+    .mat-bottom-sheet-container-animations-enabled.mat-bottom-sheet-container-enter {
+        animation: slideUpSmooth 180ms ease-out forwards;
+    }
+
+    .mat-bottom-sheet-container {
+        max-height: 85vh;
+        border-top-right-radius: 2rem;
+        border-top-left-radius: 2rem;
+        @media (min-width: 768px) {
+            max-width: 600px;
+        }
+    }
+}
+
+@keyframes slideUpSmooth {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 }

@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GalleryItemDialogComponent } from './gallery-item-dialog.component';
+import { GalleryItemViewerComponent } from './gallery-item-viewer.component';
 
 describe('GalleryItemViewDialogComponent', () => {
-    let component: GalleryItemDialogComponent;
-    let fixture: ComponentFixture<GalleryItemDialogComponent>;
+    let component: GalleryItemViewerComponent;
+    let fixture: ComponentFixture<GalleryItemViewerComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [GalleryItemDialogComponent],
+            imports: [GalleryItemViewerComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(GalleryItemDialogComponent);
+        fixture = TestBed.createComponent(GalleryItemViewerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

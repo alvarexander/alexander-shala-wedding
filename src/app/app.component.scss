@@ -4,6 +4,12 @@
 }
 
 .app {
+    padding: 2rem;
+
+    @media (min-width: 768px) {
+        padding: 2.65rem;
+    }
+
     &__nav-button {
         margin-right: -2rem;
     }
@@ -42,6 +48,7 @@
     &__nav-item {
         &--active {
             font-weight: bolder;
+
             &:before {
                 background-color: var(
                     --mdc-list-list-item-hover-state-layer-color,
