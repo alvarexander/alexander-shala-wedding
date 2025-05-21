@@ -50,16 +50,16 @@
     border-top-right-radius: 2.5rem !important;
     border-bottom-right-radius: 2.5rem !important;
 
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
         background-color: transparent !important;
         width: 30%;
-        max-width: 285px;
+        max-width: 300px;
     }
 }
 
 .mat-drawer-content {
     background-color: var(--mat-fab-small-ripple-color);
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
         height: 98% !important;
         border-radius: 4rem !important;
         margin-top: 0.6rem !important;

@@ -22,7 +22,7 @@ import {
     MatCardHeader,
     MatCardTitle,
 } from '@angular/material/card';
-import { catchError, forkJoin, Observable, of} from 'rxjs';
+import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import {
     MatButtonToggle,

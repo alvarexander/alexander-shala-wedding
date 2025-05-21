@@ -104,7 +104,7 @@ export class AppComponent implements AfterViewInit {
      * @param width The current width of the window
      */
     private _setDrawerState(width: number): void {
-        this.drawerMode = width >= 768 ? 'side' : 'over';
+        this.drawerMode = width >= 992 ? 'side' : 'over';
         if (this.drawerMode === 'side' && !this.sideNav?.opened) {
             this.sideNav?.toggle();
         } else if (this.drawerMode === 'over' && this.sideNav?.opened) {
