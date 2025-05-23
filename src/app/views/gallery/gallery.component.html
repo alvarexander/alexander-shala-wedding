@@ -1,11 +1,8 @@
 <div class="gallery">
-    @let hint =
-        viewMode === 'carousel'
-            ? 'Drag the carousel left and right with your mouse or finger to scroll through the images.'
-            : 'Tap on an image to learn more about that memory.';
+    @let hint = 'Tap on an image to learn more about that memory.';
     <div
         [style.animation-duration]="'1000ms'"
-        class="story__title-area text-center animate__animated animate__fadeIn"
+        class="text-center animate__animated animate__fadeIn"
     >
         <h1 class="title">Memory Gallery</h1>
         <p>
@@ -15,76 +12,24 @@
     </div>
     @let galleryItems = imageSources$ | async;
     @if (galleryItems) {
-        <div class="d-flex justify-content-center mb-4 gap-2">
-            <mat-button-toggle-group
-                name="galleryView"
-                [hideSingleSelectionIndicator]="true"
-                [ngModel]="viewMode"
-                aria-label="Gallery View Mode"
-                (change)="toggleGalleryMode()"
-            >
-                <mat-button-toggle value="gallery">Grid</mat-button-toggle>
-                <mat-button-toggle value="carousel"
-                    >Carousel
-                </mat-button-toggle>
-            </mat-button-toggle-group>
-        </div>
-        @switch (viewMode) {
-            @case ('carousel') {
+        <div class="gallery__grid-wrapper mt-5">
+            @for (item of galleryItems; track $index) {
                 <div
-                    [style.animation-duration]="'1000ms'"
-                    class="gallery__main animate__animated animate__fadeIn"
+                    matRipple
+                    (click)="openItemModal(item)"
+                    class="gallery__grid-wrapper"
                 >
-                    <div class="gallery__carousel-container" #carouselContainer>
-                        <div class="gallery__carousel" #carousel>
-                            @for (item of galleryItems; track item.source) {
-                                <div class="gallery__image-wrapper">
-                                    <img
-                                        [src]="item.source"
-                                        [alt]="item.alt"
-                                        class="gallery__image gallery__image--carousel"
-                                    />
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <mat-card
-                    [style.animation-duration]="'500ms'"
-                    class="gallery__descriptor-card animate__animated animate__zoomIn"
-                    appearance="outlined"
-                >
-                    <mat-card-header>
-                        <mat-card-title
-                            >{{ galleryItems[currentIndex].date }}
-                        </mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <p>{{ galleryItems[currentIndex].description }}</p>
-                    </mat-card-content>
-                </mat-card>
-            }
-            @case ('gallery') {
-                <div class="gallery__grid-wrapper">
-                    @for (item of galleryItems; track $index) {
-                        <div
-                            matRipple
-                            (click)="openItemModal(item)"
-                            class="gallery__grid-wrapper"
-                        >
-                            <img
-                                [priority]="$index === 2"
-                                [style.animation-duration]="450"
-                                class="gallery__image animate__animated animate__zoomIn"
-                                [ngSrc]="item.source"
-                                [width]="item.width"
-                                [height]="item.height"
-                                alt="Photo Memory"
-                            />
-                        </div>
-                    }
+                    <img
+                        [priority]="$index === 2"
+                        [style.animation-duration]="450"
+                        class="gallery__image animate__animated animate__zoomIn"
+                        [ngSrc]="item.source"
+                        [width]="item.width"
+                        [height]="item.height"
+                        alt="Photo Memory"
+                    />
                 </div>
             }
-        }
+        </div>
     }
 </div>
