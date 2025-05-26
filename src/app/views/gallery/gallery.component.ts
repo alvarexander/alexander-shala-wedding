@@ -3,16 +3,31 @@ import { IGalleryItem } from '../../interfaces/gallery-items.interface';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatRipple } from '@angular/material/core';
 import { GalleryItemViewerComponent } from './gallery-item-viewer/gallery-item-viewer.component';
-import { catchError, forkJoin, Observable, of } from 'rxjs';
+import {
+    catchError,
+    forkJoin,
+    map,
+    Observable,
+    of,
+    startWith,
+    timer,
+} from 'rxjs';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { FormsModule } from '@angular/forms';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
     standalone: true,
-    imports: [CommonModule, NgOptimizedImage, MatRipple, FormsModule],
+    imports: [
+        CommonModule,
+        NgOptimizedImage,
+        MatRipple,
+        FormsModule,
+        MatProgressSpinner,
+    ],
 })
 export class GalleryComponent implements OnInit {
     protected readonly title = 'Gallery';
@@ -21,6 +36,11 @@ export class GalleryComponent implements OnInit {
      * Array containing image sources for collage
      */
     protected imageSources$?: Observable<IGalleryItem[]>;
+
+    /**
+     * Loading state observable
+     */
+    protected isLoading$?: Observable<boolean>;
 
     /**
      * Array of image URLs
@@ -34,12 +54,20 @@ export class GalleryComponent implements OnInit {
             this._imageUrls.push('/images/IMG_' + i + '.webp');
         }
 
+        // Set up image loading (but don't wait for it)
         this.imageSources$ = forkJoin(
             this._imageUrls.map(
                 (url: string): Observable<IGalleryItem> =>
                     this._getImageMetadata(url),
             ),
         ).pipe(catchError(() => of([])));
+
+        // Show loader determinately
+        this.isLoading$ = timer(600).pipe(
+            map(() => false),
+            startWith(true),
+            catchError(() => of(false)),
+        );
     }
 
     /**
@@ -85,6 +113,10 @@ export class GalleryComponent implements OnInit {
         });
     }
 
+    /**
+     * Sets the image description based on passed in image
+     * @param image The image object
+     */
     private _setImageDescriptions(image: IGalleryItem): void {
         const key = image.source.replace('/images/', '');
         switch (key) {
@@ -321,10 +353,10 @@ export class GalleryComponent implements OnInit {
     }
 
     /**
-     * Opens a modal dialog to display the specified gallery item
-     * @param item The gallery item to display in the modal
+     * Opens a sheet to display the specified gallery item
+     * @param item The gallery item to display in the sheet
      */
-    openItemModal(item: IGalleryItem): void {
+    openItemSheet(item: IGalleryItem): void {
         this._bottomSheetRef.open(GalleryItemViewerComponent, {
             data: { item },
             panelClass: 'sheet',

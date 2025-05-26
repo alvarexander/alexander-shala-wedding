@@ -10,17 +10,24 @@
             {{ hint }}
         </p>
     </div>
+
     @let galleryItems = imageSources$ | async;
-    @if (galleryItems) {
+    @let loading = isLoading$ | async;
+
+    @if (loading) {
+        <div class="gallery__loader">
+            <mat-spinner diameter="50"></mat-spinner>
+        </div>
+    } @else if (galleryItems) {
         <div class="gallery__grid-wrapper mt-5">
             @for (item of galleryItems; track $index) {
                 <div
                     matRipple
-                    (click)="openItemModal(item)"
+                    (click)="openItemSheet(item)"
                     class="gallery__grid-wrapper"
                 >
                     <img
-                        [priority]="$index === 2"
+                        [priority]="$index === 0"
                         [style.animation-duration]="450"
                         class="gallery__image animate__animated animate__zoomIn"
                         [ngSrc]="item.source"

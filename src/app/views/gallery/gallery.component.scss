@@ -11,6 +11,14 @@
         }
     }
 
+    &__loader {
+        display: flex;
+        flex-direction: column;
+        height: 50vh;
+        align-items: center;
+        justify-content: center;
+    }
+
     &__grid-wrapper {
         display: grid;
         grid-gap: 0.6rem;
