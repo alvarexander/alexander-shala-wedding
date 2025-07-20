@@ -115,3 +115,13 @@
 .cdk-overlay-dark-backdrop {
     background: rgba(0, 0, 0, 0.72) !important;
 }
+
+.mat-accordion .mat-expansion-panel:first-of-type {
+    border-top-right-radius: 1.5rem !important;
+    border-top-left-radius: 1.5rem !important;
+}
+
+.mat-accordion .mat-expansion-panel:last-of-type {
+    border-bottom-right-radius: 1.5rem !important;
+    border-bottom-left-radius: 1.5rem !important;
+}

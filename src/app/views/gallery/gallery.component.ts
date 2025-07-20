@@ -10,7 +10,6 @@ import {
     Observable,
     of,
     startWith,
-    timer,
 } from 'rxjs';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { FormsModule } from '@angular/forms';
@@ -54,7 +53,7 @@ export class GalleryComponent implements OnInit {
             this._imageUrls.push('/images/IMG_' + i + '.webp');
         }
 
-        // Set up image loading (but don't wait for it)
+        // Set up image loading
         this.imageSources$ = forkJoin(
             this._imageUrls.map(
                 (url: string): Observable<IGalleryItem> =>
@@ -62,8 +61,8 @@ export class GalleryComponent implements OnInit {
             ),
         ).pipe(catchError(() => of([])));
 
-        // Show loader determinately
-        this.isLoading$ = timer(600).pipe(
+        // Show loader until images are done loading
+        this.isLoading$ = this.imageSources$.pipe(
             map(() => false),
             startWith(true),
             catchError(() => of(false)),
@@ -78,12 +77,6 @@ export class GalleryComponent implements OnInit {
         return new Observable(observer => {
             const img = new Image();
             const localCache = localStorage.getItem(source);
-            if (localCache) {
-                const galleryItem = JSON.parse(localCache) as IGalleryItem;
-                observer.next(galleryItem);
-                observer.complete();
-                return;
-            }
 
             const cleanup = () => {
                 img.onload = null;
@@ -91,14 +84,21 @@ export class GalleryComponent implements OnInit {
             };
 
             img.onload = () => {
-                const galleryItem: IGalleryItem = {
-                    alt: 'Photo memory of Alexander and Shala',
-                    source,
-                    width: img.naturalWidth,
-                    height: img.naturalHeight,
-                };
-                this._setImageDescriptions(galleryItem);
-                localStorage.setItem(source, JSON.stringify(galleryItem));
+                let galleryItem: IGalleryItem;
+
+                if (localCache) {
+                    galleryItem = JSON.parse(localCache) as IGalleryItem;
+                } else {
+                    galleryItem = {
+                        alt: 'Photo memory of Alexander and Shala',
+                        source,
+                        width: img.naturalWidth,
+                        height: img.naturalHeight,
+                    };
+                    this._setImageDescriptions(galleryItem);
+                    localStorage.setItem(source, JSON.stringify(galleryItem));
+                }
+
                 observer.next(galleryItem);
                 observer.complete();
                 cleanup();
