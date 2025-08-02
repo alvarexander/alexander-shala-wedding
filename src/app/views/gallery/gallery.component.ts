@@ -3,14 +3,7 @@ import { IGalleryItem } from '../../interfaces/gallery-items.interface';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { MatRipple } from '@angular/material/core';
 import { GalleryItemViewerComponent } from './gallery-item-viewer/gallery-item-viewer.component';
-import {
-    catchError,
-    forkJoin,
-    map,
-    Observable,
-    of,
-    startWith,
-} from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, startWith } from 'rxjs';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { FormsModule } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';

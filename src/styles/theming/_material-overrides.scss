@@ -20,6 +20,53 @@
         'opsz' 48;
 }
 
+.mat-mdc-button,
+.mdc-button {
+    // Animation parameters
+    --duration: 0.25s;
+    --easing: cubic-bezier(0.42, 1.67, 0.21, 0.9);
+    --rest-padding: 16px;
+    --active-padding-surplus: 8px;
+    --shrinked-padding: calc(
+        var(--rest-padding) - 0.5 * var(--active-padding-surplus)
+    );
+    --button-height: 48px;
+    --selected-border-radius: 4px;
+    // Needs to be exactly half the height for the animation to be good
+    --unselected-border-radius: calc(var(--button-height) / 2);
+    appearance: none !important;
+    user-select: none !important;
+    height: var(--button-height) !important;
+    padding-inline: var(--rest-padding) !important;
+    border-radius: var(--unselected-border-radius) !important;
+    // Grow the padding of the active button and shrink the padding of the adjacent ones
+    transition:
+        padding var(--duration) var(--easing),
+        border-radius var(--duration) var(--easing) !important;
+
+    &:active {
+        border-radius: var(--selected-border-radius) !important;
+        padding-inline: calc(
+            var(--rest-padding) + var(--active-padding-surplus)
+        ) !important;
+
+        &:first-child,
+        &:last-child {
+            padding-inline: calc(
+                var(--rest-padding) + 0.5 * var(--active-padding-surplus)
+            ) !important;
+        }
+    }
+
+    &:has(+ mat-mdc-button:active) {
+        padding-inline: var(--shrinked-padding);
+    }
+
+    mat-mdc-button:active + mat-mdc-button {
+        padding-inline: var(--shrinked-padding);
+    }
+}
+
 /** Components **/
 .mat-icon {
     min-width: fit-content !important;

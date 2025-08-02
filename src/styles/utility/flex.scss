@@ -11,6 +11,10 @@ $breakpoint-xxl: 1400px;
     }
 }
 
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
 // Base flex direction classes
 .flex-row {
     display: flex !important;
