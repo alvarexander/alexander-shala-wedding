@@ -6,6 +6,49 @@
 }
 
 .home {
+    &__date {
+        font-weight: bolder;
+        font-style: italic;
+        font-family: 'Instrument Serif', serif !important;
+        font-size: 22px;
+        margin: auto;
+        width: 100%;
+        display: block;
+        text-align: center;
+        @media (min-width: 992px) {
+            font-size: 28px;
+        }
+    }
+
+    &__line {
+        border-style: dotted;
+        border-width: 1px;
+        width: 100%;
+    }
+
+    &__notice {
+        border-radius: 4rem;
+        background: #f3ffcd;
+        color: #2c4630;
+        border: 1px solid #2c4630;
+        font-size: 0.8rem;
+        display: flex;
+        font-weight: bold;
+        align-items: center;
+        width: 3.5rem;
+        text-align: center;
+        letter-spacing: 0.5px;
+        justify-content: center;
+        text-transform: uppercase;
+        height: 1.6rem;
+
+        @media (prefers-color-scheme: dark) {
+            background: #ac8c41;
+            color: #fdf7e7;
+            border: 1px solid #fdf7e7;
+        }
+    }
+
     &__logo {
         border-radius: 100%;
         aspect-ratio: 1 / 1;

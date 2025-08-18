@@ -52,17 +52,28 @@ body {
 
 .title {
     font-family: 'Cal Sans', sans-serif !important;
-    font-size: 40px;
+    font-size: 34px;
     font-weight: bolder;
     line-height: 1.1;
     margin: 0;
     letter-spacing: 0;
     @media (min-width: 992px) {
-        font-size: 3.5rem;
+        font-size: 45px;
     }
 
     &--restrict-width {
         max-width: 480px;
+    }
+}
+
+.heading {
+    font-family: 'Cal Sans', sans-serif !important;
+    font-size: 26px;
+    font-weight: bold;
+    margin: 0;
+    letter-spacing: 0.5px;
+    @media (min-width: 992px) {
+        font-size: 30px;
     }
 }
 

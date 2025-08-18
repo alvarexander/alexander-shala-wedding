@@ -4,11 +4,7 @@
 }
 
 .app {
-    padding: 1.6rem;
-
-    @media (min-width: 768px) {
-        padding: 2.65rem;
-    }
+    padding: 1.2rem;
 
     &__nav-button {
         margin-right: -2rem;
@@ -48,17 +44,12 @@
 
     &__nav-item {
         &--active {
-            font-weight: bolder;
-
             &:before {
                 background-color: var(
                     --mat-list-list-item-hover-state-layer-color,
                     var(--mat-sys-on-surface)
                 );
-                opacity: var(
-                    --mdc-list-list-item-hover-state-layer-opacity,
-                    var(--mat-sys-hover-state-layer-opacity)
-                );
+                opacity: 0.06;
             }
         }
     }

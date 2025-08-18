@@ -1,0 +1,34 @@
+<mat-card appearance="outlined" class="countdown__card">
+    @let countdown = countdown$ | async;
+    @if (countdown) {
+        <h1 class="countdown__title m-1">September 26 2026</h1>
+        <mat-divider class="countdown_divider"></mat-divider>
+        <mat-card-content class="countdown__grid">
+            <div class="countdown__item">
+                <div class="countdown__value">{{ countdown.days }}</div>
+                <div class="countdown__label">days</div>
+            </div>
+
+            <div class="countdown__split">:</div>
+
+            <div class="countdown__item">
+                <div class="countdown__value">{{ countdown.hours }}</div>
+                <div class="countdown__label">hours</div>
+            </div>
+
+            <div class="countdown__split">:</div>
+
+            <div class="countdown__item">
+                <div class="countdown__value">{{ countdown.minutes }}</div>
+                <div class="countdown__label">minutes</div>
+            </div>
+
+            <div class="countdown__split">:</div>
+
+            <div class="countdown__item">
+                <div class="countdown__value">{{ countdown.seconds }}</div>
+                <div class="countdown__label">seconds</div>
+            </div>
+        </mat-card-content>
+    }
+</mat-card>
