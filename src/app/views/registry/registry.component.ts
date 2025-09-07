@@ -4,7 +4,6 @@ import {
     MatCardActions,
     MatCardContent,
     MatCardHeader,
-    MatCardImage,
     MatCardSubtitle,
     MatCardTitle,
 } from '@angular/material/card';
