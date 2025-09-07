@@ -126,6 +126,10 @@
     gap: 0.8rem !important;
     width: 98% !important;
     margin: auto !important;
+
+    &__content {
+        white-space: pre-line !important;
+    }
 }
 
 .cdk-overlay-dark-backdrop {

@@ -19,6 +19,16 @@
         justify-content: center;
     }
 
+    &__title-area {
+        max-width: 800px;
+        margin: auto;
+
+        p {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+    }
+
     &__grid-wrapper {
         display: grid;
         grid-gap: 0.6rem;

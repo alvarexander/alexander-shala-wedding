@@ -2,7 +2,7 @@
     @let countdown = countdown$ | async;
     @if (countdown) {
         <h1 class="countdown__title m-1">September 26 2026</h1>
-        <mat-divider class="countdown_divider mt-2 mb-2"></mat-divider>
+        <mat-divider class="countdown__divider mt-2 mb-2"></mat-divider>
         <mat-card-content class="countdown__grid">
             <div class="countdown__item">
                 <div class="countdown__value">{{ countdown.days }}</div>
