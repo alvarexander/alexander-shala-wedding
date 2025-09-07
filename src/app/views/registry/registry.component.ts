@@ -23,7 +23,6 @@ import { Title } from '@angular/platform-browser';
         MatCardHeader,
         MatCardActions,
         MatCardContent,
-        MatCardImage,
     ],
     templateUrl: './registry.component.html',
     styleUrl: './registry.component.scss',
