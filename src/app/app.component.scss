@@ -1,3 +1,8 @@
+// Color palette references from theme:
+// Primary (green): #274f37 (30), #3f674e (40), #709a7e (60), #a5d1b2 (80)
+// Secondary (gold): #9a6f24 (50), #b6893b (60), #d4a353 (70)
+// Neutral: #1a1c1a (10), #282b28 (17), #f3f4f0 (96), #fcfcf8 (99)
+
 :host {
     height: 100%;
     display: flex;
@@ -59,12 +64,152 @@
         z-index: 10000000;
         height: 65px;
         position: sticky;
-        box-shadow: none;
         top: 0;
         background-color: var(--mat-card-outlined-outline-color);
         filter: brightness(107%);
+        backdrop-filter: blur(10px); // Adds a subtle blur effect
+
         @media (prefers-color-scheme: dark) {
             filter: brightness(150%);
+        }
+    }
+
+    /* Animated botanical elements */
+    &__botanical-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    &__leaf {
+        position: absolute;
+        opacity: 0.1; // Slightly increased from 0.08 for more presence
+        animation: float 20s infinite ease-in-out;
+
+        svg {
+            fill: #274f37; // primary 30
+            filter: blur(0.5px);
+
+            @media (prefers-color-scheme: dark) {
+                fill: #709a7e; // primary 60 for better visibility in dark mode
+                opacity: 0.8; // Slightly reduced in dark mode
+            }
+        }
+
+        &:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            transform: rotate(45deg);
+            animation-delay: 0s;
+        }
+
+        &:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            transform: rotate(-30deg);
+            animation-delay: 3s;
+        }
+
+        &:nth-child(3) {
+            bottom: 30%;
+            left: 15%;
+            transform: rotate(60deg);
+            animation-delay: 6s;
+        }
+
+        &:nth-child(4) {
+            bottom: 20%;
+            right: 20%;
+            transform: rotate(-45deg);
+            animation-delay: 9s;
+        }
+
+        &:nth-child(5) {
+            top: 40%;
+            left: 40%;
+            transform: rotate(15deg);
+            animation-delay: 12s;
+        }
+
+        &:nth-child(6) {
+            top: 60%;
+            right: 30%;
+            transform: rotate(-60deg);
+            animation-delay: 15s;
+        }
+    }
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0) translateX(0) rotate(0deg);
+        }
+        25% {
+            transform: translateY(-20px) translateX(10px) rotate(2deg);
+        }
+        50% {
+            transform: translateY(10px) translateX(-10px) rotate(-1deg);
+        }
+        75% {
+            transform: translateY(-10px) translateX(5px) rotate(1deg);
+        }
+    }
+
+    /* Content area */
+    &__content {
+        position: relative;
+        z-index: 10;
+        padding: 60px 20px;
+        text-align: center;
+        color: #274f37; // primary 30
+
+        @media (prefers-color-scheme: dark) {
+            color: #a5d1b2; // primary 80
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #9a6f24; // secondary 50
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            font-weight: normal;
+            letter-spacing: 3px;
+
+            @media (prefers-color-scheme: dark) {
+                color: #d4a353; // secondary 70
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+    }
+
+    /* Gold accent line */
+    &__divider {
+        width: 150px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #9a6f24, transparent); // secondary 50
+        margin: 40px auto;
+
+        @media (prefers-color-scheme: dark) {
+            background: linear-gradient(90deg, transparent, #d4a353, transparent); // secondary 70
+        }
+    }
+
+    @media (max-width: 768px) {
+        &__content {
+            h1 {
+                font-size: 2em;
+            }
         }
     }
 }

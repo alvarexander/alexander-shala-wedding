@@ -54,6 +54,8 @@ export class RsvpComponent {
     private route = inject(ActivatedRoute);
     private http = inject(HttpClient);
 
+    protected readonly title = 'RSVP';
+
     /**
      * Safely parses a JSON string, returning null if parsing fails.
      */
