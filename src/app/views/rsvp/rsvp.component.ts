@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 /**
  * Response shape from /rsvp_info.php for a single RSVP code.
@@ -50,45 +51,21 @@ interface RsvpUpdateResponse {
  * Loads RSVP details by code and allows the user to submit a Yes/No response
  * that is sent to the backend endpoints.
  */
-export class RsvpComponent {
-    private route = inject(ActivatedRoute);
-    private http = inject(HttpClient);
+export class RsvpComponent implements OnInit {
+    private _route = inject(ActivatedRoute);
+    private _http = inject(HttpClient);
+    private _titleService = inject(Title);
 
     protected readonly title = 'RSVP';
 
-    /**
-     * Safely parses a JSON string, returning null if parsing fails.
-     */
-    private _parseJsonSafe<T>(txt: string): T | null {
-        try {
-            return JSON.parse(txt) as T;
-        } catch {
-            return null;
-        }
-    }
-
-    /**
-     * Generates a helpful hint when a non-JSON payload is received.
-     * Detects common cases like raw PHP served or HTML pages.
-     */
-    private _deriveNonJsonHint(sample: string): string {
-        const trimmed = (sample || '').trimStart();
-        if (trimmed.startsWith('<?php')) {
-            return 'Unable to obtain RSVP date at this time. Please try again later.';
-        }
-        if (trimmed.startsWith('<!doctype') || trimmed.startsWith('<html')) {
-            return 'Unable to obtain RSVP date at this time. Please try again later.';
-        }
-        if (!trimmed) {
-            return 'Received an empty response.';
-        }
-        return 'Unexpected response format from the server.';
+    ngOnInit(): void {
+        this._titleService.setTitle(this.title);
     }
 
     /**
      * RSVP code extracted from the route param (uppercased) as a signal.
      */
-    code = toSignal(this.route.paramMap.pipe(map((p) => (p.get('code') || '').toUpperCase())), {
+    code = toSignal(this._route.paramMap.pipe(map((p) => (p.get('code') || '').toUpperCase())), {
         initialValue: '',
     });
 
@@ -136,7 +113,7 @@ export class RsvpComponent {
         this.error.set(null);
         this.submitMessage.set(null);
         const id = this.code();
-        this.http.get(`/rsvp_info.php`, { params: { id }, responseType: 'text' }).subscribe({
+        this._http.get(`/rsvp_info.php`, { params: { id }, responseType: 'text' }).subscribe({
             next: (txt) => {
                 const res = this._parseJsonSafe<RsvpInfoResponse>(txt);
                 if (!res) {
@@ -168,7 +145,7 @@ export class RsvpComponent {
         this.submitMessage.set(null);
 
         const id = this.code();
-        this.http.get(`/rsvp.php`, { params: { id, response }, responseType: 'text' }).subscribe({
+        this._http.get(`/rsvp.php`, { params: { id, response }, responseType: 'text' }).subscribe({
             next: (txt) => {
                 const res = this._parseJsonSafe<RsvpUpdateResponse>(txt);
                 if (res && res.ok) {
@@ -192,5 +169,34 @@ export class RsvpComponent {
                 this.submitting.set(null);
             },
         });
+    }
+
+    /**
+     * Safely parses a JSON string, returning null if parsing fails.
+     */
+    private _parseJsonSafe<T>(txt: string): T | null {
+        try {
+            return JSON.parse(txt) as T;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Generates a helpful hint when a non-JSON payload is received.
+     * Detects common cases like raw PHP served or HTML pages.
+     */
+    private _deriveNonJsonHint(sample: string): string {
+        const trimmed = (sample || '').trimStart();
+        if (trimmed.startsWith('<?php')) {
+            return 'Unable to obtain RSVP date at this time. Please try again later.';
+        }
+        if (trimmed.startsWith('<!doctype') || trimmed.startsWith('<html')) {
+            return 'Unable to obtain RSVP date at this time. Please try again later.';
+        }
+        if (!trimmed) {
+            return 'Received an empty response.';
+        }
+        return 'Unexpected response format from the server.';
     }
 }
