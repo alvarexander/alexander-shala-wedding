@@ -17,5 +17,5 @@ export const routes: Routes = [
     { path: 'registry', component: RegistryComponent, pathMatch: 'full' },
     { path: '', component: HomeComponent, pathMatch: 'full' },
     { path: 'gallery', component: GalleryComponent, pathMatch: 'full' },
-    { path: 'rsvsp/:code', component: RsvpComponent, pathMatch: 'full' },
+    { path: 'rsvp/:code', component: RsvpComponent, pathMatch: 'full' },
 ];
