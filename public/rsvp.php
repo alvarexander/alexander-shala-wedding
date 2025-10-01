@@ -94,10 +94,12 @@ if (!$row) {
 }
 
 if ($response === null) {
-    // Just return current status
+    // Just return current status (include name and party size for convenience)
     respond(200, [
         'ok' => true,
         'code' => $row['code'],
+        'guest_name' => $row['guest_name'],
+        'party_size' => $row['party_size'],
         'rsvp_response' => $row['rsvp_response'],
         'rsvped_at' => $row['rsvped_at'],
         'updated_at' => $row['updated_at'],

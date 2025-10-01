@@ -1,7 +1,7 @@
 <!-- Side nav container -->
 <mat-sidenav-container class="app__nav-container">
     <!-- Mat side nav -->
-    <mat-sidenav #sidenav [mode]="drawerMode" [autoFocus]="false">
+    <mat-sidenav #sidenav [mode]="drawerMode()" [autoFocus]="false">
         <mat-nav-list>
             <div class="app__nav-brand p-4 ms-2">
                 <span> Alvarez Tolbert Wedding </span>
@@ -85,7 +85,7 @@
                     >menu_open</mat-icon
                 >
             </button>
-            <span class="m-auto"> {{ toolbarTitle }} </span>
+            <span class="m-auto"> {{ toolbarTitle() }} </span>
         </mat-toolbar>
         <!-- Contents of application -->
         <div class="app">

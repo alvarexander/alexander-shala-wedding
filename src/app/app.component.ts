@@ -3,6 +3,7 @@ import {
     Component,
     HostListener,
     ViewChild,
+    signal,
 } from '@angular/core';
 import {
     NavigationEnd,
@@ -46,9 +47,9 @@ import { ContentScrollService } from './components/services/content-scroll.servi
 })
 export class AppComponent implements AfterViewInit {
     /**
-     * The toolbar title
+     * The toolbar title (signal)
      */
-    toolbarTitle = 'Home';
+    toolbarTitle = signal('Home');
 
     /**
      * The navigation drawer reference in the template
@@ -61,9 +62,9 @@ export class AppComponent implements AfterViewInit {
     @ViewChild(MatSidenavContent) content!: MatSidenavContent;
 
     /**
-     * The app drawer mode
+     * The app drawer mode (signal)
      */
-    protected drawerMode: 'over' | 'side' = 'over';
+    protected drawerMode = signal<'over' | 'side'>('over');
 
     constructor(
         private readonly _router: Router,
@@ -72,7 +73,7 @@ export class AppComponent implements AfterViewInit {
         this._router.events
             .pipe(filter(event => event instanceof NavigationEnd))
             .subscribe(() => {
-                if (this.drawerMode === 'over') {
+                if (this.drawerMode() === 'over') {
                     this.sideNav?.close();
                 }
             });
@@ -90,7 +91,7 @@ export class AppComponent implements AfterViewInit {
      * @param event The router event
      */
     updateToolbarTitle(event: any): void {
-        this.toolbarTitle = event.title;
+        this.toolbarTitle.set(event.title);
     }
 
     @HostListener('window:resize', ['$event'])
@@ -104,10 +105,11 @@ export class AppComponent implements AfterViewInit {
      * @param width The current width of the window
      */
     private _setDrawerState(width: number): void {
-        this.drawerMode = width >= 992 ? 'side' : 'over';
-        if (this.drawerMode === 'side' && !this.sideNav?.opened) {
+        const mode = width >= 992 ? 'side' : 'over';
+        this.drawerMode.set(mode);
+        if (mode === 'side' && !this.sideNav?.opened) {
             this.sideNav?.toggle();
-        } else if (this.drawerMode === 'over' && this.sideNav?.opened) {
+        } else if (mode === 'over' && this.sideNav?.opened) {
             this.sideNav?.close();
         }
     }
