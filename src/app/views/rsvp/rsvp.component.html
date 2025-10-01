@@ -1,39 +1,54 @@
-<div class="rsvsp">
-    <mat-card appearance="outlined" class="rsvsp__card">
+<div class="rsvp">
+    <mat-card appearance="outlined" class="rsvp__card animate__animated animate__zoomIn">
         <mat-card-header class="d-flex align-items-center">
-            <div mat-card-avatar class="rsvsp__avatar">💌</div>
+            <div mat-card-avatar class="rsvp__avatar">💌</div>
             <mat-card-title>RSVP</mat-card-title>
-            @if (info()?.guest_name) {
-                <mat-card-subtitle>{{ info()?.guest_name }}</mat-card-subtitle>
-            }
         </mat-card-header>
-
         <mat-card-content>
             @if (loading()) {
-                <div class="rsvsp__loading">Loading details…</div>
+                <div class="rsvp__loading">Loading details…</div>
             } @else {
-                <div class="rsvsp__error">{{ error() }}</div>
+                <div class="rsvp__error">{{ error() }}</div>
             }
 
             @if (!loading() && !error() && info()) {
-                <div class="rsvsp__details">
-                    <div class="rsvsp__detail">
-                        <span class="label">Guest name</span>
+                <p>
+                    We are so excited to celebrate our special day with you! 💍✨
+                    <br />
+                    <br />
+
+                    Our wedding will take place on Friday, September 26th, 2025 at 5:00 PM EST at:
+                    <br />
+                    <br />
+                    Chapel & Cellar 216 W. Lyman Avenue Winter Park, FL 32789
+                    <br />
+                    <br />
+
+                    Your presence means the world to us, and we can’t wait to share this joyful occasion together.
+                    <br />
+                    <br />
+                    Kindly note that due to venue limitations and budgeting, we are only able to accommodate the guests
+                    listed on the invitation. We truly appreciate your understanding and can’t wait to celebrate with
+                    each of you!
+                </p>
+                <div class="rsvp__details">
+                    <div class="rsvp__detail">
+                        <span>Guest(s) name</span>
                         <span class="value">{{ info()?.guest_name || '—' }}</span>
                     </div>
-                    <div class="rsvsp__detail">
-                        <span class="label">Party size</span>
+                    <div class="rsvp__detail">
+                        <span>Party size</span>
                         <span class="value">{{ info()?.party_size ?? '—' }}</span>
                     </div>
-                    <div class="rsvsp__detail">
-                        <span class="label">Current status</span>
+                    <div class="rsvp__detail">
+                        <span>Current status</span>
                         <span class="value status status--{{ info()?.rsvp_response }}">{{
                             info()?.rsvp_response || 'pending' | uppercase
                         }}</span>
                     </div>
                 </div>
 
-                <div class="rsvsp__actions">
+                <div class="rsvp__actions">
                     <button
                         mat-raised-button
                         color="primary"
@@ -41,7 +56,7 @@
                         [disabled]="submitting() === 'yes'"
                         (click)="rsvp('yes')"
                     >
-                        <mat-icon>check_circle</mat-icon>
+                        <mat-icon class="material-symbols-outlined">check_circle</mat-icon>
                         Yes, I will attend
                     </button>
                     <button
@@ -51,12 +66,12 @@
                         [disabled]="submitting() === 'no'"
                         (click)="rsvp('no')"
                     >
-                        <mat-icon>cancel</mat-icon>
+                        <mat-icon class="material-symbols-outlined">cancel</mat-icon>
                         No, I can't attend
                     </button>
                 </div>
                 @if (submitMessage()) {
-                    <div class="rsvsp__message">{{ submitMessage() }}</div>
+                    <div class="rsvp__message">{{ submitMessage() }}</div>
                 }
             }
         </mat-card-content>

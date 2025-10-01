@@ -1,70 +1,66 @@
-.rsvsp {
+.rsvp {
     height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
-}
 
-.rsvsp__card {
-    width: min(720px, 100%);
-    border-radius: 20px;
-}
+    &__card {
+        width: min(720px, 100%);
+        border-radius: 20px;
+    }
 
-.rsvsp__avatar {
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-}
+    &__avatar {
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
 
-.rsvsp__loading,
-.rsvsp__error,
-.rsvsp__message {
-    margin-top: 12px;
-}
+    &__loading,
+    &__error,
+    &__message {
+        margin-top: 12px;
+    }
 
-.rsvsp__error {
-    color: var(--mat-warn-600, #b00020);
-}
+    &__error {
+        color: var(--mat-warn-600, #b00020);
+    }
 
-.rsvsp__details {
-    display: grid;
-    gap: 8px;
-    margin-top: 8px;
-}
+    &__details {
+        display: grid;
+        gap: 8px;
+        margin-top: 8px;
+    }
 
-.rsvsp__detail {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-}
+    &__detail {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+    }
 
-.label {
-    color: rgba(0, 0, 0, 0.6);
-}
+    .value {
+        &.status--yes {
+            color: var(--mat-primary-700, #1e88e5);
+        }
+        &.status--no {
+            color: var(--mat-warn-700, #c62828);
+        }
+        &.status--pending {
+            color: rgba(0, 0, 0, 0.6);
+        }
+    }
 
-.value.status--yes {
-    color: var(--mat-primary-700, #1e88e5);
-}
+    &__actions {
+        margin-top: 16px;
+        display: flex;
+        gap: 12px;
 
-.value.status--no {
-    color: var(--mat-warn-700, #c62828);
-}
-
-.value.status--pending {
-    color: rgba(0, 0, 0, 0.6);
-}
-
-.rsvsp__actions {
-    margin-top: 16px;
-    display: flex;
-    gap: 12px;
-}
-
-.rsvsp__actions .yes mat-icon,
-.rsvsp__actions .no mat-icon {
-    margin-right: 6px;
+        .yes mat-icon,
+        .no mat-icon {
+            margin-right: 6px;
+        }
+    }
 }
