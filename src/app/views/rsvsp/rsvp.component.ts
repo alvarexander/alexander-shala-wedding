@@ -83,7 +83,7 @@ export class RsvpComponent {
     submitting = signal<'yes' | 'no' | null>(null);
 
     /**
-     * Human-friendly message reflecting submission outcome.
+     * Human-friendly message reflecting the submission outcome.
      */
     submitMessage = signal<string | null>(null);
 
