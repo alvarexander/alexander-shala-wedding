@@ -13,27 +13,25 @@
             @if (!loading() && !error() && info()) {
                 <p>
                     We are so excited to celebrate our special day with you!
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
 
                     Our wedding will take place on Saturday, September 26th, 2025 at 5:00 PM EST at:
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
                     Chapel & Cellar <br />
                     216 W. Lyman Avenue <br />
                     Winter Park, FL 32789
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
 
                     Your presence means the world to us, and we can’t wait to share this joyful occasion together.
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
                     <b>
                         Kindly note that due to venue limitations and budgeting, we are only able to accommodate the
-                        guests
-                        listed on the invitation. We truly appreciate your understanding and can’t wait to celebrate
-                        with
-                        each of you!
+                        guests listed on the invitation. We truly appreciate your understanding and can’t wait to
+                        celebrate with each of you!
                     </b>
                 </p>
                 <div class="rsvp__details">
@@ -48,14 +46,14 @@
                     <div class="rsvp__detail">
                         <span>Current status</span>
                         <span class="value status status--{{ info()?.rsvp_response }}">{{
-                                info()?.rsvp_response || 'pending' | uppercase
-                            }}</span>
+                            info()?.rsvp_response || 'pending' | uppercase
+                        }}</span>
                     </div>
                 </div>
 
                 <div class="rsvp__actions">
                     <button
-                        mat-button
+                        mat-flat-button
                         color="primary"
                         class="yes"
                         [disabled]="submitting() === 'yes'"
