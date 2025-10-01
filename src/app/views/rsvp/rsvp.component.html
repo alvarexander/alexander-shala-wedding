@@ -12,6 +12,10 @@
 
             @if (!loading() && !error() && info()) {
                 <p>
+                    @if( info()?.guest_name) {
+                        <b>Dear {{ info()?.guest_name }},</b>
+                    }
+                    <br />
                     We are so excited to celebrate our special day with you!
                     <br />
                     <br />
@@ -36,7 +40,7 @@
                 </p>
                 <div class="rsvp__details">
                     <div class="rsvp__detail">
-                        <span>Guest(s) name</span>
+                        <span>Guest(s)</span>
                         <span class="value">{{ info()?.guest_name || '—' }}</span>
                     </div>
                     <div class="rsvp__detail">
@@ -62,7 +66,7 @@
                         Yes, I will attend
                     </button>
                     <button
-                        mat-stroked-button
+                        mat-button
                         color="warn"
                         class="no"
                         [disabled]="submitting() === 'no'"
