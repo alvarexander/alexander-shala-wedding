@@ -14,22 +14,26 @@
             @if (!loading() && !error() && info()) {
                 <p>
                     We are so excited to celebrate our special day with you! 💍✨
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
 
                     Our wedding will take place on Friday, September 26th, 2025 at 5:00 PM EST at:
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     Chapel & Cellar 216 W. Lyman Avenue Winter Park, FL 32789
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
 
                     Your presence means the world to us, and we can’t wait to share this joyful occasion together.
-                    <br />
-                    <br />
-                    Kindly note that due to venue limitations and budgeting, we are only able to accommodate the guests
-                    listed on the invitation. We truly appreciate your understanding and can’t wait to celebrate with
-                    each of you!
+                    <br/>
+                    <br/>
+                    <b>
+                        Kindly note that due to venue limitations and budgeting, we are only able to accommodate the
+                        guests
+                        listed on the invitation. We truly appreciate your understanding and can’t wait to celebrate
+                        with
+                        each of you!
+                    </b>
                 </p>
                 <div class="rsvp__details">
                     <div class="rsvp__detail">
@@ -43,8 +47,8 @@
                     <div class="rsvp__detail">
                         <span>Current status</span>
                         <span class="value status status--{{ info()?.rsvp_response }}">{{
-                            info()?.rsvp_response || 'pending' | uppercase
-                        }}</span>
+                                info()?.rsvp_response || 'pending' | uppercase
+                            }}</span>
                     </div>
                 </div>
 
@@ -56,7 +60,6 @@
                         [disabled]="submitting() === 'yes'"
                         (click)="rsvp('yes')"
                     >
-                        <mat-icon class="material-symbols-outlined">check_circle</mat-icon>
                         Yes, I will attend
                     </button>
                     <button
@@ -66,7 +69,6 @@
                         [disabled]="submitting() === 'no'"
                         (click)="rsvp('no')"
                     >
-                        <mat-icon class="material-symbols-outlined">cancel</mat-icon>
                         No, I can't attend
                     </button>
                 </div>

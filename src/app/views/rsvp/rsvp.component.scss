@@ -43,13 +43,10 @@
 
     .value {
         &.status--yes {
-            color: var(--mat-primary-700, #1e88e5);
+            color: var(--mat-success-700, green);
         }
         &.status--no {
             color: var(--mat-warn-700, #c62828);
-        }
-        &.status--pending {
-            color: rgba(0, 0, 0, 0.6);
         }
     }
 
