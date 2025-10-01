@@ -14,9 +14,7 @@
                 [routerLinkActive]="['app__nav-item--active']"
                 #routerLink1="routerLinkActive"
             >
-                <mat-icon class="material-symbols-outlined" matListItemIcon>
-                    home
-                </mat-icon>
+                <mat-icon class="material-symbols-outlined" matListItemIcon> home </mat-icon>
                 <a matListItemTitle>Home</a>
             </mat-list-item>
             <mat-list-item
@@ -27,9 +25,7 @@
                 [routerLinkActive]="['app__nav-item--active']"
                 #routerLink2="routerLinkActive"
             >
-                <mat-icon class="material-symbols-outlined" matListItemIcon>
-                    auto_stories
-                </mat-icon>
+                <mat-icon class="material-symbols-outlined" matListItemIcon> auto_stories </mat-icon>
                 <a matListItemTitle>Our Story</a>
             </mat-list-item>
             <mat-list-item
@@ -39,9 +35,7 @@
                 [routerLinkActive]="['app__nav-item--active']"
                 #routerLink4="routerLinkActive"
             >
-                <mat-icon class="material-symbols-outlined" matListItemIcon>
-                    photo_prints
-                </mat-icon>
+                <mat-icon class="material-symbols-outlined" matListItemIcon> photo_prints </mat-icon>
                 <a matListItemTitle>Memories</a>
             </mat-list-item>
             <mat-list-item
@@ -52,9 +46,7 @@
                 [routerLinkActive]="['app__nav-item--active']"
                 #routerLink3="routerLinkActive"
             >
-                <mat-icon class="material-symbols-outlined" matListItemIcon>
-                    featured_seasonal_and_gifts
-                </mat-icon>
+                <mat-icon class="material-symbols-outlined" matListItemIcon> featured_seasonal_and_gifts </mat-icon>
                 <a matListItemTitle>Registry</a>
             </mat-list-item>
             <mat-list-item
@@ -64,34 +56,26 @@
                 [routerLinkActive]="['app__nav-item--active']"
                 #routerLink4="routerLinkActive"
             >
-                <mat-icon class="material-symbols-outlined" matListItemIcon>
-                    quiz
-                </mat-icon>
+                <mat-icon class="material-symbols-outlined" matListItemIcon> quiz </mat-icon>
                 <a matListItemTitle>Q&A</a>
             </mat-list-item>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-        <mat-toolbar
-            class="app__toolbar d-lg-flex d-none animate__animated animate__faster animate__slideInDown"
-        >
+        <mat-toolbar class="app__toolbar d-lg-flex d-none animate__animated animate__faster animate__slideInDown">
             <button
                 mat-icon-button
                 class="app__nav-button"
                 aria-label="Navigation drawer button"
                 (click)="sidenav.toggle()"
             >
-                <mat-icon #toolbarIcon class="material-symbols-outlined"
-                    >menu_open</mat-icon
-                >
+                <mat-icon #toolbarIcon class="material-symbols-outlined">menu_open</mat-icon>
             </button>
             <span class="m-auto"> {{ toolbarTitle() }} </span>
         </mat-toolbar>
         <!-- Contents of application -->
         <div class="app">
-            <router-outlet
-                (activate)="updateToolbarTitle($event)"
-            ></router-outlet>
+            <router-outlet (activate)="updateToolbarTitle($event)"></router-outlet>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

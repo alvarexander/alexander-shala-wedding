@@ -21,11 +21,7 @@
     } @else if (galleryItems) {
         <div class="gallery__grid-wrapper mt-5">
             @for (item of galleryItems; track $index) {
-                <div
-                    matRipple
-                    (click)="openItemSheet(item)"
-                    class="gallery__grid-wrapper"
-                >
+                <div matRipple (click)="openItemSheet(item)" class="gallery__grid-wrapper">
                     <img
                         [priority]="$index === 0"
                         [style.animation-duration]="450"

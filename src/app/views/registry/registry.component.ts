@@ -102,7 +102,7 @@ export class RegistryComponent {
                 .then(() => {
                     console.log('Successfully shared');
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error sharing:', error);
                 });
         }

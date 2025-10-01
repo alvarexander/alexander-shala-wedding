@@ -1,9 +1,11 @@
 <div class="rsvsp">
     <mat-card appearance="outlined" class="rsvsp__card">
-        <mat-card-header>
+        <mat-card-header class="d-flex align-items-center">
             <div mat-card-avatar class="rsvsp__avatar">💌</div>
             <mat-card-title>RSVP</mat-card-title>
-            <mat-card-subtitle *ngIf="code()">Code: {{ code() }}</mat-card-subtitle>
+            @if (info()?.guest_name) {
+                <mat-card-subtitle>{{ info()?.guest_name }}</mat-card-subtitle>
+            }
         </mat-card-header>
 
         <mat-card-content>
@@ -25,24 +27,35 @@
                     </div>
                     <div class="rsvsp__detail">
                         <span class="label">Current status</span>
-                        <span
-                            class="value status status--{{ info()?.rsvp_response }}">{{ (info()?.rsvp_response || 'pending') | uppercase }}</span>
+                        <span class="value status status--{{ info()?.rsvp_response }}">{{
+                            info()?.rsvp_response || 'pending' | uppercase
+                        }}</span>
                     </div>
                 </div>
 
                 <div class="rsvsp__actions">
-                    <button mat-raised-button color="primary" class="yes" [disabled]="submitting()==='yes'"
-                            (click)="rsvp('yes')">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="yes"
+                        [disabled]="submitting() === 'yes'"
+                        (click)="rsvp('yes')"
+                    >
                         <mat-icon>check_circle</mat-icon>
                         Yes, I will attend
                     </button>
-                    <button mat-stroked-button color="warn" class="no" [disabled]="submitting()==='no'"
-                            (click)="rsvp('no')">
+                    <button
+                        mat-stroked-button
+                        color="warn"
+                        class="no"
+                        [disabled]="submitting() === 'no'"
+                        (click)="rsvp('no')"
+                    >
                         <mat-icon>cancel</mat-icon>
                         No, I can't attend
                     </button>
                 </div>
-                @if(submitMessage()) {
+                @if (submitMessage()) {
                     <div class="rsvsp__message">{{ submitMessage() }}</div>
                 }
             }

@@ -1,11 +1,7 @@
 @if (data.item) {
     <div class="dialog">
         <h2 class="fw-bolder">{{ data.item.date }}</h2>
-        <img
-            class="dialog__img"
-            [src]="data.item.source"
-            [alt]="data.item.alt"
-        />
+        <img class="dialog__img" [src]="data.item.source" [alt]="data.item.alt" />
         <p>{{ data.item.description }}</p>
         <div class="d-flex w-100 justify-content-end">
             <button mat-flat-button (click)="close()">Close</button>

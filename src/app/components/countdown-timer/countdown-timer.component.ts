@@ -31,9 +31,7 @@ export class CountdownTimerComponent {
     /**
      * Observable emitting the remaining time every second
      */
-    countdown$: Observable<CountdownTime> = timer(0, 1000).pipe(
-        map(() => this._calcRemaining()),
-    );
+    countdown$: Observable<CountdownTime> = timer(0, 1000).pipe(map(() => this._calcRemaining()));
 
     /**
      * Calculates time remaining from now until September 26th 2026

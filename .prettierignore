@@ -1,0 +1,24 @@
+# Default ignores
+node_modules
+.dist
+/dist
+coverage
+
+# Build outputs
+/build
+/.angular
+
+# Package manager files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Generated files
+*.min.*
+
+# Backend PHP endpoints (not formatted by Prettier in this repo)
+public/*.php
+public/**/*.php
+
+# Keep original entries from prettierignore.txt
+package.json

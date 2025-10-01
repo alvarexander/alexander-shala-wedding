@@ -13,13 +13,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss'],
     standalone: true,
-    imports: [
-        CommonModule,
-        NgOptimizedImage,
-        MatRipple,
-        FormsModule,
-        MatProgressSpinner,
-    ],
+    imports: [CommonModule, NgOptimizedImage, MatRipple, FormsModule, MatProgressSpinner],
 })
 export class GalleryComponent implements OnInit {
     protected readonly title = 'Gallery';
@@ -49,8 +43,7 @@ export class GalleryComponent implements OnInit {
         // Set up image loading
         this.imageSources$ = forkJoin(
             this._imageUrls.map(
-                (url: string): Observable<IGalleryItem> =>
-                    this._getImageMetadata(url),
+                (url: string): Observable<IGalleryItem> => this._getImageMetadata(url),
             ),
         ).pipe(catchError(() => of([])));
 
@@ -67,7 +60,7 @@ export class GalleryComponent implements OnInit {
      * @param source The image source URL
      */
     private _getImageMetadata(source: string): Observable<IGalleryItem> {
-        return new Observable(observer => {
+        return new Observable((observer) => {
             const img = new Image();
             const localCache = localStorage.getItem(source);
 

@@ -1,10 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { IGalleryItem } from '../../../interfaces/gallery-items.interface';
 import { MatButton } from '@angular/material/button';
-import {
-    MAT_BOTTOM_SHEET_DATA,
-    MatBottomSheetRef,
-} from '@angular/material/bottom-sheet';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
     selector: 'app-gallery-item-viewer',

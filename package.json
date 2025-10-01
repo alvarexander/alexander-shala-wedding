@@ -8,7 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint --fix",
-    "pretty": "prettier --write \"**/*.{ts,scss,html}\" --ignore-path=.prettierignore"
+    "pretty": "prettier --write \"**/*.{ts,scss,html}\" --ignore-path=.prettierignore",
+    "format": "npm run pretty",
+    "format:check": "prettier --check \"**/*.{ts,scss,html}\" --ignore-path=.prettierignore"
   },
   "private": true,
   "dependencies": {

@@ -1,17 +1,5 @@
-import {
-    AfterViewInit,
-    Component,
-    HostListener,
-    ViewChild,
-    signal,
-} from '@angular/core';
-import {
-    NavigationEnd,
-    Router,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-} from '@angular/router';
+import { AfterViewInit, Component, HostListener, ViewChild, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
     MatDrawer,
     MatSidenav,
@@ -71,7 +59,7 @@ export class AppComponent implements AfterViewInit {
         private readonly _scrollService: ContentScrollService,
     ) {
         this._router.events
-            .pipe(filter(event => event instanceof NavigationEnd))
+            .pipe(filter((event) => event instanceof NavigationEnd))
             .subscribe(() => {
                 if (this.drawerMode() === 'over') {
                     this.sideNav?.close();

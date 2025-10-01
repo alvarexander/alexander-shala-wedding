@@ -42,7 +42,7 @@ interface RsvpUpdateResponse {
     standalone: true,
     imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
     templateUrl: './rsvp.component.html',
-    styleUrls: ['./rsvp.component.scss']
+    styleUrls: ['./rsvp.component.scss'],
 })
 /**
  * Route component for handling RSVP interactions at /rsvp/:code.
@@ -55,12 +55,40 @@ export class RsvpComponent {
     private http = inject(HttpClient);
 
     /**
+     * Safely parses a JSON string, returning null if parsing fails.
+     */
+    private _parseJsonSafe<T>(txt: string): T | null {
+        try {
+            return JSON.parse(txt) as T;
+        } catch {
+            return null;
+        }
+    }
+
+    /**
+     * Generates a helpful hint when a non-JSON payload is received.
+     * Detects common cases like raw PHP served or HTML pages.
+     */
+    private _deriveNonJsonHint(sample: string): string {
+        const trimmed = (sample || '').trimStart();
+        if (trimmed.startsWith('<?php')) {
+            return 'Unable to obtain RSVP date at this time. Please try again later.';
+        }
+        if (trimmed.startsWith('<!doctype') || trimmed.startsWith('<html')) {
+            return 'Unable to obtain RSVP date at this time. Please try again later.';
+        }
+        if (!trimmed) {
+            return 'Received an empty response.';
+        }
+        return 'Unexpected response format from the server.';
+    }
+
+    /**
      * RSVP code extracted from the route param (uppercased) as a signal.
      */
-    code = toSignal(
-        this.route.paramMap.pipe(map(p => (p.get('code') || '').toUpperCase())),
-        { initialValue: '' }
-    );
+    code = toSignal(this.route.paramMap.pipe(map((p) => (p.get('code') || '').toUpperCase())), {
+        initialValue: '',
+    });
 
     /**
      * True while loading RSVP information from the server.
@@ -106,23 +134,26 @@ export class RsvpComponent {
         this.error.set(null);
         this.submitMessage.set(null);
         const id = this.code();
-        this.http
-            .get<RsvpInfoResponse>(`/rsvp_info.php`, { params: { id } })
-            .subscribe({
-                next: res => {
-                    if (!res.ok) {
-                        this.error.set(res.error || 'Failed to load RSVP info.');
-                        this.info.set(null);
-                    } else {
-                        this.info.set(res);
-                    }
-                    this.loading.set(false);
-                },
-                error: err => {
-                    this.error.set((err?.error?.error) || 'Failed to load RSVP info.');
-                    this.loading.set(false);
-                },
-            });
+        this.http.get(`/rsvp_info.php`, { params: { id }, responseType: 'text' }).subscribe({
+            next: (txt) => {
+                const res = this._parseJsonSafe<RsvpInfoResponse>(txt);
+                if (!res) {
+                    const hint = this._deriveNonJsonHint(txt);
+                    this.error.set(`The server did not respond. ${hint}`);
+                    this.info.set(null);
+                } else if (!res.ok) {
+                    this.error.set(res.error || 'Failed to load RSVP info.');
+                    this.info.set(null);
+                } else {
+                    this.info.set(res);
+                }
+                this.loading.set(false);
+            },
+            error: (err) => {
+                this.error.set(err?.error?.error || 'Failed to load RSVP info.');
+                this.loading.set(false);
+            },
+        });
     }
 
     /**
@@ -135,25 +166,29 @@ export class RsvpComponent {
         this.submitMessage.set(null);
 
         const id = this.code();
-        this.http
-            .get<RsvpUpdateResponse>(`/rsvp.php`, { params: { id, response } })
-            .subscribe({
-                next: res => {
-                    if (res.ok) {
-                        this.submitMessage.set(
-                            `RSVP recorded as ${res.rsvp_response?.toUpperCase()}. Thank you!`
-                        );
-                        // Refresh info to reflect updates
-                        this.fetchInfo();
-                    } else {
-                        this.submitMessage.set(res.error || 'Failed to submit RSVP.');
-                    }
-                    this.submitting.set(null);
-                },
-                error: err => {
-                    this.submitMessage.set((err?.error?.error) || 'Failed to submit RSVP.');
-                    this.submitting.set(null);
-                },
-            });
+        this.http.get(`/rsvp.php`, { params: { id, response }, responseType: 'text' }).subscribe({
+            next: (txt) => {
+                const res = this._parseJsonSafe<RsvpUpdateResponse>(txt);
+                if (res && res.ok) {
+                    this.submitMessage.set(
+                        `RSVP recorded as ${res.rsvp_response?.toUpperCase()}. Thank you!`,
+                    );
+                    // Refresh info to reflect updates
+                    this.fetchInfo();
+                } else if (res) {
+                    this.submitMessage.set(res.error || 'Failed to submit RSVP.');
+                } else {
+                    const hint = this._deriveNonJsonHint(txt);
+                    this.submitMessage.set(
+                        `The server did not return valid JSON for RSVP submit. ${hint}`,
+                    );
+                }
+                this.submitting.set(null);
+            },
+            error: (err) => {
+                this.submitMessage.set(err?.error?.error || 'Failed to submit RSVP.');
+                this.submitting.set(null);
+            },
+        });
     }
 }
