@@ -38,14 +38,14 @@ interface RsvpUpdateResponse {
 }
 
 @Component({
-    selector: 'app-rsvsp',
+    selector: 'app-rsvp',
     standalone: true,
     imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
     templateUrl: './rsvp.component.html',
     styleUrls: ['./rsvp.component.scss']
 })
 /**
- * Route component for handling RSVP interactions at /rsvsp/:code.
+ * Route component for handling RSVP interactions at /rsvp/:code.
  *
  * Loads RSVP details by code and allows the user to submit a Yes/No response
  * that is sent to the backend endpoints.

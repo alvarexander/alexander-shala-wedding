@@ -4,7 +4,7 @@ import { OurStoryComponent } from './views/our-story/our-story.component';
 import { QuestionsAndAnswersComponent } from './views/questions-and-answers/questions-and-answers.component';
 import { RegistryComponent } from './views/registry/registry.component';
 import { GalleryComponent } from './views/gallery/gallery.component';
-import { RsvpComponent } from './views/rsvsp/rsvp.component';
+import { RsvpComponent } from './views/rsvp/rsvp.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent, pathMatch: 'full' },
