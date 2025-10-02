@@ -215,6 +215,7 @@ try {
     }
 
     $emailSent = false;
+    $emailErrors = [];
     try {
         if ($extraParams !== '') {
             $emailSent = @mail($to, $subject, $body, $headers, $extraParams);
@@ -224,6 +225,9 @@ try {
         if (!$emailSent) {
             $lastErr = function_exists('error_get_last') ? error_get_last() : null;
             @error_log('RSVP mail() failed for code ' . $codeNorm . ' to ' . $to . ' with subject: ' . $subject . ($lastErr ? (' | last_error: ' . json_encode($lastErr)) : ''));
+            $errMsg = 'mail() returned false';
+            if ($lastErr && isset($lastErr['message'])) { $errMsg .= ' | ' . $lastErr['message']; }
+            $emailErrors[] = $errMsg;
             // Fallback: SendGrid Web API if configured
             $sgApiKey = getenv('SENDGRID_API_KEY');
             if ($sgApiKey) {
@@ -264,6 +268,7 @@ try {
                         if ($sgRespBody === false) {
                             $sgErr = @curl_error($ch);
                             @error_log('RSVP SendGrid curl error for code ' . $codeNorm . ': ' . $sgErr);
+                            $emailErrors[] = 'SendGrid curl error: ' . $sgErr;
                         }
                         @curl_close($ch);
                         if ($sgHttpCode >= 200 && $sgHttpCode < 300) {
@@ -271,18 +276,24 @@ try {
                             $emailSent = true;
                         } else {
                             @error_log('RSVP SendGrid send failed for code ' . $codeNorm . ' http=' . $sgHttpCode . ' resp=' . $sgRespBody);
+                            $emailErrors[] = 'SendGrid send failed http=' . $sgHttpCode . ' resp=' . $sgRespBody;
                         }
                     } else {
                         @error_log('RSVP SendGrid curl_init failed');
+                        $emailErrors[] = 'SendGrid curl_init failed';
                     }
                 } else {
                     @error_log('RSVP SendGrid: no valid recipients parsed from: ' . $to);
+                    $emailErrors[] = 'SendGrid: no valid recipients parsed from: ' . $to;
                 }
+            } else {
+                $emailErrors[] = 'SendGrid fallback not configured (SENDGRID_API_KEY not set)';
             }
         }
     } catch (Throwable $mailErr) {
         // Swallow any mail-related errors to ensure 200 response
         @error_log('RSVP mail exception for code ' . $codeNorm . ': ' . $mailErr->getMessage());
+        $emailErrors[] = 'mail exception: ' . $mailErr->getMessage();
         $emailSent = false;
     }
 
@@ -306,6 +317,7 @@ try {
         'rsvped_at' => $updated['rsvped_at'],
         'updated_at' => $updated['updated_at'],
         'email_sent' => (bool)$emailSent,
+        'email_errors' => $emailErrors,
     ]);
 } catch (Throwable $e) {
     if ($pdo->inTransaction()) {
