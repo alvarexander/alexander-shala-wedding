@@ -19,7 +19,6 @@ if ($name !== null && $name !== '') {
 }
 
 if ($code === '') {
-    respond(400, [
         'ok' => false,
         'error' => 'Missing required query parameter: id',
         'usage' => [
@@ -112,74 +111,77 @@ try {
 
     $pdo->commit();
 
-    // Send notification email (non-fatal on failure)
-    $to = getenv('RSVP_NOTIFY_EMAIL') ?: 'shalatolbert656@gmail.com';
-    $fromEmail = getenv('RSVP_FROM_EMAIL') ?: ('no-reply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'));
+     // Send notification email (non-fatal on failure)
+        $to = (getenv('RSVP_NOTIFY_EMAIL') ?: 'shalatolbert656@gmail.com') . ', trulyitsalex95@gmail.com';
+        $fromEmail = getenv('RSVP_FROM_EMAIL') ?: ('no-reply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'));
 
-    $subjectBase = 'RSVP Response Received - ' . strtoupper($updated['rsvp_response']);
-    $guestNameTrim = isset($updated['guest_name']) ? trim($updated['guest_name']) : '';
-    if ($guestNameTrim !== '') {
-        $subject = $subjectBase . ' - Guest(s): ' . $guestNameTrim;
-    } else {
-        $subject = $subjectBase . ' - Invite Code: ' . $updated['code'];
-    }
+        $subjectBase = 'RSVP Response Received - ' . strtoupper($updated['rsvp_response']);
+        $guestNameTrim = isset($updated['guest_name']) ? trim($updated['guest_name']) : '';
+        if ($guestNameTrim !== '') {
+            $subject = $subjectBase . ' - Guest(s): ' . $guestNameTrim;
+        } else {
+            $subject = $subjectBase . ' - Invite Code: ' . $updated['code'];
+        }
 
-    $guestNameForEmail = $updated['guest_name'] ?? '';
-    if ($guestNameForEmail === '' || $guestNameForEmail === null) {
-        $guestNameForEmail = ($name !== null && $name !== '') ? $name : '(unknown)';
-    }
+        $guestNameForEmail = $updated['guest_name'] ?? '';
+        if ($guestNameForEmail === '' || $guestNameForEmail === null) {
+            $guestNameForEmail = ($name !== null && $name !== '') ? $name : '(unknown)';
+        }
 
-    // Build HTML email body
-    $body = '
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <style>
-        .card {
-          max-width: 500px;
-          margin: 20px auto;
-          padding: 20px;
-          border: 1px solid #e0e0e0;
-          border-radius: 12px;
-          background-color: #f9f9f9;
-          font-family: Arial, sans-serif;
-          color: #333;
-        }
-        .card h2 {
-          margin-top: 0;
-          color: #2c3e50;
-          text-align: center;
-        }
-        .card p {
-          margin: 8px 0;
-        }
-        .label {
-          font-weight: bold;
-        }
-        .footer {
-          margin-top: 20px;
-          font-size: 12px;
-          color: #888;
-          text-align: center;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <h2>New RSVP Response</h2>
-        <p><span class="label">Code:</span> ' . htmlspecialchars($updated['code']) . '</p>
-        <p><span class="label">Name:</span> ' . htmlspecialchars($guestNameForEmail) . '</p>
-        <p><span class="label">Response:</span> ' . htmlspecialchars(strtoupper($updated['rsvp_response'])) . '</p>
-        <p><span class="label">Party size:</span> ' . htmlspecialchars($updated['party_size'] ?? 'n/a') . '</p>
-        <p><span class="label">RSVPed at:</span> ' . htmlspecialchars($updated['rsvped_at']) . '</p>
-        <p><span class="label">Updated at:</span> ' . htmlspecialchars($updated['updated_at']) . '</p>
-        <div class="footer">
-          Sent at ' . date('c') . '
-        </div>
-      </div>
-    </body>
-    </html>';
+        // Human-readable date
+        $sentAt = date("l, F j, Y \\a\\t g:i A");
+
+        // Build HTML email body
+        $body = '
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            .card {
+              max-width: 500px;
+              margin: 20px auto;
+              padding: 20px;
+              border: 1px solid #e0e0e0;
+              border-radius: 12px;
+              background-color: #f9f9f9;
+              font-family: Arial, sans-serif;
+              color: #333;
+            }
+            .card h2 {
+              margin-top: 0;
+              color: #2c3e50;
+              text-align: center;
+            }
+            .card p {
+              margin: 8px 0;
+            }
+            .label {
+              font-weight: bold;
+            }
+            .footer {
+              margin-top: 20px;
+              font-size: 12px;
+              color: #888;
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <h2>New Wedding RSVP Response</h2>
+            <p><span class="label">Code:</span> ' . htmlspecialchars($updated['code']) . '</p>
+            <p><span class="label">Name:</span> ' . htmlspecialchars($guestNameForEmail) . '</p>
+            <p><span class="label">Response:</span> ' . htmlspecialchars(strtoupper($updated['rsvp_response'])) . '</p>
+            <p><span class="label">Party size:</span> ' . htmlspecialchars($updated['party_size'] ?? 'n/a') . '</p>
+            <p><span class="label">RSVPed at:</span> ' . htmlspecialchars($updated['rsvped_at']) . '</p>
+            <p><span class="label">Updated at:</span> ' . htmlspecialchars($updated['updated_at']) . '</p>
+            <div class="footer">
+              Sent on ' . $sentAt . '
+            </div>
+          </div>
+        </body>
+        </html>';
 
     // Headers for HTML email
     $headers = 'From: ' . $fromEmail . "\r\n" .
