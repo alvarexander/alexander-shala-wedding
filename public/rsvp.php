@@ -129,13 +129,25 @@ try {
     // Send notification email (non-fatal on failure)
     $to = getenv('RSVP_NOTIFY_EMAIL') ?: 'shalatolbert656@gmail.com';
     $fromEmail = getenv('RSVP_FROM_EMAIL') ?: ('no-reply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'));
+    // validate/sanitize From address
+    $fromEmail = filter_var($fromEmail, FILTER_VALIDATE_EMAIL) ? $fromEmail : 'no-reply@localhost';
+
     $subjectBase = 'RSVP Response Received - ' . strtoupper($updated['rsvp_response']);
+    // Sanitize guest name from DB to avoid header injection
     $guestNameTrim = isset($updated['guest_name']) ? trim($updated['guest_name']) : '';
+    if ($guestNameTrim !== '') {
+        $guestNameTrim = preg_replace('/[\x00-\x1F\x7F]/', '', $guestNameTrim);
+        $guestNameTrim = preg_replace("/[\r\n]+/", ' ', $guestNameTrim);
+    }
     if ($guestNameTrim !== '') {
         $subject = $subjectBase . ' - Guest(s) ' . $guestNameTrim;
     } else {
         $subject = $subjectBase . ' - Invite Code ' . $updated['code'];
     }
+    // Sanitize subject for safety
+    $subject = preg_replace('/[\x00-\x1F\x7F]/', '', $subject);
+    $subject = preg_replace("/[\r\n]+/", ' ', $subject);
+
     $guestNameForEmail = $updated['guest_name'] ?? '';
     if ($guestNameForEmail === '' || $guestNameForEmail === null) {
         $guestNameForEmail = ($name !== null && $name !== '') ? $name : '(unknown)';
@@ -189,13 +201,32 @@ try {
     $headers = 'MIME-Version: 1.0' . "\r\n" .
                'From: ' . $fromEmail . "\r\n" .
                'Reply-To: ' . $fromEmail . "\r\n" .
-               'Content-Type: text/html; charset=UTF-8';
+               'Content-Type: text/html; charset=UTF-8' . "\r\n" .
+               'Content-Transfer-Encoding: 8bit';
+
+    // Optional envelope sender for better deliverability
+    $envelopeFrom = getenv('RSVP_ENVELOPE_FROM');
+    if (!filter_var($envelopeFrom, FILTER_VALIDATE_EMAIL)) {
+        $envelopeFrom = $fromEmail;
+    }
+    $extraParams = '';
+    if (filter_var($envelopeFrom, FILTER_VALIDATE_EMAIL)) {
+        $extraParams = '-f' . $envelopeFrom;
+    }
 
     $emailSent = false;
     try {
-        $emailSent = @mail($to, $subject, $body, $headers);
+        if ($extraParams !== '') {
+            $emailSent = @mail($to, $subject, $body, $headers, $extraParams);
+        } else {
+            $emailSent = @mail($to, $subject, $body, $headers);
+        }
+        if (!$emailSent) {
+            @error_log('RSVP mail failed for code ' . $codeNorm . ' to ' . $to . ' with subject: ' . $subject);
+        }
     } catch (Throwable $mailErr) {
         // Swallow any mail-related errors to ensure 200 response
+        @error_log('RSVP mail exception for code ' . $codeNorm . ': ' . $mailErr->getMessage());
         $emailSent = false;
     }
 
