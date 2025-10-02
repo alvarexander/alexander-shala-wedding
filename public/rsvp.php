@@ -222,7 +222,63 @@ try {
             $emailSent = @mail($to, $subject, $body, $headers);
         }
         if (!$emailSent) {
-            @error_log('RSVP mail failed for code ' . $codeNorm . ' to ' . $to . ' with subject: ' . $subject);
+            $lastErr = function_exists('error_get_last') ? error_get_last() : null;
+            @error_log('RSVP mail() failed for code ' . $codeNorm . ' to ' . $to . ' with subject: ' . $subject . ($lastErr ? (' | last_error: ' . json_encode($lastErr)) : ''));
+            // Fallback: SendGrid Web API if configured
+            $sgApiKey = getenv('SENDGRID_API_KEY');
+            if ($sgApiKey) {
+                $sgFrom = getenv('SENDGRID_FROM_EMAIL');
+                if (!filter_var($sgFrom, FILTER_VALIDATE_EMAIL)) {
+                    $sgFrom = $fromEmail;
+                }
+                $recipients = array_map('trim', explode(',', $to));
+                $toArray = [];
+                foreach ($recipients as $rcpt) {
+                    if ($rcpt !== '' && filter_var($rcpt, FILTER_VALIDATE_EMAIL)) {
+                        $toArray[] = ['email' => $rcpt];
+                    }
+                }
+                if (!empty($toArray)) {
+                    $sgPayload = [
+                        'personalizations' => [
+                            ['to' => $toArray]
+                        ],
+                        'from' => ['email' => $sgFrom],
+                        'subject' => $subject,
+                        'content' => [
+                            ['type' => 'text/html', 'value' => $body]
+                        ]
+                    ];
+                    $ch = @curl_init('https://api.sendgrid.com/v3/mail/send');
+                    if ($ch !== false) {
+                        @curl_setopt($ch, CURLOPT_POST, true);
+                        @curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                            'Authorization: Bearer ' . $sgApiKey,
+                            'Content-Type: application/json'
+                        ]);
+                        @curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($sgPayload));
+                        @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        @curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                        $sgRespBody = @curl_exec($ch);
+                        $sgHttpCode = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                        if ($sgRespBody === false) {
+                            $sgErr = @curl_error($ch);
+                            @error_log('RSVP SendGrid curl error for code ' . $codeNorm . ': ' . $sgErr);
+                        }
+                        @curl_close($ch);
+                        if ($sgHttpCode >= 200 && $sgHttpCode < 300) {
+                            // SendGrid returns 202 on success
+                            $emailSent = true;
+                        } else {
+                            @error_log('RSVP SendGrid send failed for code ' . $codeNorm . ' http=' . $sgHttpCode . ' resp=' . $sgRespBody);
+                        }
+                    } else {
+                        @error_log('RSVP SendGrid curl_init failed');
+                    }
+                } else {
+                    @error_log('RSVP SendGrid: no valid recipients parsed from: ' . $to);
+                }
+            }
         }
     } catch (Throwable $mailErr) {
         // Swallow any mail-related errors to ensure 200 response
