@@ -129,110 +129,41 @@ try {
     // Send notification email (non-fatal on failure)
     $to = getenv('RSVP_NOTIFY_EMAIL') ?: 'shalatolbert656@gmail.com';
     $fromEmail = getenv('RSVP_FROM_EMAIL') ?: ('no-reply@' . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'localhost'));
-    // validate/sanitize From address
-    $fromEmail = filter_var($fromEmail, FILTER_VALIDATE_EMAIL) ? $fromEmail : 'no-reply@localhost';
-
-    $subjectBase = 'RSVP Response Received - ' . strtoupper($updated['rsvp_response']);
-    // Sanitize guest name from DB to avoid header injection
-    $guestNameTrim = isset($updated['guest_name']) ? trim($updated['guest_name']) : '';
-    if ($guestNameTrim !== '') {
-        $guestNameTrim = preg_replace('/[\x00-\x1F\x7F]/', '', $guestNameTrim);
-        $guestNameTrim = preg_replace("/[\r\n]+/", ' ', $guestNameTrim);
-    }
-    if ($guestNameTrim !== '') {
-        $subject = $subjectBase . ' - Guest(s) ' . $guestNameTrim;
-    } else {
-        $subject = $subjectBase . ' - Invite Code ' . $updated['code'];
-    }
-    // Sanitize subject for safety
-    $subject = preg_replace('/[\x00-\x1F\x7F]/', '', $subject);
-    $subject = preg_replace("/[\r\n]+/", ' ', $subject);
-
+     $subjectBase = 'RSVP Response Received - ' . strtoupper($updated['rsvp_response']);
+       $guestNameTrim = isset($updated['guest_name']) ? trim($updated['guest_name']) : '';
+       if ($guestNameTrim !== '') {
+           $subject = $subjectBase . ' - Guest(s) ' . $guestNameTrim;
+       } else {
+           $subject = $subjectBase . ' - Invite Code ' . $updated['code'];
+       }
     $guestNameForEmail = $updated['guest_name'] ?? '';
     if ($guestNameForEmail === '' || $guestNameForEmail === null) {
         $guestNameForEmail = ($name !== null && $name !== '') ? $name : '(unknown)';
     }
-    // Build a styled HTML email body (card) using Arial
-    $partyDisplay = (isset($updated['party_size']) && $updated['party_size'] !== null) ? $updated['party_size'] : 'n/a';
-    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    $ua = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
-    $timeIso = date('c');
-
-    $codeEsc = htmlspecialchars($updated['code'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $nameEsc = htmlspecialchars($guestNameForEmail, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $respEsc = htmlspecialchars($updated['rsvp_response'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $partyEsc = htmlspecialchars((string)$partyDisplay, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $rsvpedEsc = htmlspecialchars((string)$updated['rsvped_at'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $updatedEsc = htmlspecialchars((string)$updated['updated_at'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $ipEsc = htmlspecialchars($ip, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $uaEsc = htmlspecialchars($ua, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    $timeEsc = htmlspecialchars($timeIso, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-
-    $body = '<!doctype html>' .
-        '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' .
-        '<title>RSVP Response</title></head>' .
-        '<body style="margin:0;background:#f5f6f8;padding:24px;font-family:Arial,Helvetica,sans-serif;color:#1f2937;">' .
-        '  <div style="max-width:640px;margin:0 auto;">' .
-        '    <div style="background:#ffffff;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.08);overflow:hidden;border:1px solid #e5e7eb;">' .
-        '      <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;background:#fafafa;">' .
-        '        <h2 style="margin:0;font-size:20px;line-height:28px;font-weight:700;font-family:Arial,Helvetica,sans-serif;color:#111827;">RSVP Response Recorded</h2>' .
-        '        <p style="margin:6px 0 0 0;font-size:14px;color:#6b7280;">A new RSVP update has been received.</p>' .
-        '      </div>' .
-        '      <div style="padding:20px 24px;">' .
-        '        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;font-size:14px;">' .
-        '          <tr><td style="padding:8px 0;width:160px;color:#6b7280;">Code</td><td style="padding:8px 0;color:#111827;"><strong>' . $codeEsc . '</strong></td></tr>' .
-        '          <tr><td style="padding:8px 0;width:160px;color:#6b7280;">Name</td><td style="padding:8px 0;color:#111827;">' . $nameEsc . '</td></tr>' .
-        '          <tr><td style="padding:8px 0;width:160px;color:#6b7280;">Response</td><td style="padding:8px 0;color:#111827;">' . strtoupper($respEsc) . '</td></tr>' .
-        '          <tr><td style="padding:8px 0;width:160px;color:#6b7280;">Party size</td><td style="padding:8px 0;color:#111827;">' . $partyEsc . '</td></tr>' .
-        '          <tr><td style="padding:8px 0;width:160px;color:#6b7280;">RSVPed at</td><td style="padding:8px 0;color:#111827;">' . $rsvpedEsc . '</td></tr>' .
-        '          <tr><td style="padding:8px 0;width:160px;color:#6b7280;">Updated at</td><td style="padding:8px 0;color:#111827;">' . $updatedEsc . '</td></tr>' .
-        '        </table>' .
-        '      </div>' .
-        '      <div style="padding:16px 24px;border-top:1px solid #f1f5f9;background:#fafafa;">' .
-        '        <p style="margin:0 0 6px 0;font-size:12px;color:#6b7280;">IP: ' . $ipEsc . '</p>' .
-        '        <p style="margin:0 0 6px 0;font-size:12px;color:#6b7280;">User-Agent: ' . $uaEsc . '</p>' .
-        '        <p style="margin:0;font-size:12px;color:#6b7280;">Time: ' . $timeEsc . '</p>' .
-        '      </div>' .
-        '    </div>' .
-        '    <p style="text-align:center;margin:16px 0 0 0;font-size:12px;color:#9ca3af;font-family:Arial,Helvetica,sans-serif;">This is an automated message. Please do not reply.</p>' .
-        '  </div>' .
-        '</body></html>';
-
-    $headers = 'MIME-Version: 1.0' . "\r\n" .
-               'From: ' . $fromEmail . "\r\n" .
+    $bodyLines = [
+        'An RSVP response was recorded:',
+        '',
+        'Code: ' . $updated['code'],
+        'Name: ' . $guestNameForEmail,
+        'Response: ' . $updated['rsvp_response'],
+        'Party size: ' . ((isset($updated['party_size']) && $updated['party_size'] !== null) ? $updated['party_size'] : 'n/a'),
+        'RSVPed at: ' . $updated['rsvped_at'],
+        'Updated at: ' . $updated['updated_at'],
+        '',
+        'IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'),
+        'User-Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown'),
+        'Time: ' . date('c'),
+    ];
+    $body = implode("\n", $bodyLines);
+    $headers = 'From: ' . $fromEmail . "\r\n" .
                'Reply-To: ' . $fromEmail . "\r\n" .
-               'Content-Type: text/html; charset=UTF-8' . "\r\n" .
-               'Content-Transfer-Encoding: 8bit';
-
-    // Optional envelope sender for better deliverability
-    $envelopeFrom = getenv('RSVP_ENVELOPE_FROM');
-    if (!filter_var($envelopeFrom, FILTER_VALIDATE_EMAIL)) {
-        $envelopeFrom = $fromEmail;
-    }
-    $extraParams = '';
-    if (filter_var($envelopeFrom, FILTER_VALIDATE_EMAIL)) {
-        $extraParams = '-f' . $envelopeFrom;
-    }
+               'Content-Type: text/plain; charset=UTF-8';
 
     $emailSent = false;
-    $emailErrors = [];
     try {
-        if ($extraParams !== '') {
-            $emailSent = @mail($to, $subject, $body, $headers, $extraParams);
-        } else {
-            $emailSent = @mail($to, $subject, $body, $headers);
-        }
-        if (!$emailSent) {
-            $lastErr = function_exists('error_get_last') ? error_get_last() : null;
-            @error_log('RSVP mail() failed for code ' . $codeNorm . ' to ' . $to . ' with subject: ' . $subject . ($lastErr ? (' | last_error: ' . json_encode($lastErr)) : ''));
-            $errMsg = 'mail() returned false';
-            if ($lastErr && isset($lastErr['message'])) { $errMsg .= ' | ' . $lastErr['message']; }
-            $emailErrors[] = $errMsg;
-        }
+        $emailSent = @mail($to, $subject, $body, $headers);
     } catch (Throwable $mailErr) {
         // Swallow any mail-related errors to ensure 200 response
-        @error_log('RSVP mail exception for code ' . $codeNorm . ': ' . $mailErr->getMessage());
-        $emailErrors[] = 'mail exception: ' . $mailErr->getMessage();
         $emailSent = false;
     }
 
@@ -256,7 +187,6 @@ try {
         'rsvped_at' => $updated['rsvped_at'],
         'updated_at' => $updated['updated_at'],
         'email_sent' => (bool)$emailSent,
-        'email_errors' => $emailErrors,
     ]);
 } catch (Throwable $e) {
     if ($pdo->inTransaction()) {
