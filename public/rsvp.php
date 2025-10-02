@@ -132,9 +132,9 @@ try {
      $subjectBase = 'RSVP Response Received - ' . strtoupper($updated['rsvp_response']);
        $guestNameTrim = isset($updated['guest_name']) ? trim($updated['guest_name']) : '';
        if ($guestNameTrim !== '') {
-           $subject = $subjectBase . ' - Guest(s) ' . $guestNameTrim;
+           $subject = $subjectBase . ' - Guest(s): ' . $guestNameTrim;
        } else {
-           $subject = $subjectBase . ' - Invite Code ' . $updated['code'];
+           $subject = $subjectBase . ' - Invite Code: ' . $updated['code'];
        }
     $guestNameForEmail = $updated['guest_name'] ?? '';
     if ($guestNameForEmail === '' || $guestNameForEmail === null) {
@@ -150,8 +150,6 @@ try {
         'RSVPed at: ' . $updated['rsvped_at'],
         'Updated at: ' . $updated['updated_at'],
         '',
-        'IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'),
-        'User-Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown'),
         'Time: ' . date('c'),
     ];
     $body = implode("\n", $bodyLines);
