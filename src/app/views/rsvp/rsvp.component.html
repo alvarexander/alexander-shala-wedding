@@ -98,10 +98,10 @@
                         [disabled]="submitting() === 'yes' || (!allComing() && (info()?.guest_names?.length || 0) > 0 && selectedAttending().size === 0)"
                         (click)="rsvp('yes')"
                     >
-                        Yes, I will attend
+                        {{ yesAttendLabel() }}
                     </button>
                     <button mat-button color="warn" class="no" [disabled]="submitting() === 'no'" (click)="rsvp('no')">
-                        No, I can't attend
+                        {{ noAttendLabel() }}
                     </button>
                 </div>
                 @if (submitMessage()) {

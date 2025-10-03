@@ -322,4 +322,42 @@ export class RsvpComponent implements OnInit {
         }
         return selectedCount || null;
     });
+
+    /**
+     * Dynamic label for the Yes button: use "I" vs "We" based on attendee count semantics.
+     * Rules:
+     * - If there is only one invited guest total → "I".
+     * - Else if toggle is ON (all coming) → "We".
+     * - Else (toggle OFF): more than one selected → "We"; otherwise → "I".
+     */
+    yesAttendLabel = computed<string>(() => {
+        const invitedCount = this.info()?.guest_names?.length ?? 0;
+        if (invitedCount <= 1) {
+            return 'Yes, I will attend';
+        }
+        if (this.allComing()) {
+            return 'Yes, We will attend';
+        }
+        const selectedCount = this.selectedAttending().size;
+        return selectedCount > 1 ? 'Yes, We will attend' : 'Yes, I will attend';
+    });
+
+    /**
+     * Dynamic label for the No button: use "I" vs "We" based on the same semantics as the Yes button.
+     * Rules mirror yesAttendLabel():
+     * - If there is only one invited guest total → "I".
+     * - Else if toggle is ON (all coming) → "We".
+     * - Else (toggle OFF): more than one selected → "We"; otherwise → "I".
+     */
+    noAttendLabel = computed<string>(() => {
+        const invitedCount = this.info()?.guest_names?.length ?? 0;
+        if (invitedCount <= 1) {
+            return "No, I can't attend";
+        }
+        if (this.allComing()) {
+            return "No, We can't attend";
+        }
+        const selectedCount = this.selectedAttending().size;
+        return selectedCount > 1 ? "No, We can't attend" : "No, I can't attend";
+    });
 }
