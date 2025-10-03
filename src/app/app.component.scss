@@ -10,6 +10,8 @@
 
 .app {
     padding: 1.2rem;
+    z-index: 2;
+    position: relative;
 
     &__nav-button {
         margin-right: -2rem;

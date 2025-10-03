@@ -59,9 +59,12 @@
     font-weight: bold !important;
 }
 
-.mat-expansion-panel,
-.mat-expansion-panel-header {
-    background-color: var(--mat-expansion-header-hover-state-layer-color) !important;
+.mat-drawer.mat-drawer-opened.mat-drawer-opened {
+    backdrop-filter: blur(100px);
+}
+
+.mat-drawer-backdrop.mat-drawer-shown {
+    backdrop-filter: blur(10px);
 }
 
 .mat-drawer-container {
