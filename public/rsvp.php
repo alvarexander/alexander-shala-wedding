@@ -12,13 +12,22 @@ $code = isset($_GET["id"]) ? trim($_GET["id"]) : "";
 $response = isset($_GET["response"])
     ? strtolower(trim($_GET["response"]))
     : null;
-$name = isset($_GET["name"]) ? trim($_GET["name"]) : null;
-if ($name !== null && $name !== "") {
-    if (strlen($name) > 400) {
-        $name = substr($name, 0, 400);
+
+// Optional: accept guest_names as a JSON-encoded array of strings
+$guestNamesParam = isset($_GET["guest_names"]) ? $_GET["guest_names"] : null;
+$guestNamesArr = [];
+if ($guestNamesParam !== null && $guestNamesParam !== "") {
+    $decoded = json_decode($guestNamesParam, true);
+    if (is_array($decoded)) {
+        foreach ($decoded as $nm) {
+            if (!is_string($nm)) { continue; }
+            $nm = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', "", trim($nm));
+            if ($nm === '') { continue; }
+            if (strlen($nm) > 400) { $nm = substr($nm, 0, 400); }
+            $guestNamesArr[] = $nm;
+            if (count($guestNamesArr) >= 10) { break; } // sanity limit
+        }
     }
-    // Normalize name to avoid control characters in email body/logs
-    $name = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', "", $name);
 }
 
 if ($code === "") {
@@ -26,9 +35,10 @@ if ($code === "") {
         "ok" => false,
         "error" => "Missing required query parameter: id",
         "usage" => [
-            "yes" => "/rsvp.php?id=A007&response=yes",
-            "no" => "/rsvp.php?id=A007&response=no",
-            "check" => "/rsvp.php?id=A007",
+            "yes" => "/rsvp.php?id=123e4567-e89b-12d3-a456-426614174000&response=yes",
+            "yes_with_guest_names_json" => "/rsvp.php?id=123e4567-e89b-12d3-a456-426614174000&response=yes&guest_names=%5B%22Alice%22%2C%22Bob%22%5D",
+            "no" => "/rsvp.php?id=123e4567-e89b-12d3-a456-426614174000&response=no",
+            "check" => "/rsvp.php?id=123e4567-e89b-12d3-a456-426614174000",
         ],
     ]);
 }
@@ -62,17 +72,17 @@ try {
 // Normalize the code to uppercase to avoid case-sensitivity issues
 $codeNorm = strtoupper($code);
 // Strict validation for code to guard against injection/malformed input
-if (!preg_match('/^[A-Z0-9_-]{1,32}$/', $codeNorm)) {
+if (!preg_match('/^[A-Z0-9_-]{1,36}$/', $codeNorm)) {
     respond(400, [
         "ok" => false,
         "error" =>
-            "Invalid id format. Use 1-32 characters: letters, numbers, underscore, or hyphen.",
+            "Invalid id format. Use 1-36 characters: letters, numbers, underscore, or hyphen.",
     ]);
 }
 
 // Ensure code exists
 $stmt = $pdo->prepare(
-    "SELECT id, code, guest_name, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?"
+    "SELECT id, code, guest_names, attending_guest_names, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?"
 );
 $stmt->execute([$codeNorm]);
 $row = $stmt->fetch();
@@ -86,11 +96,23 @@ if (!$row) {
 }
 
 if ($response === null) {
-    // Just return current status (include name and party size for convenience)
+    // Decode guest names arrays for response
+    $guestNames = [];
+    if (isset($row['guest_names']) && $row['guest_names'] !== null && $row['guest_names'] !== '') {
+        $dec = json_decode($row['guest_names'], true);
+        if (is_array($dec)) { $guestNames = array_values(array_filter($dec, 'is_string')); }
+    }
+    $attendingGuestNames = [];
+    if (isset($row['attending_guest_names']) && $row['attending_guest_names'] !== null && $row['attending_guest_names'] !== '') {
+        $dec2 = json_decode($row['attending_guest_names'], true);
+        if (is_array($dec2)) { $attendingGuestNames = array_values(array_filter($dec2, 'is_string')); }
+    }
+    // Just return current status (include names and party size for convenience)
     respond(200, [
         "ok" => true,
         "code" => $row["code"],
-        "guest_name" => $row["guest_name"],
+        "guest_names" => $guestNames,
+        "attending_guest_names" => $attendingGuestNames,
         "party_size" => $row["party_size"],
         "rsvp_response" => $row["rsvp_response"],
         "rsvped_at" => $row["rsvped_at"],
@@ -103,12 +125,13 @@ if ($response === null) {
 try {
     $pdo->beginTransaction();
 
-    // Update RSVP, and if a name is provided, store it as guest_name
-    if ($name !== null && $name !== "") {
+    // Update RSVP, and if guest_names are provided, store them as JSON array
+    if (!empty($guestNamesArr)) {
+        $guestNamesJson = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
         $update = $pdo->prepare(
-            "UPDATE rsvp_codes SET rsvp_response = ?, guest_name = ?, rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = ?"
+            "UPDATE rsvp_codes SET rsvp_response = ?, guest_names = ?, rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = ?"
         );
-        $update->execute([$response, $name, $codeNorm]);
+        $update->execute([$response, $guestNamesJson, $codeNorm]);
     } else {
         $update = $pdo->prepare(
             "UPDATE rsvp_codes SET rsvp_response = ?, rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = ?"
@@ -117,7 +140,7 @@ try {
     }
 
     $check = $pdo->prepare(
-        "SELECT id, code, guest_name, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?"
+        "SELECT id, code, guest_names, attending_guest_names, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?"
     );
     $check->execute([$codeNorm]);
     $updated = $check->fetch();
@@ -133,23 +156,25 @@ try {
 
     $subjectBase =
         "RSVP Response Received - " . strtoupper($updated["rsvp_response"]);
-    $guestNameTrim = isset($updated["guest_name"])
-        ? trim($updated["guest_name"])
-        : "";
-    if ($guestNameTrim !== "") {
-        $subject = $subjectBase . " - Guest(s): " . $guestNameTrim;
+    // Decode guest names for email/subject
+    $updatedGuestNames = [];
+    if (isset($updated['guest_names']) && $updated['guest_names'] !== null && $updated['guest_names'] !== '') {
+        $tmp = json_decode($updated['guest_names'], true);
+        if (is_array($tmp)) { $updatedGuestNames = array_values(array_filter($tmp, 'is_string')); }
+    }
+    // Use incoming guestNamesArr as fallback if update just set it
+    if (empty($updatedGuestNames) && !empty($guestNamesArr)) {
+        $updatedGuestNames = $guestNamesArr;
+    }
+    $guestNamesJoined = count($updatedGuestNames) ? implode(', ', $updatedGuestNames) : '';
+    if ($guestNamesJoined !== "") {
+        $subject = $subjectBase . " - Guest(s): " . $guestNamesJoined;
     } else {
         $subject = $subjectBase . " - Invite Code: " . $updated["code"];
     }
 
-    $guestNameForEmail = $updated["guest_name"] ?? "";
-    if ($guestNameForEmail === "" || $guestNameForEmail === null) {
-        $guestNameForEmail =
-            $name !== null && $name !== "" ? $name : "(unknown)";
-    }
+    $guestNameForEmail = $guestNamesJoined !== "" ? $guestNamesJoined : "(names not provided)";
 
-    // Human-readable date for footer
-    $sentAt = date("l, F j, Y \\a\\t g:i A");
 
     // Build HTML email body
     $body =
@@ -180,12 +205,6 @@ try {
         .label {
           font-weight: bold;
         }
-        .footer {
-          margin-top: 20px;
-          font-size: 12px;
-          color: #888;
-          text-align: center;
-        }
       </style>
     </head>
     <body>
@@ -203,17 +222,6 @@ try {
         <p><span class="label">Party size:</span> ' .
         htmlspecialchars($updated["party_size"] ?? "n/a") .
         '</p>
-        <p><span class="label">RSVPed at:</span> ' .
-        htmlspecialchars($updated["rsvped_at"]) .
-        '</p>
-        <p><span class="label">Updated at:</span> ' .
-        htmlspecialchars($updated["updated_at"]) .
-        '</p>
-        <div class="footer">
-          Sent on ' .
-        htmlspecialchars($sentAt) .
-        '
-        </div>
       </div>
     </body>
     </html>';
@@ -251,11 +259,24 @@ try {
         exit();
     }
 
+    // Decode arrays for response
+    $updatedGuestNames = [];
+    if (isset($updated['guest_names']) && $updated['guest_names'] !== null && $updated['guest_names'] !== '') {
+        $tmp3 = json_decode($updated['guest_names'], true);
+        if (is_array($tmp3)) { $updatedGuestNames = array_values(array_filter($tmp3, 'is_string')); }
+    }
+    $updatedAttendingGuestNames = [];
+    if (isset($updated['attending_guest_names']) && $updated['attending_guest_names'] !== null && $updated['attending_guest_names'] !== '') {
+        $tmp4 = json_decode($updated['attending_guest_names'], true);
+        if (is_array($tmp4)) { $updatedAttendingGuestNames = array_values(array_filter($tmp4, 'is_string')); }
+    }
+
     respond(200, [
         "ok" => true,
         "message" => "RSVP updated",
         "code" => $updated["code"],
-        "guest_name" => $updated["guest_name"],
+        "guest_names" => $updatedGuestNames,
+        "attending_guest_names" => $updatedAttendingGuestNames,
         "rsvp_response" => $updated["rsvp_response"],
         "rsvped_at" => $updated["rsvped_at"],
         "updated_at" => $updated["updated_at"],

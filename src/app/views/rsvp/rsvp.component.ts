@@ -15,7 +15,8 @@ import { Title } from '@angular/platform-browser';
 interface RsvpInfoResponse {
     ok: boolean;
     code?: string;
-    guest_name?: string | null;
+    guest_names?: string[];
+    attending_guest_names?: string[];
     party_size?: number | null;
     rsvp_response?: 'pending' | 'yes' | 'no';
     rsvped_at?: string | null;
@@ -30,7 +31,8 @@ interface RsvpUpdateResponse {
     ok: boolean;
     message?: string;
     code?: string;
-    guest_name?: string | null;
+    guest_names?: string[];
+    attending_guest_names?: string[];
     rsvp_response?: 'yes' | 'no' | 'pending';
     rsvped_at?: string | null;
     updated_at?: string | null;
@@ -138,14 +140,29 @@ export class RsvpComponent implements OnInit {
     /**
      * Submits an RSVP response for the current code.
      * @param response The user's response: 'yes' or 'no'.
+     * @param namesCsv The names as comma-separated string, if applicable.
      */
-    rsvp(response: 'yes' | 'no') {
+    rsvp(response: 'yes' | 'no', namesCsv?: string) {
         if (this.submitting()) return;
         this.submitting.set(response);
         this.submitMessage.set(null);
 
         const id = this.code();
-        this._http.get(`/rsvp.php`, { params: { id, response }, responseType: 'text' }).subscribe({
+        const params: Record<string, string> = { id, response };
+
+        if (response === 'yes') {
+            const partySize = this.info()?.party_size ?? null;
+            const raw = (namesCsv || '').split(',');
+            const parsed = raw
+                .map((s) => s.trim())
+                .filter((s) => s.length > 0);
+            const limited = typeof partySize === 'number' && partySize > 0 ? parsed.slice(0, partySize) : parsed;
+            if (limited.length > 0) {
+                params['guest_names'] = JSON.stringify(limited);
+            }
+        }
+
+        this._http.get(`/rsvp.php`, { params, responseType: 'text' }).subscribe({
             next: (txt) => {
                 const res = this._parseJsonSafe<RsvpUpdateResponse>(txt);
                 if (res && res.ok) {
