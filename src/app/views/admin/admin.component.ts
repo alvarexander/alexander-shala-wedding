@@ -15,6 +15,8 @@ import { PasswordDialogComponent } from './password-dialog.component';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 
 /**
  * Shape of a single invitation row displayed/edited in the Admin table.
@@ -57,6 +59,8 @@ interface AdminListResponse {
         FormsModule,
         MatSlideToggleModule,
         MatProgressSpinnerModule,
+        MatSnackBarModule,
+        ClipboardModule,
     ],
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
@@ -69,6 +73,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
     private http = inject(HttpClient);
     private dialog = inject(MatDialog);
     private router = inject(Router);
+    private snackBar = inject(MatSnackBar);
+    private clipboard = inject(Clipboard);
 
     /**
      * Columns displayed in the Material table.
@@ -278,5 +284,27 @@ export class AdminComponent implements OnInit, AfterViewInit {
     statusLabel(code: string): string {
         const found = this.statuses.find((s) => s.code === code);
         return found?.label || code;
+    }
+
+    /** Copies the row's invite code to clipboard and shows a confirmation snackbar. */
+    copyInvite(row: AdminRow): void {
+        const ok = this.clipboard.copy(row.invite_code);
+        if (ok) {
+            this.snackBar.open('Invite code copied', undefined, { duration: 2000 });
+        } else {
+            // Fallback attempt using navigator if available
+            if (navigator && 'clipboard' in navigator && (navigator as any).clipboard?.writeText) {
+                (navigator as any).clipboard
+                    .writeText(row.invite_code)
+                    .then(() =>
+                        this.snackBar.open('Invite code copied', undefined, { duration: 2000 }),
+                    )
+                    .catch(() =>
+                        this.snackBar.open('Failed to copy', undefined, { duration: 2000 }),
+                    );
+            } else {
+                this.snackBar.open('Failed to copy', undefined, { duration: 2000 });
+            }
+        }
     }
 }

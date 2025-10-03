@@ -25,10 +25,10 @@
     }
 
     &__table-card {
-        background: white;
+        background: var(--mat-card-outlined-container-color);
         border-radius: 12px;
         padding: 12px;
-        overflow: hidden; /* contain inner scroll */
+        overflow: hidden;
     }
 
     &__table-scroll {
@@ -44,20 +44,6 @@
     /* Ensure table can scroll horizontally on small screens */
     &__table-scroll table {
         min-width: 900px;
-    }
-
-    .w-120 {
-        width: 120px;
-    }
-    .w-180 {
-        width: 180px;
-    }
-    .w-220 {
-        width: 220px;
-    }
-    .w-300 {
-        width: 300px;
-        max-width: 100%;
     }
 
     &__loading {
