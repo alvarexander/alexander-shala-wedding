@@ -1,7 +1,7 @@
 <div class="rsvp">
     <mat-card appearance="outlined" class="rsvp__card animate__animated animate__zoomIn">
         @if (!loading() && !error() && info()) {
-            <img mat-card-image class="mt-3" src="/images/chapel.webp" alt="Photo of Chapel & Cellar">
+            <img mat-card-image src="/images/chapel.webp" alt="Photo of Chapel & Cellar">
         }
         <mat-card-content class="rsvp__content">
             @if (loading()) {
