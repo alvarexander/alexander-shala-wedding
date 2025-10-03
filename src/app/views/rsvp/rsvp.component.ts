@@ -214,7 +214,7 @@ export class RsvpComponent implements OnInit {
                         `RSVP recorded as ${res.rsvp_response?.toUpperCase()}. Thank you!`,
                     );
                     // Toast confirmation
-                    this._snack.open('💌  Thank you for your response', 'Close', {
+                    this._snack.open('Thank you for your response!', 'Close', {
                         duration: 4000,
                     });
                     // Refresh info to reflect updates
