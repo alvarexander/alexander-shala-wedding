@@ -3,7 +3,9 @@
         <mat-card-header class="d-flex align-items-center">
             <mat-card-title class="rsvp__title">RSVP To Our Special Day</mat-card-title>
         </mat-card-header>
-        <img mat-card-image class="mt-3" src="/images/chapel.webp" alt="Photo of Chapel & Cellar">
+        @if (!loading() && !error() && info()) {
+            <img mat-card-image class="mt-3" src="/images/chapel.webp" alt="Photo of Chapel & Cellar">
+        }
         <mat-card-content class="rsvp__content">
             @if (loading()) {
                 <div class="rsvp__loading">Loading details…</div>
@@ -16,35 +18,35 @@
                     @if ((info()?.guest_names?.length || 0) > 0) {
                         <b>{{ (info()?.guest_names || []).join(', ') }}</b>
                     }
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     Shala and I are so excited to celebrate our special day with you! We would be honored to have you
                     here to share our love and celebrate our special day together.
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
 
                     Our wedding will take place on Saturday, September 26th, 2025 at 5:00 PM EST at:
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     <i class="d-block text-center">
-                        Chapel & Cellar <br />
-                        216 W. Lyman Avenue <br />
+                        Chapel & Cellar <br/>
+                        216 W. Lyman Avenue <br/>
                         Winter Park, FL 32789
                     </i>
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
 
                     Your presence means the world to us, and we can’t wait to share this joyful occasion together.
                     @if ((info()?.guest_names?.length || 0) > 1) {
                         To help us make sure we plan and prepare accordingly, please check off the name(s) of the
-                        guest(s) that are planning to come.
+                            guest(s) that are planning to come.
                     }
                     <i>
                         Don't worry if something changes later, you can always update your RSVP right here! We look
                         forward to celebrating with you!
                     </i>
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     <b>
                         Kindly note that due to venue limitations and budgeting, we are only able to accommodate the
                         guests listed on the invitation. We truly appreciate your understanding and can’t wait to
@@ -62,7 +64,7 @@
                                         class="rsvp__guest-checkbox"
                                         [checked]="isSelected(name)"
                                         (change)="toggleGuest(name, $event.checked)"
-                                        >{{ name }}</mat-checkbox
+                                    >{{ name }}</mat-checkbox
                                     >
                                 }
                             </span>
@@ -79,8 +81,8 @@
                     <div class="rsvp__detail">
                         <span>Current Status</span>
                         <span class="value status status--{{ info()?.rsvp_response }}">{{
-                            info()?.rsvp_response || 'pending' | uppercase
-                        }}</span>
+                                info()?.rsvp_response || 'pending' | uppercase
+                            }}</span>
                     </div>
                 </div>
 
