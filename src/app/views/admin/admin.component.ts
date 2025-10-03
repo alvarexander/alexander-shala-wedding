@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ViewChild } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -52,7 +51,6 @@ interface AdminListResponse {
         MatButtonModule,
         MatSelectModule,
         MatIconModule,
-        MatPaginatorModule,
         MatSortModule,
         MatDialogModule,
         ReactiveFormsModule,
@@ -105,7 +103,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
     /** Free-text filter bound to the table. */
     private readonly _PASSWORD= 'Alex&Shala0225656r!@#'
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
 
     /**
@@ -147,9 +144,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        // Defer to ensure the paginator/sort exist when initial load toggles the view
+        // Defer to ensure the sort exists when initial load toggles the view
         setTimeout(() => {
-            if (this.paginator) this.dataSource.paginator = this.paginator;
             if (this.sort) this.dataSource.sort = this.sort;
         });
     }
@@ -162,7 +158,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
                 if (!res.ok) throw new Error('Failed to load');
                 this.statuses = res.statuses;
                 this.dataSource.data = res.items;
-                if (this.paginator) this.dataSource.paginator = this.paginator;
                 if (this.sort) this.dataSource.sort = this.sort;
                 this.loading.set(false);
             },
