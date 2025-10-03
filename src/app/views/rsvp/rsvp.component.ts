@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
@@ -44,7 +45,7 @@ interface RsvpUpdateResponse {
 @Component({
     selector: 'app-rsvp',
     standalone: true,
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatSlideToggleModule],
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatSlideToggleModule, MatCheckboxModule],
     templateUrl: './rsvp.component.html',
     styleUrls: ['./rsvp.component.scss'],
 })
@@ -98,6 +99,11 @@ export class RsvpComponent implements OnInit {
     allComing = signal<boolean>(false);
 
     /**
+     * Set of selected attending guests when not allComing.
+     */
+    selectedAttending = signal<Set<string>>(new Set<string>());
+
+    /**
      * Human-friendly message reflecting the submission outcome.
      */
     submitMessage = signal<string | null>(null);
@@ -110,6 +116,17 @@ export class RsvpComponent implements OnInit {
         if (current) {
             this.fetchInfo();
         }
+    });
+
+    /**
+     * When info() updates, initialize selectedAttending from any existing attending_guest_names.
+     */
+    private readonly _initSelectionOnInfo = effect(() => {
+        const i = this.info();
+        const names = (i?.attending_guest_names ?? []) as string[];
+        const set = new Set<string>();
+        for (const n of names) set.add(n);
+        this.selectedAttending.set(set);
     });
 
     /**
@@ -169,14 +186,18 @@ export class RsvpComponent implements OnInit {
                 params['guest_names'] = JSON.stringify(limitedFromInput);
             }
 
-            // If the toggle is on, send attending_guest_names as the full listed guest_names (capped by party size)
+            // Determine attending_guest_names based on toggle/selection and ALWAYS send it (even if empty)
+            let attending: string[] = [];
             if (this.allComing()) {
+                // All listed guests (capped by party size)
                 const listed = (this.info()?.guest_names || []);
-                const attending = typeof partySize === 'number' && partySize > 0 ? listed.slice(0, partySize) : listed;
-                if (attending.length > 0) {
-                    params['attending_guest_names'] = JSON.stringify(attending);
-                }
+                attending = typeof partySize === 'number' && partySize > 0 ? listed.slice(0, partySize) : listed;
+            } else {
+                // Only the selected guests (capped by party size)
+                const sel = Array.from(this.selectedAttending().values());
+                attending = typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
             }
+            params['attending_guest_names'] = JSON.stringify(attending);
         }
 
         this._http.get(`/rsvp.php`, { params, responseType: 'text' }).subscribe({
@@ -233,4 +254,50 @@ export class RsvpComponent implements OnInit {
         }
         return 'Unexpected response format from the server.';
     }
+
+    // UI helpers for checkbox selection
+    isSelected(name: string): boolean {
+        return this.selectedAttending().has(name);
+    }
+
+    toggleGuest(name: string, checked: boolean | undefined | null): void {
+        const set = new Set(this.selectedAttending());
+        if (checked) {
+            set.add(name);
+        } else {
+            set.delete(name);
+        }
+        this.selectedAttending.set(set);
+    }
+
+    /**
+     * Displayed party size logic:
+     * - If allComing is ON, show the allowed/obtained party_size (fallback to invited count if null)
+     * - If there is only one invited guest, show party_size (or 1 if party_size is null)
+     * - If toggle is OFF, show the number of checked guests, capped by party_size if present
+     */
+    displayedPartySize = computed<number | null>(() => {
+        const i = this.info();
+        const ps = i?.party_size ?? null;
+        const invited = i?.guest_names ?? [];
+        const invitedCount = invited.length;
+
+        // If all listed guests are attending OR only one invited guest
+        if (this.allComing() || invitedCount === 1) {
+            if (typeof ps === 'number' && ps > 0) {
+                // show the allowed party size (obtained number)
+                // also clamp to invited count if present
+                return invitedCount > 0 ? Math.min(ps, invitedCount) : ps;
+            }
+            // fallback to invited count if party size is unknown
+            return invitedCount > 0 ? invitedCount : null;
+        }
+
+        // Otherwise, toggle is OFF: show how many were checked off
+        const selectedCount = this.selectedAttending().size;
+        if (typeof ps === 'number' && ps > 0) {
+            return Math.min(ps, selectedCount);
+        }
+        return selectedCount || null;
+    });
 }

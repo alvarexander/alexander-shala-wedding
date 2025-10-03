@@ -31,8 +31,9 @@ if ($guestNamesParam !== null && $guestNamesParam !== "") {
 }
 
 // Optional: accept attending_guest_names as a JSON-encoded array of strings
-$attendingNamesParam = isset($_GET["attending_guest_names"]) ? $_GET["attending_guest_names"] : null;
+$attendingNamesParam = array_key_exists("attending_guest_names", $_GET) ? $_GET["attending_guest_names"] : null;
 $attendingGuestNamesArr = [];
+$attendingProvided = array_key_exists("attending_guest_names", $_GET);
 if ($attendingNamesParam !== null && $attendingNamesParam !== "") {
     $decodedA = json_decode($attendingNamesParam, true);
     if (is_array($decodedA)) {
@@ -164,7 +165,7 @@ try {
             $sql .= "guest_names = :gn, ";
             $params[':gn'] = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
         }
-        if (!empty($attendingGuestNamesArr)) {
+        if ($attendingProvided) {
             $sql .= "attending_guest_names = :agn, ";
             $params[':agn'] = json_encode($attendingGuestNamesArr, JSON_UNESCAPED_UNICODE);
         }
