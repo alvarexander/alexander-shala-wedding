@@ -96,7 +96,7 @@ export class RsvpComponent implements OnInit {
     /**
      * Toggle state for marking that all listed guests are attending.
      */
-    allComing = signal<boolean>(false);
+    allComing = signal<boolean>(true);
 
     /**
      * Set of selected attending guests when not allComing.
@@ -268,6 +268,16 @@ export class RsvpComponent implements OnInit {
             set.delete(name);
         }
         this.selectedAttending.set(set);
+
+        // If the toggle is currently OFF and the user has checked all listed guests,
+        // automatically flip the toggle back ON (which hides the checkboxes).
+        if (!this.allComing()) {
+            const invited = this.info()?.guest_names || [];
+            const invitedCount = invited.length;
+            if (invitedCount > 0 && set.size >= invitedCount) {
+                this.allComing.set(true);
+            }
+        }
     }
 
     /**

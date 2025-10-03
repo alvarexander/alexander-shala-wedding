@@ -58,8 +58,8 @@
                         </span>
                             </div>
                             @if (!allComing()) {
-                                <div class="rsvp__detail">
-                                    <span>Select which guest(s) plan to attend</span>
+                                <div class="rsvp__detail animate__animated animate__fadeIn">
+                                    <span>Which Guest(s) Plan To Attend</span>
                                     <span class="value value--checkboxes">
                                         @for (name of info()?.guest_names; track name) {
                                             <mat-checkbox
