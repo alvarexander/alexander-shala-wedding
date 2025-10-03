@@ -7,7 +7,8 @@
         font-weight: 600;
     }
 
-    &__row {
+    /* Row modifier for edit mode only */
+    &__row--edit {
         height: 90px;
     }
 
