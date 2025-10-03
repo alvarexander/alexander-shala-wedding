@@ -89,3 +89,20 @@
         }
     }
 }
+
+@media (max-width: 768px) {
+    .rsvp {
+        &__title {
+            font-size: 1.6rem;
+        }
+
+        &__content {
+            font-size: 1.05rem;
+        }
+
+        &__img {
+            height: 220px;
+        }
+        /* Button sizes intentionally unchanged across breakpoints */
+    }
+}
