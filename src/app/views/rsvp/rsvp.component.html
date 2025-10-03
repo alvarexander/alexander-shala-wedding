@@ -87,7 +87,7 @@
                         <button
                             mat-flat-button
                             color="primary"
-                            class="yes"
+                            class="yes rsvp__split-button"
                             [disabled]="submitting() === 'yes'"
                             (click)="rsvp('yes')"
                         >
@@ -96,7 +96,7 @@
                         <button
                             mat-stroked-button
                             color="warn"
-                            class="no"
+                            class="no rsvp__split-button"
                             [disabled]="submitting() === 'no'"
                             (click)="rsvp('no')"
                         >
@@ -106,7 +106,7 @@
                         <button
                             mat-flat-button
                             color="primary"
-                            class="yes"
+                            class="yes rsvp__only-button"
                             [disabled]="submitting() === 'yes'"
                             (click)="rsvp('yes')"
                         >
