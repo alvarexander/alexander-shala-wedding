@@ -5,6 +5,7 @@ import { QuestionsAndAnswersComponent } from './views/questions-and-answers/ques
 import { RegistryComponent } from './views/registry/registry.component';
 import { GalleryComponent } from './views/gallery/gallery.component';
 import { RsvpComponent } from './views/rsvp/rsvp.component';
+import { AdminComponent } from './views/admin/admin.component';
 
 export const routes: Routes = [
     { path: 'home', component: HomeComponent, pathMatch: 'full' },
@@ -18,4 +19,5 @@ export const routes: Routes = [
     { path: '', component: HomeComponent, pathMatch: 'full' },
     { path: 'gallery', component: GalleryComponent, pathMatch: 'full' },
     { path: 'rsvp/:code', component: RsvpComponent, pathMatch: 'full' },
+    { path: 'admin', component: AdminComponent, pathMatch: 'full' },
 ];

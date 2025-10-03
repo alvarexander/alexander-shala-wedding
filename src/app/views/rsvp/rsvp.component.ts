@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -265,11 +265,22 @@ export class RsvpComponent implements OnInit {
         return 'Unexpected response format from the server.';
     }
 
-    // UI helpers for checkbox selection
+    /**
+     * Checks whether a given guest name is currently selected in the UI.
+     * @param name The guest name to check
+     * @returns True if the guest is selected to attend; otherwise false
+     */
     isSelected(name: string): boolean {
         return this.selectedAttending().has(name);
     }
 
+    /**
+     * Toggles the selection state of a guest checkbox.
+     * Adds to or removes from the selectedAttending set in an immutable way
+     * so Angular signals properly detect and propagate the change.
+     * @param name The guest name associated with the checkbox
+     * @param checked The new checked state (true/false)
+     */
     toggleGuest(name: string, checked: boolean | undefined | null): void {
         const set = new Set(this.selectedAttending());
         if (checked) {

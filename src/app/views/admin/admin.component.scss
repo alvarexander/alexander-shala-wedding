@@ -1,0 +1,65 @@
+.admin {
+    padding: 16px;
+
+    &__title {
+        font-size: 1.8rem;
+        margin: 0 0 12px 0;
+        font-weight: 600;
+    }
+
+    &__toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    &__filter {
+        width: 320px;
+        max-width: 100%;
+    }
+
+    &__table-card {
+        background: white;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    .w-120 {
+        width: 120px;
+    }
+    .w-180 {
+        width: 180px;
+    }
+    .w-220 {
+        width: 220px;
+    }
+    .w-300 {
+        width: 300px;
+        max-width: 100%;
+    }
+
+    &__loading {
+        padding: 24px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin {
+        &__title {
+            font-size: 1.4rem;
+        }
+        &__filter {
+            width: 100%;
+        }
+        &__toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+}

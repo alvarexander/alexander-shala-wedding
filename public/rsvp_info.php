@@ -1,7 +1,4 @@
 <?php
-// Simple endpoint to get RSVP details (guest_names array, party_size, and status) by code
-// Usage: /rsvp_info.php?id=123e4567-e89b-12d3-a456-426614174000
-
 header('Content-Type: application/json');
 
 function respond($statusCode, $payload) {
