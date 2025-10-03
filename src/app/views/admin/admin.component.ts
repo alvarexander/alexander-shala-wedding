@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -106,37 +106,9 @@ export class AdminComponent implements OnInit, AfterViewInit {
      * Initializes the admin page. Prompts for password if needed, then loads data.
      */
     ngOnInit(): void {
-        const passOk = sessionStorage.getItem('admin_pass_ok') === '1';
-        if (!passOk) {
-            const ref = this.dialog.open(PasswordDialogComponent, { disableClose: true });
-            ref.afterClosed().subscribe((provided) => {
-                if (!provided) {
-                    alert('Access denied');
-                    this.router.navigateByUrl('/');
-                    return;
-                }
-                // Verify the password with backend
-                this.http
-                    .post<{ ok: boolean } | { ok: false; error: string }>(
-                        '/admin_auth.php',
-                        { password: provided },
-                    )
-                    .subscribe({
-                        next: (res: any) => {
-                            if (!res || !res.ok) {
-                                alert('Access denied');
-                                this.router.navigateByUrl('/');
-                                return;
-                            }
-                            sessionStorage.setItem('admin_pass_ok', '1');
-                            this.load();
-                        },
-                        error: () => {
-                            alert('Access denied');
-                            this.router.navigateByUrl('/');
-                        },
-                    });
-            });
+        const token = sessionStorage.getItem('admin_token');
+        if (!token) {
+            this.promptForPassword();
         } else {
             this.load();
         }
@@ -159,6 +131,39 @@ export class AdminComponent implements OnInit, AfterViewInit {
         };
     }
 
+    /** Opens the password dialog and attempts authentication. */
+    private promptForPassword(): void {
+        const ref = this.dialog.open(PasswordDialogComponent, { disableClose: true });
+        ref.afterClosed().subscribe((provided) => {
+            if (!provided) {
+                alert('Access denied');
+                this.router.navigateByUrl('/');
+                return;
+            }
+            // Verify the password with backend
+            this.http
+                .post<{ ok: boolean; token?: string } | { ok: false; error: string }>(
+                    '/admin_auth.php',
+                    { password: provided },
+                )
+                .subscribe({
+                    next: (res: any) => {
+                        if (!res || !res.ok || !res.token) {
+                            alert('Access denied');
+                            this.router.navigateByUrl('/');
+                            return;
+                        }
+                        sessionStorage.setItem('admin_token', res.token as string);
+                        this.load();
+                    },
+                    error: () => {
+                        alert('Access denied');
+                        this.router.navigateByUrl('/');
+                    },
+                });
+        });
+    }
+
     ngAfterViewInit(): void {
         // Defer to ensure the sort exists when initial load toggles the view
         setTimeout(() => {
@@ -168,8 +173,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     /** Loads all invitation rows and status options into the table. */
     load(): void {
+        const token = sessionStorage.getItem('admin_token') || '';
+        const headers = new HttpHeaders({ 'X-Admin-Token': token });
         this.loading.set(true);
-        this.http.get<AdminListResponse>('/admin_list.php').subscribe({
+        this.http.get<AdminListResponse>('/admin_list.php', { headers }).subscribe({
             next: (res) => {
                 if (!res.ok) throw new Error('Failed to load');
                 this.statuses = res.statuses;
@@ -177,9 +184,15 @@ export class AdminComponent implements OnInit, AfterViewInit {
                 if (this.sort) this.dataSource.sort = this.sort;
                 this.loading.set(false);
             },
-            error: () => {
+            error: (err) => {
                 this.loading.set(false);
-                alert('Failed to load admin data');
+                if (err?.status === 401) {
+                    // token invalid or missing – prompt again
+                    sessionStorage.removeItem('admin_token');
+                    this.promptForPassword();
+                } else {
+                    alert('Failed to load admin data');
+                }
             },
         });
     }
@@ -214,6 +227,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
      * @param edited Optional partial overrides to apply when sending
      */
     save(row: AdminRow, edited: Partial<AdminRow> = {}): void {
+        const token = sessionStorage.getItem('admin_token') || '';
+        const headers = new HttpHeaders({ 'X-Admin-Token': token });
         // Build payload with edited values (CSV inputs already bound into row via template refs)
         const payload: any = {
             id: row.id,
@@ -226,7 +241,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
         // Apply any overrides
         Object.assign(payload, edited);
         this.savingId.set(row.id);
-        this.http.post('/admin_update.php', payload).subscribe({
+        this.http.post('/admin_update.php', payload, { headers }).subscribe({
             next: (res: any) => {
                 this.savingId.set(null);
                 if (!res.ok) {
@@ -240,9 +255,15 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     this.dataSource._updateChangeSubscription();
                 }
             },
-            error: () => {
+            error: (err) => {
                 this.savingId.set(null);
-                alert('Save failed');
+                if (err?.status === 401) {
+                    sessionStorage.removeItem('admin_token');
+                    alert('Your session expired. Please re-authenticate.');
+                    this.promptForPassword();
+                } else {
+                    alert('Save failed');
+                }
             },
         });
     }

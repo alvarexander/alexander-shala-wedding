@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json');
+session_start();
 
 /**
  * Respond helper: sends JSON with an HTTP status code and exits.
@@ -79,9 +80,16 @@ try {
         respond(401, ['ok' => false, 'error' => 'Invalid credentials']);
     }
 
-    // Optionally, return a minimal profile; client will store a sessionStorage flag for now.
+    // Issue a session-bound token and return it to the client
+    $token = bin2hex(random_bytes(32));
+    $_SESSION['admin_user_id'] = (int)$row['id'];
+    $_SESSION['admin_username'] = $row['username'];
+    $_SESSION['admin_token'] = $token;
+    $_SESSION['admin_token_issued_at'] = time();
+
     respond(200, [
         'ok' => true,
+        'token' => $token,
         'user' => [
             'id' => (int)$row['id'],
             'username' => $row['username'],

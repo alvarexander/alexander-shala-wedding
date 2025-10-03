@@ -1,10 +1,18 @@
 <?php
 header('Content-Type: application/json');
+session_start();
 
 function respond($statusCode, $payload) {
     http_response_code($statusCode);
     echo json_encode($payload, JSON_PRETTY_PRINT);
     exit;
+}
+
+// Verify admin token from header against session
+$hdrs = getallheaders();
+$clientToken = $hdrs['X-Admin-Token'] ?? $hdrs['x-admin-token'] ?? null;
+if (!isset($_SESSION['admin_token']) || !$clientToken || !hash_equals((string)$_SESSION['admin_token'], (string)$clientToken)) {
+    respond(401, ['ok' => false, 'error' => 'Unauthorized']);
 }
 
 $host = getenv('DB_HOST') ?: '127.0.0.1';
