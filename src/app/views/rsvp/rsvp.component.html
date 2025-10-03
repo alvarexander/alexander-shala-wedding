@@ -1,8 +1,5 @@
 <div class="rsvp">
     <mat-card appearance="outlined" class="rsvp__card animate__animated animate__zoomIn">
-        <mat-card-header class="d-flex align-items-center">
-            <mat-card-title class="rsvp__title">RSVP To Our Special Day</mat-card-title>
-        </mat-card-header>
         @if (!loading() && !error() && info()) {
             <img mat-card-image class="mt-3" src="/images/chapel.webp" alt="Photo of Chapel & Cellar">
         }
@@ -16,9 +13,8 @@
             @if (!loading() && !error() && info()) {
                 <p>
                     @if ((info()?.guest_names?.length || 0) > 0) {
-                        <b>{{ (info()?.guest_names || []).join(', ') }}</b>
+                        <b class="d-block text-center">{{ (info()?.guest_names || []).join(', ') }}</b>
                     }
-                    <br/>
                     <br/>
                     Shala and I are so excited to celebrate our special day with you! We would be honored to have you
                     here to share our love and celebrate our special day together.
