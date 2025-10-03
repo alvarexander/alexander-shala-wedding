@@ -85,10 +85,13 @@ export class AdminComponent implements OnInit, AfterViewInit {
     ];
     /** Data source feeding the mat-table (with paginator/sort integration). */
     dataSource = new MatTableDataSource<AdminRow>([]);
+
     /** Available statuses returned by the server for editing. */
     statuses: { id: number; code: string; label: string }[] = [];
+
     /** True while list is being loaded from the server. */
     loading = signal(false);
+
     /** Row id currently being saved (used to disable Save button). */
     savingId = signal<number | null>(null);
 
@@ -97,6 +100,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     /** Free-text filter bound to the table. */
     filterCtrl = new FormControl('');
+
+
+    /** Free-text filter bound to the table. */
+    private readonly _PASSWORD= 'Alex&Shala0225656r!@#'
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -109,7 +116,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
         if (!passOk) {
             const ref = this.dialog.open(PasswordDialogComponent, { disableClose: true });
             ref.afterClosed().subscribe((provided) => {
-                if (provided !== 'password') {
+                if (provided !== this._PASSWORD) {
                     alert('Access denied');
                     this.router.navigateByUrl('/');
                     return;
@@ -175,6 +182,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
     toCsv(arr: string[] | null | undefined): string {
         return (arr ?? []).join(', ');
     }
+
     /**
      * Parses a comma-separated string from the editor into a string array.
      * Trims whitespace and removes empty entries.
