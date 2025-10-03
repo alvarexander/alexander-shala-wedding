@@ -106,29 +106,7 @@
                         </td>
                     </ng-container>
 
-                    <!-- Actions -->
-                    <ng-container matColumnDef="actions">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let row">
-                            @if (editable()) {
-                                <button
-                                    mat-flat-button
-                                    color="primary"
-                                    class="mt-1"
-                                    (click)="save(row)"
-                                    [disabled]="savingId() === row.id"
-                                >
-                                    <mat-icon class="material-symbols-outlined">save</mat-icon>
-                                    Save
-                                </button>
-                                <button class="my-1" mat-button (click)="reset()" [disabled]="savingId() === row.id">
-                                    Reset
-                                </button>
-                            }
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row class="fw-bolder" *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-header-row class="fw-bolder admin__header-row" *matHeaderRowDef="displayedColumns"></tr>
                     <tr
                         mat-row
                         class="admin__row"
@@ -142,6 +120,19 @@
         <div class="admin__loading">
             <mat-spinner diameter="48"></mat-spinner>
             <div style="margin-top: 8px; opacity: 0.8">Loading…</div>
+        </div>
+    }
+
+    @if (editable()) {
+        <div class="admin__fab-container">
+            <button mat-fab extended color="primary" (click)="saveAll()" [disabled]="savingAll() || loading()">
+                <mat-icon class="material-symbols-outlined">save</mat-icon>
+                Save changes
+            </button>
+            <button mat-fab extended color="warn" (click)="resetAll()" [disabled]="savingAll() || loading()">
+                <mat-icon class="material-symbols-outlined">undo</mat-icon>
+                Reset changes
+            </button>
         </div>
     }
 </div>

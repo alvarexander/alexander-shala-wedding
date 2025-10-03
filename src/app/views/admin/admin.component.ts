@@ -85,7 +85,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
         'attending_guest_names',
         'status',
         'party_size',
-        'actions',
     ];
     /** Data source feeding the mat-table (with paginator/sort integration). */
     dataSource = new MatTableDataSource<AdminRow>([]);
@@ -101,6 +100,9 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     /** Edit mode toggle (read-only by default). */
     editable = signal<boolean>(false);
+
+    /** Global saving flag when saving all rows at once. */
+    savingAll = signal<boolean>(false);
 
     /** Free-text filter bound to the table. */
     filterCtrl = new FormControl('');
@@ -272,10 +274,56 @@ export class AdminComponent implements OnInit, AfterViewInit {
         });
     }
 
+    /** Saves all rows currently in the table (best-effort, sequentially). */
+    async saveAll(): Promise<void> {
+        if (this.savingAll()) return;
+        const token = sessionStorage.getItem('admin_token') || '';
+        const headers = new HttpHeaders({ 'X-Admin-Token': token });
+        const rows = this.dataSource.data;
+        if (!rows || rows.length === 0) return;
+
+        this.savingAll.set(true);
+        try {
+            for (const row of rows) {
+                const payload: any = {
+                    id: row.id,
+                    invite_code: row.invite_code,
+                    party_size: row.party_size,
+                    status: row.status,
+                    guest_names: row.guest_names,
+                    attending_guest_names: row.attending_guest_names,
+                };
+                await new Promise<void>((resolve) => {
+                    this.http.post('/admin_update.php', payload, { headers }).subscribe({
+                        next: (res: any) => {
+                            if (res?.ok && res.item) {
+                                const idx = this.dataSource.data.findIndex((r) => r.id === row.id);
+                                if (idx >= 0) {
+                                    this.dataSource.data[idx] = res.item as AdminRow;
+                                    this.dataSource._updateChangeSubscription();
+                                }
+                            }
+                            resolve();
+                        },
+                        error: () => resolve(), // continue best-effort on error
+                    });
+                });
+            }
+            this.snackBar.open('All changes saved', undefined, { duration: 2000 });
+        } finally {
+            this.savingAll.set(false);
+        }
+    }
+
     /** Reloads the table from the server, discarding any unsaved edits. */
     reset(): void {
         // Reload all data (simplest minimal approach)
         this.load();
+    }
+
+    /** Reset via floating action button (alias to reset). */
+    resetAll(): void {
+        this.reset();
     }
 
     /**
