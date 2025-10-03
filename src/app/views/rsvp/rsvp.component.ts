@@ -192,7 +192,8 @@ export class RsvpComponent implements OnInit {
 
             // Determine attending_guest_names strictly from current selection (reflect DB state; no defaults)
             const sel = Array.from(this.selectedAttending().values());
-            const attending = typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
+            const attending =
+                typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
             params['attending_guest_names'] = JSON.stringify(attending);
         }
 
@@ -269,5 +270,4 @@ export class RsvpComponent implements OnInit {
         }
         this.selectedAttending.set(set);
     }
-
 }
