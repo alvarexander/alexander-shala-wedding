@@ -45,7 +45,14 @@ interface RsvpUpdateResponse {
 @Component({
     selector: 'app-rsvp',
     standalone: true,
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatSlideToggleModule, MatCheckboxModule],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSlideToggleModule,
+        MatCheckboxModule,
+    ],
     templateUrl: './rsvp.component.html',
     styleUrls: ['./rsvp.component.scss'],
 })
@@ -178,10 +185,11 @@ export class RsvpComponent implements OnInit {
 
             // Existing (optional) manual names CSV if present (kept for flexibility)
             const raw = (namesCsv || '').split(',');
-            const parsed = raw
-                .map((s) => s.trim())
-                .filter((s) => s.length > 0);
-            const limitedFromInput = typeof partySize === 'number' && partySize > 0 ? parsed.slice(0, partySize) : parsed;
+            const parsed = raw.map((s) => s.trim()).filter((s) => s.length > 0);
+            const limitedFromInput =
+                typeof partySize === 'number' && partySize > 0
+                    ? parsed.slice(0, partySize)
+                    : parsed;
             if (limitedFromInput.length > 0) {
                 params['guest_names'] = JSON.stringify(limitedFromInput);
             }
@@ -190,12 +198,16 @@ export class RsvpComponent implements OnInit {
             let attending: string[] = [];
             if (this.allComing()) {
                 // All listed guests (capped by party size)
-                const listed = (this.info()?.guest_names || []);
-                attending = typeof partySize === 'number' && partySize > 0 ? listed.slice(0, partySize) : listed;
+                const listed = this.info()?.guest_names || [];
+                attending =
+                    typeof partySize === 'number' && partySize > 0
+                        ? listed.slice(0, partySize)
+                        : listed;
             } else {
                 // Only the selected guests (capped by party size)
                 const sel = Array.from(this.selectedAttending().values());
-                attending = typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
+                attending =
+                    typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
             }
             params['attending_guest_names'] = JSON.stringify(attending);
         }
@@ -321,43 +333,5 @@ export class RsvpComponent implements OnInit {
             return Math.min(ps, selectedCount);
         }
         return selectedCount || null;
-    });
-
-    /**
-     * Dynamic label for the Yes button: use "I" vs "We" based on attendee count semantics.
-     * Rules:
-     * - If there is only one invited guest total → "I".
-     * - Else if toggle is ON (all coming) → "We".
-     * - Else (toggle OFF): more than one selected → "We"; otherwise → "I".
-     */
-    yesAttendLabel = computed<string>(() => {
-        const invitedCount = this.info()?.guest_names?.length ?? 0;
-        if (invitedCount <= 1) {
-            return 'Yes, I will attend';
-        }
-        if (this.allComing()) {
-            return 'Yes, We will attend';
-        }
-        const selectedCount = this.selectedAttending().size;
-        return selectedCount > 1 ? 'Yes, We will attend' : 'Yes, I will attend';
-    });
-
-    /**
-     * Dynamic label for the No button: use "I" vs "We" based on the same semantics as the Yes button.
-     * Rules mirror yesAttendLabel():
-     * - If there is only one invited guest total → "I".
-     * - Else if toggle is ON (all coming) → "We".
-     * - Else (toggle OFF): more than one selected → "We"; otherwise → "I".
-     */
-    noAttendLabel = computed<string>(() => {
-        const invitedCount = this.info()?.guest_names?.length ?? 0;
-        if (invitedCount <= 1) {
-            return "No, I can't attend";
-        }
-        if (this.allComing()) {
-            return "No, We can't attend";
-        }
-        const selectedCount = this.selectedAttending().size;
-        return selectedCount > 1 ? "No, We can't attend" : "No, I can't attend";
     });
 }
