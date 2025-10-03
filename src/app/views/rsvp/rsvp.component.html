@@ -1,9 +1,9 @@
 <div class="rsvp">
     <mat-card appearance="outlined" class="rsvp__card animate__animated animate__zoomIn">
         <mat-card-header class="d-flex align-items-center">
-            <mat-card-title>RSVP To Our Special Day</mat-card-title>
+            <mat-card-title class="rsvp__title">RSVP To Our Special Day</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content class="rsvp__content">
             @if (loading()) {
                 <div class="rsvp__loading">Loading details…</div>
             } @else {
@@ -111,7 +111,7 @@
                             [disabled]="submitting() === 'yes'"
                             (click)="rsvp('yes')"
                         >
-                            Set Your RSVP Response
+                            Confirm
                         </button>
                     }
                 </div>
