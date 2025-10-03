@@ -48,7 +48,7 @@ try {
     ]);
 }
 
-$stmt = $pdo->prepare('SELECT code, guest_names, attending_guest_names, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?');
+$stmt = $pdo->prepare('SELECT rc.code, rc.guest_names, rc.attending_guest_names, rc.party_size, rs.code AS rsvp_response, rc.rsvped_at, rc.updated_at FROM rsvp_codes rc JOIN rsvp_statuses rs ON rs.id = rc.status_id WHERE rc.code = ?');
 $stmt->execute([$codeNorm]);
 $row = $stmt->fetch();
 

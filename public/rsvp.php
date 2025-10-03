@@ -100,7 +100,7 @@ if (!preg_match('/^[A-Z0-9_-]{1,36}$/', $codeNorm)) {
 
 // Ensure code exists
 $stmt = $pdo->prepare(
-    "SELECT id, code, guest_names, attending_guest_names, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?"
+    "SELECT rc.id, rc.code, rc.guest_names, rc.attending_guest_names, rc.party_size, rs.code AS rsvp_response, rc.rsvped_at, rc.updated_at FROM rsvp_codes rc JOIN rsvp_statuses rs ON rs.id = rc.status_id WHERE rc.code = ?"
 );
 $stmt->execute([$codeNorm]);
 $row = $stmt->fetch();
@@ -147,7 +147,7 @@ try {
     if ($response === 'no') {
         // Decline: clear attending_guest_names
         $update = $pdo->prepare(
-            "UPDATE rsvp_codes SET rsvp_response = 'no', " .
+            "UPDATE rsvp_codes SET status_id = (SELECT id FROM rsvp_statuses WHERE code = 'no'), " .
             (empty($guestNamesArr) ? "" : "guest_names = :gn, ") .
             "attending_guest_names = JSON_ARRAY(), rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = :code"
         );
@@ -183,8 +183,8 @@ try {
             $attendingJson = json_encode($sel, JSON_UNESCAPED_UNICODE);
         }
 
-        $sql = "UPDATE rsvp_codes SET rsvp_response = :status, ";
-        $params = [':code' => $codeNorm, ':status' => $finalStatus];
+        $sql = "UPDATE rsvp_codes SET status_id = (SELECT id FROM rsvp_statuses WHERE code = :status_code), ";
+        $params = [':code' => $codeNorm, ':status_code' => $finalStatus];
         if (!empty($guestNamesArr)) {
             $sql .= "guest_names = :gn, ";
             $params[':gn'] = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
@@ -199,7 +199,7 @@ try {
     }
 
     $check = $pdo->prepare(
-        "SELECT id, code, guest_names, attending_guest_names, party_size, rsvp_response, rsvped_at, updated_at FROM rsvp_codes WHERE code = ?"
+        "SELECT rc.id, rc.code, rc.guest_names, rc.attending_guest_names, rc.party_size, rs.code AS rsvp_response, rc.rsvped_at, rc.updated_at FROM rsvp_codes rc JOIN rsvp_statuses rs ON rs.id = rc.status_id WHERE rc.code = ?"
     );
     $check->execute([$codeNorm]);
     $updated = $check->fetch();
