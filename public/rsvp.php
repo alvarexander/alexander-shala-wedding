@@ -213,8 +213,14 @@ try {
         getenv("RSVP_FROM_EMAIL") ?:
         "no-reply@" . ($_SERVER["SERVER_NAME"] ?? "localhost");
 
-    $subjectBase =
-        "RSVP Response Received - " . strtoupper($updated["rsvp_response"]);
+    // Build subject to include partial attendance note when applicable
+    $respLowerForSubject = strtolower($updated["rsvp_response"] ?? '');
+    if ($respLowerForSubject === 'yes partial party attendance') {
+        $subjectResponseDisplay = 'YES (PARTIAL PARTY ATTENDANCE)';
+    } else {
+        $subjectResponseDisplay = strtoupper($updated["rsvp_response"] ?? '');
+    }
+    $subjectBase = "RSVP Response Received - " . $subjectResponseDisplay;
     // Decode guest names for email/subject
     $updatedGuestNames = [];
     if (isset($updated['guest_names']) && $updated['guest_names'] !== null && $updated['guest_names'] !== '') {
@@ -247,6 +253,14 @@ try {
     $attendingGuestsHtml = '';
     if ($attendingGuestsJoined !== '' && (strtolower($updated['rsvp_response']) === 'yes' || strtolower($updated['rsvp_response']) === 'yes partial party attendance')) {
         $attendingGuestsHtml = '<p><span class="label">Attending guest(s):</span> ' . htmlspecialchars($attendingGuestsJoined) . '</p>';
+    }
+
+    // Build email response label; include explicit note for partial attendance
+    $respLower = strtolower($updated["rsvp_response"] ?? '');
+    if ($respLower === 'yes partial party attendance') {
+        $responseDisplay = 'YES (PARTIAL PARTY ATTENDANCE)';
+    } else {
+        $responseDisplay = strtoupper($updated["rsvp_response"] ?? '');
     }
 
     // Build HTML email body
@@ -286,11 +300,11 @@ try {
         <p><span class="label">Code:</span> ' .
         htmlspecialchars($updated["code"]) .
         '</p>
-        <p><span class="label">Name:</span> ' .
+        <p><span class="label">Guest name(s):</span> ' .
         htmlspecialchars($guestNameForEmail) .
         '</p>
         <p><span class="label">Response:</span> ' .
-        htmlspecialchars(strtoupper($updated["rsvp_response"])) .
+        htmlspecialchars($responseDisplay) .
         '</p>' .
         $attendingGuestsHtml .
         '<p><span class="label">Party size:</span> ' .
