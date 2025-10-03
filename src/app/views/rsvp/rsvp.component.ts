@@ -178,6 +178,8 @@ export class RsvpComponent implements OnInit {
 
         if (response === 'yes') {
             const partySize = this.info()?.party_size ?? null;
+            const guestList = (this.info()?.guest_names || []) as string[];
+            const guestCount = guestList.length;
 
             // Existing (optional) manual names CSV if present (kept for flexibility)
             const raw = (namesCsv || '').split(',');
@@ -190,11 +192,18 @@ export class RsvpComponent implements OnInit {
                 params['guest_names'] = JSON.stringify(limitedFromInput);
             }
 
-            // Determine attending_guest_names strictly from current selection (reflect DB state; no defaults)
-            const sel = Array.from(this.selectedAttending().values());
-            const attending =
-                typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
-            params['attending_guest_names'] = JSON.stringify(attending);
+            // Determine attending_guest_names
+            if (guestCount === 1) {
+                // Single-guest invite: clicking Yes implies that guest is attending
+                const onlyGuest = guestList[0];
+                params['attending_guest_names'] = JSON.stringify([onlyGuest]);
+            } else {
+                // Multi-guest: use current selection strictly (reflect DB state; no defaults)
+                const sel = Array.from(this.selectedAttending().values());
+                const attending =
+                    typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
+                params['attending_guest_names'] = JSON.stringify(attending);
+            }
         }
 
         this._http.get(`/rsvp.php`, { params, responseType: 'text' }).subscribe({
