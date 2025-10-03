@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -15,6 +15,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { PasswordDialogComponent } from './password-dialog.component';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 /**
  * Shape of a single invitation row displayed/edited in the Admin table.
@@ -57,6 +58,7 @@ interface AdminListResponse {
         ReactiveFormsModule,
         FormsModule,
         MatSlideToggleModule,
+        MatProgressSpinnerModule,
     ],
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
@@ -65,7 +67,7 @@ interface AdminListResponse {
  * Admin view component that is gated by a simple password dialog.
  * Presents a Material table for viewing and editing invitation rows.
  */
-export class AdminComponent implements OnInit {
+export class AdminComponent implements OnInit, AfterViewInit {
     private http = inject(HttpClient);
     private dialog = inject(MatDialog);
     private router = inject(Router);
@@ -137,6 +139,14 @@ export class AdminComponent implements OnInit {
         };
     }
 
+    ngAfterViewInit(): void {
+        // Defer to ensure the paginator/sort exist when initial load toggles the view
+        setTimeout(() => {
+            if (this.paginator) this.dataSource.paginator = this.paginator;
+            if (this.sort) this.dataSource.sort = this.sort;
+        });
+    }
+
     /** Loads all invitation rows and status options into the table. */
     load(): void {
         this.loading.set(true);
@@ -144,7 +154,7 @@ export class AdminComponent implements OnInit {
             next: (res) => {
                 if (!res.ok) throw new Error('Failed to load');
                 this.statuses = res.statuses;
-                this.dataSource = new MatTableDataSource(res.items);
+                this.dataSource.data = res.items;
                 if (this.paginator) this.dataSource.paginator = this.paginator;
                 if (this.sort) this.dataSource.sort = this.sort;
                 this.loading.set(false);
