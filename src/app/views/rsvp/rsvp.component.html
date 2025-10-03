@@ -13,7 +13,7 @@
             @if (!loading() && !error() && info()) {
                 <p>
                     @if ((info()?.guest_names?.length || 0) > 0) {
-                        <b class="d-block text-center">{{ (info()?.guest_names || []).join(', ') }}</b>
+                        <b class="d-block text-center rsvp__title">{{ (info()?.guest_names || []).join(', ') }}</b>
                     }
                     <br/>
                     Shala and I are so excited to celebrate our special day with you! We would be honored to have you
