@@ -7,6 +7,10 @@
         font-weight: 600;
     }
 
+    &__row {
+        min-height: 97px;
+    }
+
     &__toolbar {
         display: flex;
         align-items: center;
