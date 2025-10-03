@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -21,7 +20,7 @@ interface RsvpInfoResponse {
     guest_names?: string[];
     attending_guest_names?: string[];
     party_size?: number | null;
-    rsvp_response?: 'pending' | 'yes' | 'no';
+    rsvp_response?: 'pending' | 'yes' | 'no' | 'yes partial party attendance';
     rsvped_at?: string | null;
     updated_at?: string | null;
     error?: string;
@@ -36,7 +35,7 @@ interface RsvpUpdateResponse {
     code?: string;
     guest_names?: string[];
     attending_guest_names?: string[];
-    rsvp_response?: 'yes' | 'no' | 'pending';
+    rsvp_response?: 'yes' | 'no' | 'pending' | 'yes partial party attendance';
     rsvped_at?: string | null;
     updated_at?: string | null;
     email_sent?: boolean;
@@ -51,7 +50,6 @@ interface RsvpUpdateResponse {
         MatCardModule,
         MatButtonModule,
         MatIconModule,
-        MatSlideToggleModule,
         MatCheckboxModule,
         MatSnackBarModule,
     ],
@@ -104,12 +102,7 @@ export class RsvpComponent implements OnInit {
     submitting = signal<'yes' | 'no' | null>(null);
 
     /**
-     * Toggle state for marking that all listed guests are attending.
-     */
-    allComing = signal<boolean>(true);
-
-    /**
-     * Set of selected attending guests when not allComing.
+     * Set of selected attending guests when there are multiple guests.
      */
     selectedAttending = signal<Set<string>>(new Set<string>());
 
@@ -197,21 +190,9 @@ export class RsvpComponent implements OnInit {
                 params['guest_names'] = JSON.stringify(limitedFromInput);
             }
 
-            // Determine attending_guest_names based on toggle/selection and ALWAYS send it (even if empty)
-            let attending: string[] = [];
-            if (this.allComing()) {
-                // All listed guests (capped by party size)
-                const listed = this.info()?.guest_names || [];
-                attending =
-                    typeof partySize === 'number' && partySize > 0
-                        ? listed.slice(0, partySize)
-                        : listed;
-            } else {
-                // Only the selected guests (capped by party size)
-                const sel = Array.from(this.selectedAttending().values());
-                attending =
-                    typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
-            }
+            // Determine attending_guest_names strictly from current selection (reflect DB state; no defaults)
+            const sel = Array.from(this.selectedAttending().values());
+            const attending = typeof partySize === 'number' && partySize > 0 ? sel.slice(0, partySize) : sel;
             params['attending_guest_names'] = JSON.stringify(attending);
         }
 
@@ -223,7 +204,7 @@ export class RsvpComponent implements OnInit {
                         `RSVP recorded as ${res.rsvp_response?.toUpperCase()}. Thank you!`,
                     );
                     // Toast confirmation
-                    this._snack.open('💌 Thank you for your response', 'Close', {
+                    this._snack.open('💌  Thank you for your response', 'Close', {
                         duration: 4000,
                     });
                     // Refresh info to reflect updates
@@ -287,58 +268,6 @@ export class RsvpComponent implements OnInit {
             set.delete(name);
         }
         this.selectedAttending.set(set);
-
-        // If the toggle is currently OFF and the user has checked all listed guests,
-        // automatically flip the toggle back ON (which hides the checkboxes).
-        if (!this.allComing()) {
-            const invited = this.info()?.guest_names || [];
-            const invitedCount = invited.length;
-            if (invitedCount > 0 && set.size >= invitedCount) {
-                this.allComing.set(true);
-            }
-        }
     }
 
-    /** Handle slide-toggle changes for "All Listed Guest Attending".
-     * If toggled OFF, reset any per-guest selections to unchecked.
-     */
-    onToggleAllComing(checked: boolean | undefined | null): void {
-        const isChecked = !!checked;
-        this.allComing.set(isChecked);
-        if (!isChecked) {
-            // Clear all selected guest checkboxes when turning the toggle OFF
-            this.selectedAttending.set(new Set<string>());
-        }
-    }
-
-    /**
-     * Displayed party size logic:
-     * - If allComing is ON, show the allowed/obtained party_size (fallback to invited count if null)
-     * - If there is only one invited guest, show party_size (or 1 if party_size is null)
-     * - If toggle is OFF, show the number of checked guests, capped by party_size if present
-     */
-    displayedPartySize = computed<number | null>(() => {
-        const i = this.info();
-        const ps = i?.party_size ?? null;
-        const invited = i?.guest_names ?? [];
-        const invitedCount = invited.length;
-
-        // If all listed guests are attending OR only one invited guest
-        if (this.allComing() || invitedCount === 1) {
-            if (typeof ps === 'number' && ps > 0) {
-                // show the allowed party size (obtained number)
-                // also clamp to invited count if present
-                return invitedCount > 0 ? Math.min(ps, invitedCount) : ps;
-            }
-            // fallback to invited count if party size is unknown
-            return invitedCount > 0 ? invitedCount : null;
-        }
-
-        // Otherwise, toggle is OFF: show how many were checked off
-        const selectedCount = this.selectedAttending().size;
-        if (typeof ps === 'number' && ps > 0) {
-            return Math.min(ps, selectedCount);
-        }
-        return selectedCount || null;
-    });
 }

@@ -158,18 +158,39 @@ try {
         $update->bindValue(':code', $codeNorm, PDO::PARAM_STR);
         $update->execute();
     } else {
-        // Accept: optionally set guest_names and attending_guest_names
-        $sql = "UPDATE rsvp_codes SET rsvp_response = 'yes', ";
-        $params = [':code' => $codeNorm];
+        // Accept intent received: determine final status (Yes, Partial, or No) based on attending selections
+        // Decode listed guest_names from the current row
+        $listedGuests = [];
+        if (isset($row['guest_names']) && $row['guest_names'] !== null && $row['guest_names'] !== '') {
+            $lg = json_decode($row['guest_names'], true);
+            if (is_array($lg)) { $listedGuests = array_values(array_filter($lg, 'is_string')); }
+        }
+        // Use provided attending list or default to empty selection
+        $sel = $attendingProvided ? $attendingGuestNamesArr : [];
+        // Keep only names that are part of this invite
+        $sel = array_values(array_intersect($listedGuests, $sel));
+        $listedCount = count($listedGuests);
+        $selCount = count($sel);
+
+        if ($selCount === 0) {
+            $finalStatus = 'no';
+            $attendingJson = json_encode([], JSON_UNESCAPED_UNICODE);
+        } elseif ($listedCount > 0 && $selCount === $listedCount) {
+            $finalStatus = 'yes';
+            $attendingJson = json_encode($sel, JSON_UNESCAPED_UNICODE);
+        } else {
+            $finalStatus = 'yes partial party attendance';
+            $attendingJson = json_encode($sel, JSON_UNESCAPED_UNICODE);
+        }
+
+        $sql = "UPDATE rsvp_codes SET rsvp_response = :status, ";
+        $params = [':code' => $codeNorm, ':status' => $finalStatus];
         if (!empty($guestNamesArr)) {
             $sql .= "guest_names = :gn, ";
             $params[':gn'] = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
         }
-        if ($attendingProvided) {
-            $sql .= "attending_guest_names = :agn, ";
-            $params[':agn'] = json_encode($attendingGuestNamesArr, JSON_UNESCAPED_UNICODE);
-        }
-        $sql .= "rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = :code";
+        $sql .= "attending_guest_names = :agn, rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = :code";
+        $params[':agn'] = $attendingJson;
         $update = $pdo->prepare($sql);
         foreach ($params as $k => $v) {
             $update->bindValue($k, $v, PDO::PARAM_STR);
@@ -224,7 +245,7 @@ try {
     }
     $attendingGuestsJoined = count($updatedAttendingNames) ? implode(', ', $updatedAttendingNames) : '';
     $attendingGuestsHtml = '';
-    if (strtolower($updated['rsvp_response']) === 'yes' && $attendingGuestsJoined !== '') {
+    if ($attendingGuestsJoined !== '' && (strtolower($updated['rsvp_response']) === 'yes' || strtolower($updated['rsvp_response']) === 'yes partial party attendance')) {
         $attendingGuestsHtml = '<p><span class="label">Attending guest(s):</span> ' . htmlspecialchars($attendingGuestsJoined) . '</p>';
     }
 

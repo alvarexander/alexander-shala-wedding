@@ -33,7 +33,10 @@
                     <br />
                     <br />
 
-                    Your presence means the world to us, and we can’t wait to share this joyful occasion together.
+                    Your presence means the world to us, and we can’t wait to share this joyful occasion together. To help
+                    us make sure we plan and prepare accordingly, please check off all the names of the guests that are planning
+                    to come. Don't worry if something changes later, you can always update your RSVP right here! We look
+                    forward to celebrating with you!
                     <br />
                     <br />
                     <b>
@@ -44,35 +47,19 @@
                 </p>
                 <div class="rsvp__details">
                     @if ((info()?.guest_names?.length || 0) > 1) {
-                        <div class="rsvp__details">
-                            <div class="rsvp__detail">
-                                <span>All Listed Guest Attending</span>
-                                <span class="value">
-                                    <mat-slide-toggle
+                        <div class="rsvp__detail">
+                            <span>Select Which Guest(s) Plan To Attend</span>
+                            <span class="value value--checkboxes">
+                                @for (name of info()?.guest_names; track name) {
+                                    <mat-checkbox
                                         color="primary"
-                                        [checked]="allComing()"
-                                        (change)="onToggleAllComing($event.checked)"
-                                        [disabled]="(info()?.guest_names?.length || 0) === 0"
-                                        aria-label="Toggle all listed guests are attending"
-                                    ></mat-slide-toggle>
-                                </span>
-                            </div>
-                            @if (!allComing()) {
-                                <div class="rsvp__detail animate__animated animate__fadeIn">
-                                    <span>Which Guest(s) Plan To Attend</span>
-                                    <span class="value value--checkboxes">
-                                        @for (name of info()?.guest_names; track name) {
-                                            <mat-checkbox
-                                                color="primary"
-                                                class="rsvp__guest-checkbox"
-                                                [checked]="isSelected(name)"
-                                                (change)="toggleGuest(name, $event.checked)"
-                                                >{{ name }}</mat-checkbox
-                                            >
-                                        }
-                                    </span>
-                                </div>
-                            }
+                                        class="rsvp__guest-checkbox"
+                                        [checked]="isSelected(name)"
+                                        (change)="toggleGuest(name, $event.checked)"
+                                        >{{ name }}</mat-checkbox
+                                    >
+                                }
+                            </span>
                         </div>
                     }
                     <div class="rsvp__detail">
@@ -81,7 +68,7 @@
                     </div>
                     <div class="rsvp__detail">
                         <span>Party Size</span>
-                        <span class="value">{{ displayedPartySize() ?? '—' }}</span>
+                        <span class="value">{{ info()?.party_size ?? '—' }}</span>
                     </div>
                     <div class="rsvp__detail">
                         <span>Current Status</span>
@@ -96,16 +83,10 @@
                         mat-flat-button
                         color="primary"
                         class="yes"
-                        [disabled]="
-                            submitting() === 'yes' ||
-                            (!allComing() && (info()?.guest_names?.length || 0) > 0 && selectedAttending().size === 0)
-                        "
+                        [disabled]="submitting() === 'yes'"
                         (click)="rsvp('yes')"
                     >
-                        Yes
-                    </button>
-                    <button mat-button color="warn" class="no" [disabled]="submitting() === 'no'" (click)="rsvp('no')">
-                        No
+                        Set Your RSVP Response
                     </button>
                 </div>
                 @if (submitMessage()) {
