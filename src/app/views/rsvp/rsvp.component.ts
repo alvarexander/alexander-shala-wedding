@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
@@ -52,6 +53,7 @@ interface RsvpUpdateResponse {
         MatIconModule,
         MatSlideToggleModule,
         MatCheckboxModule,
+        MatSnackBarModule,
     ],
     templateUrl: './rsvp.component.html',
     styleUrls: ['./rsvp.component.scss'],
@@ -66,6 +68,7 @@ export class RsvpComponent implements OnInit {
     private _route = inject(ActivatedRoute);
     private _http = inject(HttpClient);
     private _titleService = inject(Title);
+    private _snack = inject(MatSnackBar);
 
     protected readonly title = 'RSVP';
 
@@ -219,6 +222,10 @@ export class RsvpComponent implements OnInit {
                     this.submitMessage.set(
                         `RSVP recorded as ${res.rsvp_response?.toUpperCase()}. Thank you!`,
                     );
+                    // Toast confirmation
+                    this._snack.open('💌 Thank you for your response', 'Close', {
+                        duration: 4000,
+                    });
                     // Refresh info to reflect updates
                     this.fetchInfo();
                 } else if (res) {
