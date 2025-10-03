@@ -280,6 +280,18 @@ export class RsvpComponent implements OnInit {
         }
     }
 
+    /** Handle slide-toggle changes for "All Listed Guest Attending".
+     * If toggled OFF, reset any per-guest selections to unchecked.
+     */
+    onToggleAllComing(checked: boolean | undefined | null): void {
+        const isChecked = !!checked;
+        this.allComing.set(isChecked);
+        if (!isChecked) {
+            // Clear all selected guest checkboxes when turning the toggle OFF
+            this.selectedAttending.set(new Set<string>());
+        }
+    }
+
     /**
      * Displayed party size logic:
      * - If allComing is ON, show the allowed/obtained party_size (fallback to invited count if null)
