@@ -99,7 +99,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
     /** Free-text filter bound to the table. */
     filterCtrl = new FormControl('');
 
-
     @ViewChild(MatSort) sort!: MatSort;
 
     /**
@@ -142,10 +141,9 @@ export class AdminComponent implements OnInit, AfterViewInit {
             }
             // Verify the password with backend
             this.http
-                .post<{ ok: boolean; token?: string } | { ok: false; error: string }>(
-                    '/admin_auth.php',
-                    { password: provided },
-                )
+                .post<
+                    { ok: boolean; token?: string } | { ok: false; error: string }
+                >('/admin_auth.php', { password: provided })
                 .subscribe({
                     next: (res: any) => {
                         if (!res || !res.ok || !res.token) {
