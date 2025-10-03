@@ -100,9 +100,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
     filterCtrl = new FormControl('');
 
 
-    /** Free-text filter bound to the table. */
-    private readonly _PASSWORD= 'Alex&Shala0225656r!@#'
-
     @ViewChild(MatSort) sort!: MatSort;
 
     /**
@@ -113,13 +110,32 @@ export class AdminComponent implements OnInit, AfterViewInit {
         if (!passOk) {
             const ref = this.dialog.open(PasswordDialogComponent, { disableClose: true });
             ref.afterClosed().subscribe((provided) => {
-                if (provided !== this._PASSWORD) {
+                if (!provided) {
                     alert('Access denied');
                     this.router.navigateByUrl('/');
                     return;
                 }
-                sessionStorage.setItem('admin_pass_ok', '1');
-                this.load();
+                // Verify the password with backend
+                this.http
+                    .post<{ ok: boolean } | { ok: false; error: string }>(
+                        '/admin_auth.php',
+                        { password: provided },
+                    )
+                    .subscribe({
+                        next: (res: any) => {
+                            if (!res || !res.ok) {
+                                alert('Access denied');
+                                this.router.navigateByUrl('/');
+                                return;
+                            }
+                            sessionStorage.setItem('admin_pass_ok', '1');
+                            this.load();
+                        },
+                        error: () => {
+                            alert('Access denied');
+                            this.router.navigateByUrl('/');
+                        },
+                    });
             });
         } else {
             this.load();
