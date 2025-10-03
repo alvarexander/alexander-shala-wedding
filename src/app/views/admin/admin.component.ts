@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { ViewChild } from '@angular/core';
@@ -55,6 +56,7 @@ interface AdminListResponse {
         MatDialogModule,
         ReactiveFormsModule,
         FormsModule,
+        MatSlideToggleModule,
     ],
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
@@ -87,6 +89,9 @@ export class AdminComponent implements OnInit {
     loading = signal(false);
     /** Row id currently being saved (used to disable Save button). */
     savingId = signal<number | null>(null);
+
+    /** Edit mode toggle (read-only by default). */
+    editable = signal<boolean>(false);
 
     /** Free-text filter bound to the table. */
     filterCtrl = new FormControl('');
@@ -217,5 +222,13 @@ export class AdminComponent implements OnInit {
     reset(): void {
         // Reload all data (simplest minimal approach)
         this.load();
+    }
+
+    /**
+     * Resolves a human-friendly status label from a status code.
+     */
+    statusLabel(code: string): string {
+        const found = this.statuses.find((s) => s.code === code);
+        return found?.label || code;
     }
 }

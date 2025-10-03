@@ -23,10 +23,22 @@
         background: white;
         border-radius: 12px;
         padding: 12px;
+        overflow: hidden; /* contain inner scroll */
+    }
+
+    &__table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
     }
 
     table {
         width: 100%;
+    }
+
+    /* Ensure table can scroll horizontally on small screens */
+    &__table-scroll table {
+        min-width: 900px;
     }
 
     .w-120 {
