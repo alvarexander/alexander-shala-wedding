@@ -60,7 +60,8 @@
                                         class="rsvp__guest-checkbox"
                                         [checked]="isSelected(name)"
                                         (change)="toggleGuest(name, $event.checked)"
-                                    >{{ name }}</mat-checkbox
+                                    >
+                                        <div class="rsvp__content"> {{ name }} </div></mat-checkbox
                                     >
                                 }
                             </span>
