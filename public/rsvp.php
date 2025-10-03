@@ -30,6 +30,23 @@ if ($guestNamesParam !== null && $guestNamesParam !== "") {
     }
 }
 
+// Optional: accept attending_guest_names as a JSON-encoded array of strings
+$attendingNamesParam = isset($_GET["attending_guest_names"]) ? $_GET["attending_guest_names"] : null;
+$attendingGuestNamesArr = [];
+if ($attendingNamesParam !== null && $attendingNamesParam !== "") {
+    $decodedA = json_decode($attendingNamesParam, true);
+    if (is_array($decodedA)) {
+        foreach ($decodedA as $nm) {
+            if (!is_string($nm)) { continue; }
+            $nm = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', "", trim($nm));
+            if ($nm === '') { continue; }
+            if (strlen($nm) > 400) { $nm = substr($nm, 0, 400); }
+            $attendingGuestNamesArr[] = $nm;
+            if (count($attendingGuestNamesArr) >= 10) { break; } // sanity limit
+        }
+    }
+}
+
 if ($code === "") {
     respond(400, [
         "ok" => false,
@@ -125,18 +142,38 @@ if ($response === null) {
 try {
     $pdo->beginTransaction();
 
-    // Update RSVP, and if guest_names are provided, store them as JSON array
-    if (!empty($guestNamesArr)) {
-        $guestNamesJson = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
+    // Update RSVP, set guest_names if provided, and handle attending_guest_names per response
+    if ($response === 'no') {
+        // Decline: clear attending_guest_names
         $update = $pdo->prepare(
-            "UPDATE rsvp_codes SET rsvp_response = ?, guest_names = ?, rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = ?"
+            "UPDATE rsvp_codes SET rsvp_response = 'no', " .
+            (empty($guestNamesArr) ? "" : "guest_names = :gn, ") .
+            "attending_guest_names = JSON_ARRAY(), rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = :code"
         );
-        $update->execute([$response, $guestNamesJson, $codeNorm]);
+        if (!empty($guestNamesArr)) {
+            $guestNamesJson = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
+            $update->bindValue(':gn', $guestNamesJson, PDO::PARAM_STR);
+        }
+        $update->bindValue(':code', $codeNorm, PDO::PARAM_STR);
+        $update->execute();
     } else {
-        $update = $pdo->prepare(
-            "UPDATE rsvp_codes SET rsvp_response = ?, rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = ?"
-        );
-        $update->execute([$response, $codeNorm]);
+        // Accept: optionally set guest_names and attending_guest_names
+        $sql = "UPDATE rsvp_codes SET rsvp_response = 'yes', ";
+        $params = [':code' => $codeNorm];
+        if (!empty($guestNamesArr)) {
+            $sql .= "guest_names = :gn, ";
+            $params[':gn'] = json_encode($guestNamesArr, JSON_UNESCAPED_UNICODE);
+        }
+        if (!empty($attendingGuestNamesArr)) {
+            $sql .= "attending_guest_names = :agn, ";
+            $params[':agn'] = json_encode($attendingGuestNamesArr, JSON_UNESCAPED_UNICODE);
+        }
+        $sql .= "rsvped_at = IFNULL(rsvped_at, NOW()), updated_at = NOW() WHERE code = :code";
+        $update = $pdo->prepare($sql);
+        foreach ($params as $k => $v) {
+            $update->bindValue($k, $v, PDO::PARAM_STR);
+        }
+        $update->execute();
     }
 
     $check = $pdo->prepare(
@@ -175,6 +212,20 @@ try {
 
     $guestNameForEmail = $guestNamesJoined !== "" ? $guestNamesJoined : "(names not provided)";
 
+    // Decode attending guest names for email (and allow immediate fallback to incoming param)
+    $updatedAttendingNames = [];
+    if (isset($updated['attending_guest_names']) && $updated['attending_guest_names'] !== null && $updated['attending_guest_names'] !== '') {
+        $tmpAtt = json_decode($updated['attending_guest_names'], true);
+        if (is_array($tmpAtt)) { $updatedAttendingNames = array_values(array_filter($tmpAtt, 'is_string')); }
+    }
+    if (empty($updatedAttendingNames) && !empty($attendingGuestNamesArr)) {
+        $updatedAttendingNames = $attendingGuestNamesArr;
+    }
+    $attendingGuestsJoined = count($updatedAttendingNames) ? implode(', ', $updatedAttendingNames) : '';
+    $attendingGuestsHtml = '';
+    if (strtolower($updated['rsvp_response']) === 'yes' && $attendingGuestsJoined !== '') {
+        $attendingGuestsHtml = '<p><span class="label">Attending guest(s):</span> ' . htmlspecialchars($attendingGuestsJoined) . '</p>';
+    }
 
     // Build HTML email body
     $body =
@@ -218,8 +269,9 @@ try {
         '</p>
         <p><span class="label">Response:</span> ' .
         htmlspecialchars(strtoupper($updated["rsvp_response"])) .
-        '</p>
-        <p><span class="label">Party size:</span> ' .
+        '</p>' .
+        $attendingGuestsHtml .
+        '<p><span class="label">Party size:</span> ' .
         htmlspecialchars($updated["party_size"] ?? "n/a") .
         '</p>
       </div>

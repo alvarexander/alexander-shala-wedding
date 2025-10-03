@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { Title } from '@angular/platform-browser';
@@ -43,7 +44,7 @@ interface RsvpUpdateResponse {
 @Component({
     selector: 'app-rsvp',
     standalone: true,
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatSlideToggleModule],
     templateUrl: './rsvp.component.html',
     styleUrls: ['./rsvp.component.scss'],
 })
@@ -90,6 +91,11 @@ export class RsvpComponent implements OnInit {
      * Current submission state; set to the response being submitted or null when idle.
      */
     submitting = signal<'yes' | 'no' | null>(null);
+
+    /**
+     * Toggle state for marking that all listed guests are attending.
+     */
+    allComing = signal<boolean>(false);
 
     /**
      * Human-friendly message reflecting the submission outcome.
@@ -152,13 +158,24 @@ export class RsvpComponent implements OnInit {
 
         if (response === 'yes') {
             const partySize = this.info()?.party_size ?? null;
+
+            // Existing (optional) manual names CSV if present (kept for flexibility)
             const raw = (namesCsv || '').split(',');
             const parsed = raw
                 .map((s) => s.trim())
                 .filter((s) => s.length > 0);
-            const limited = typeof partySize === 'number' && partySize > 0 ? parsed.slice(0, partySize) : parsed;
-            if (limited.length > 0) {
-                params['guest_names'] = JSON.stringify(limited);
+            const limitedFromInput = typeof partySize === 'number' && partySize > 0 ? parsed.slice(0, partySize) : parsed;
+            if (limitedFromInput.length > 0) {
+                params['guest_names'] = JSON.stringify(limitedFromInput);
+            }
+
+            // If the toggle is on, send attending_guest_names as the full listed guest_names (capped by party size)
+            if (this.allComing()) {
+                const listed = (this.info()?.guest_names || []);
+                const attending = typeof partySize === 'number' && partySize > 0 ? listed.slice(0, partySize) : listed;
+                if (attending.length > 0) {
+                    params['attending_guest_names'] = JSON.stringify(attending);
+                }
             }
         }
 
