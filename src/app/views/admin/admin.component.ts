@@ -18,7 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 import { Title } from '@angular/platform-browser';
-import { MatTooltip } from '@angular/material/tooltip-module.d';
+import { MatTooltip } from '@angular/material/tooltip';
 
 /**
  * Shape of a single invitation row displayed/edited in the Admin table.
