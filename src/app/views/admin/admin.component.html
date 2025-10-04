@@ -49,7 +49,7 @@
                                     />
                                 </mat-form-field>
                             } @else {
-                                {{ toCsv(row.guest_names) }}
+                                {{ toCsv(row.guest_names) || 'Not Set' }}
                             }
                         </td>
                     </ng-container>
@@ -69,7 +69,7 @@
                                     />
                                 </mat-form-field>
                             } @else {
-                                {{ toCsv(row.attending_guest_names) }}
+                                {{ toCsv(row.attending_guest_names) || 'Not Set' }}
                             }
                         </td>
                     </ng-container>
@@ -128,6 +128,7 @@
             <button
                 mat-mini-fab
                 color="warn"
+                [matTooltip]="'Reset all changes'"
                 class="animate__animated animate__fast animate__zoomIn"
                 (click)="resetAll()"
                 [disabled]="savingAll() || loading()"
@@ -143,8 +144,17 @@
                 [disabled]="savingAll() || loading()"
             >
                 <mat-icon class="material-symbols-outlined">save</mat-icon>
-                Save All
+                Save Changes
             </button>
+        </div>
+    }
+
+    @if (savingAll() || savingId() !== null) {
+        <div class="admin__saving-overlay" aria-busy="true" aria-live="polite" role="status">
+            <div class="admin__saving-content">
+                <mat-spinner diameter="56"></mat-spinner>
+                <div class="admin__saving-text">Saving changes...</div>
+            </div>
         </div>
     }
 </div>
