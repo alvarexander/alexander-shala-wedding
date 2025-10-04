@@ -78,7 +78,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
     private readonly _clipboard = inject(Clipboard);
     private readonly _titleService = inject(Title);
 
-    protected readonly title = 'Admin Portal';
+    protected readonly title = 'Invitation Manager';
 
     /**
      * Columns displayed in the Material table.
@@ -96,10 +96,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
     /** Available statuses returned by the server for editing. */
     statuses: { id: number; code: string; label: string }[] = [];
 
-    /** True while list is being loaded from the server. */
+    /** True while a list is being loaded from the server. */
     loading = signal(false);
 
-    /** Row id currently being saved (used to disable Save button). */
+    /** Row id currently being saved (used to disable the Save button). */
     savingId = signal<number | null>(null);
 
     /** Edit mode toggle (read-only by default). */
