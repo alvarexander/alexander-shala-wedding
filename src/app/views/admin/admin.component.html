@@ -39,7 +39,7 @@
                         <th mat-header-cell *matHeaderCellDef>Guest Names</th>
                         <td mat-cell *matCellDef="let row">
                             @if (editable()) {
-                                <mat-form-field appearance="fill" subscriptSizing="dynamic">
+                                <mat-form-field appearance="outline" subscriptSizing="dynamic">
                                     <input
                                         matInput
                                         #gn
@@ -59,7 +59,7 @@
                         <th mat-header-cell *matHeaderCellDef>Attending Guest Names</th>
                         <td mat-cell *matCellDef="let row">
                             @if (editable()) {
-                                <mat-form-field appearance="fill" subscriptSizing="dynamic">
+                                <mat-form-field appearance="outline" subscriptSizing="dynamic">
                                     <input
                                         matInput
                                         #agn
@@ -79,7 +79,7 @@
                         <th mat-header-cell *matHeaderCellDef>Status</th>
                         <td mat-cell *matCellDef="let row">
                             @if (editable()) {
-                                <mat-form-field appearance="fill" subscriptSizing="dynamic">
+                                <mat-form-field appearance="outline" subscriptSizing="dynamic">
                                     <mat-select [(ngModel)]="row.status">
                                         @for (status of statuses; track status.code) {
                                             <mat-option [value]="status.code">{{ status.label }}</mat-option>
@@ -97,7 +97,7 @@
                         <th mat-header-cell *matHeaderCellDef>Party Size</th>
                         <td mat-cell *matCellDef="let row">
                             @if (editable()) {
-                                <mat-form-field appearance="fill" subscriptSizing="dynamic">
+                                <mat-form-field appearance="outline" subscriptSizing="dynamic">
                                     <input matInput type="number" [(ngModel)]="row.party_size" placeholder="—" />
                                 </mat-form-field>
                             } @else {
