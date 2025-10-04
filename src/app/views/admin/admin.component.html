@@ -45,7 +45,7 @@
                                         #gn
                                         [value]="toCsv(row.guest_names)"
                                         (input)="row.guest_names = fromCsv(gn.value)"
-                                        placeholder="Comma-separated"
+                                        placeholder="Comma separated names (John, Jane)"
                                     />
                                 </mat-form-field>
                             } @else {
@@ -65,7 +65,7 @@
                                         #agn
                                         [value]="toCsv(row.attending_guest_names)"
                                         (input)="row.attending_guest_names = fromCsv(agn.value)"
-                                        placeholder="Comma-separated"
+                                        placeholder="Comma separated names (John, Jane)"
                                     />
                                 </mat-form-field>
                             } @else {
