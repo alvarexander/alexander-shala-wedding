@@ -125,13 +125,27 @@
 
     @if (editable()) {
         <div class="admin__fab-container">
-            <button mat-fab extended color="primary" (click)="saveAll()" [disabled]="savingAll() || loading()">
+            <button
+                mat-fab
+                extended
+                color="primary"
+                class="animate__animated animate__fast animate__zoomIn"
+                (click)="saveAll()"
+                [disabled]="savingAll() || loading()"
+            >
                 <mat-icon class="material-symbols-outlined">save</mat-icon>
-                Save changes
+                Save All
             </button>
-            <button mat-fab extended color="warn" (click)="resetAll()" [disabled]="savingAll() || loading()">
+            <button
+                mat-fab
+                extended
+                color="warn"
+                class="animate__animated animate__faster animate__zoomIn"
+                (click)="resetAll()"
+                [disabled]="savingAll() || loading()"
+            >
                 <mat-icon class="material-symbols-outlined">undo</mat-icon>
-                Reset changes
+                Undo All
             </button>
         </div>
     }

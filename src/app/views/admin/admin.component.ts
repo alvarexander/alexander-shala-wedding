@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { Title } from '@angular/platform-browser';
 
 /**
  * Shape of a single invitation row displayed/edited in the Admin table.
@@ -70,11 +71,14 @@ interface AdminListResponse {
  * Presents a Material table for viewing and editing invitation rows.
  */
 export class AdminComponent implements OnInit, AfterViewInit {
-    private http = inject(HttpClient);
-    private dialog = inject(MatDialog);
-    private router = inject(Router);
-    private snackBar = inject(MatSnackBar);
-    private clipboard = inject(Clipboard);
+    private readonly _http = inject(HttpClient);
+    private readonly _dialog = inject(MatDialog);
+    private readonly _router = inject(Router);
+    private readonly _snackBar = inject(MatSnackBar);
+    private readonly _clipboard = inject(Clipboard);
+    private readonly _titleService = inject(Title);
+
+    protected readonly title = 'Admin Portal';
 
     /**
      * Columns displayed in the Material table.
@@ -120,6 +124,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
             this.load();
         }
 
+        this._titleService.setTitle(this.title);
+
         this.filterCtrl.valueChanges.subscribe((v) => {
             this.dataSource.filter = (v ?? '').trim().toLowerCase();
         });
@@ -140,15 +146,15 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     /** Opens the password dialog and attempts authentication. */
     private promptForPassword(): void {
-        const ref = this.dialog.open(PasswordDialogComponent, { disableClose: true });
+        const ref = this._dialog.open(PasswordDialogComponent, { disableClose: true });
         ref.afterClosed().subscribe((provided) => {
             if (!provided) {
                 alert('Access denied');
-                this.router.navigateByUrl('/');
+                this._router.navigateByUrl('/');
                 return;
             }
             // Verify the password with backend
-            this.http
+            this._http
                 .post<
                     { ok: boolean; token?: string } | { ok: false; error: string }
                 >('/admin_auth.php', { password: provided })
@@ -156,7 +162,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     next: (res: any) => {
                         if (!res || !res.ok || !res.token) {
                             alert('Access denied');
-                            this.router.navigateByUrl('/');
+                            this._router.navigateByUrl('/');
                             return;
                         }
                         sessionStorage.setItem('admin_token', res.token as string);
@@ -164,7 +170,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     },
                     error: () => {
                         alert('Access denied');
-                        this.router.navigateByUrl('/');
+                        this._router.navigateByUrl('/');
                     },
                 });
         });
@@ -182,7 +188,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
         const token = sessionStorage.getItem('admin_token') || '';
         const headers = new HttpHeaders({ 'X-Admin-Token': token });
         this.loading.set(true);
-        this.http.get<AdminListResponse>('/admin_list.php', { headers }).subscribe({
+        this._http.get<AdminListResponse>('/admin_list.php', { headers }).subscribe({
             next: (res) => {
                 if (!res.ok) throw new Error('Failed to load');
                 this.statuses = res.statuses;
@@ -247,7 +253,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
         // Apply any overrides
         Object.assign(payload, edited);
         this.savingId.set(row.id);
-        this.http.post('/admin_update.php', payload, { headers }).subscribe({
+        this._http.post('/admin_update.php', payload, { headers }).subscribe({
             next: (res: any) => {
                 this.savingId.set(null);
                 if (!res.ok) {
@@ -294,7 +300,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     attending_guest_names: row.attending_guest_names,
                 };
                 await new Promise<void>((resolve) => {
-                    this.http.post('/admin_update.php', payload, { headers }).subscribe({
+                    this._http.post('/admin_update.php', payload, { headers }).subscribe({
                         next: (res: any) => {
                             if (res?.ok && res.item) {
                                 const idx = this.dataSource.data.findIndex((r) => r.id === row.id);
@@ -309,7 +315,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     });
                 });
             }
-            this.snackBar.open('All changes saved', undefined, { duration: 2000 });
+            this._snackBar.open('All changes saved', undefined, { duration: 2000 });
         } finally {
             this.savingAll.set(false);
         }
@@ -336,22 +342,22 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     /** Copies the row's invite code to clipboard and shows a confirmation snackbar. */
     copyInvite(row: AdminRow): void {
-        const ok = this.clipboard.copy(row.invite_code);
+        const ok = this._clipboard.copy(row.invite_code);
         if (ok) {
-            this.snackBar.open('Invite code copied', undefined, { duration: 2000 });
+            this._snackBar.open('Invite code copied', undefined, { duration: 2000 });
         } else {
             // Fallback attempt using navigator if available
-            if (navigator && 'clipboard' in navigator && (navigator as any).clipboard?.writeText) {
-                (navigator as any).clipboard
+            if (navigator && 'clipboard' in navigator && (navigator as any)._clipboard?.writeText) {
+                (navigator as any)._clipboard
                     .writeText(row.invite_code)
                     .then(() =>
-                        this.snackBar.open('Invite code copied', undefined, { duration: 2000 }),
+                        this._snackBar.open('Invite code copied', undefined, { duration: 2000 }),
                     )
                     .catch(() =>
-                        this.snackBar.open('Failed to copy', undefined, { duration: 2000 }),
+                        this._snackBar.open('Failed to copy', undefined, { duration: 2000 }),
                     );
             } else {
-                this.snackBar.open('Failed to copy', undefined, { duration: 2000 });
+                this._snackBar.open('Failed to copy', undefined, { duration: 2000 });
             }
         }
     }
