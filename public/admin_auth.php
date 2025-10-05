@@ -33,10 +33,6 @@ $user = getenv('DB_USER') ?: 'root';
 $pass = getenv('DB_PASS') ?: '';
 $dsn = "mysql:host={$host};dbname={$db};charset=utf8mb4";
 
-// This is used ONLY for first-run bootstrap if no admins exist yet.
-// It adopts the previously hardcoded client-side password so behavior is preserved.
-$DEFAULT_BOOTSTRAP_PASSWORD = 'Alex&Shala0225656r!@#';
-
 try {
     $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -56,14 +52,6 @@ try {
         PRIMARY KEY (id),
         UNIQUE KEY uniq_rsvp_admin_username (username)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
-
-    // Bootstrap a default admin if table is empty
-    $count = (int)$pdo->query('SELECT COUNT(*) AS c FROM rsvp_admins')->fetchColumn();
-    if ($count === 0) {
-        $hash = password_hash($DEFAULT_BOOTSTRAP_PASSWORD, PASSWORD_BCRYPT);
-        $ins = $pdo->prepare('INSERT INTO rsvp_admins (username, password_hash) VALUES (?, ?)');
-        $ins->execute(['admin', $hash]);
-    }
 
     // Look up the requested user (default 'admin')
     $sel = $pdo->prepare('SELECT id, username, password_hash FROM rsvp_admins WHERE username = ?');
