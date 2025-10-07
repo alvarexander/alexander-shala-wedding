@@ -57,6 +57,10 @@
     font-weight: bold !important;
 }
 
+.mat-drawer.mat-drawer-opened.mat-drawer-opened {
+    backdrop-filter: blur(100px);
+}
+
 .mat-drawer-backdrop.mat-drawer-shown {
     background-color: rgba(0, 0, 0, .5) !important;
     backdrop-filter: contrast(0.7);
