@@ -113,6 +113,47 @@ if (!$row) {
     ]);
 }
 
+// Simple per-IP + per-code rate limiting for response submissions
+$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+$windowSeconds = 60; // time window in seconds
+$maxActions = 5;     // max allowed actions within the window
+
+try {
+    // Create a small throttle table if it doesn't exist yet
+    $pdo->exec("CREATE TABLE IF NOT EXISTS rsvp_rate_limit (
+        ip VARCHAR(45) NOT NULL,
+        code VARCHAR(36) NOT NULL,
+        action_time DATETIME NOT NULL,
+        INDEX idx_ip_code_time (ip, code, action_time)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+} catch (Throwable $e) {
+    // If creation fails, do not block the flow; continue without throttling
+}
+
+if ($response !== null) {
+    // Only throttle when attempting to submit a yes/no response
+    $since = date('Y-m-d H:i:s', time() - $windowSeconds);
+    try {
+        $cntStmt = $pdo->prepare("SELECT COUNT(*) AS cnt FROM rsvp_rate_limit WHERE ip = ? AND code = ? AND action_time >= ?");
+        $cntStmt->execute([$ip, $codeNorm, $since]);
+        $rowCnt = $cntStmt->fetch();
+        $cnt = isset($rowCnt['cnt']) ? (int)$rowCnt['cnt'] : 0;
+        if ($cnt >= $maxActions) {
+            respond(429, [
+                "ok" => false,
+                "error" => "You've done that too many times in a row. Please wait and try again later.",
+                "rate_limited" => true,
+                "retry_after" => $windowSeconds,
+            ]);
+        }
+        // Record this attempt (best effort)
+        $ins = $pdo->prepare("INSERT INTO rsvp_rate_limit (ip, code, action_time) VALUES (?, ?, NOW())");
+        $ins->execute([$ip, $codeNorm]);
+    } catch (Throwable $e) {
+        // ignore throttling errors
+    }
+}
+
 if ($response === null) {
     // Decode guest names arrays for response
     $guestNames = [];

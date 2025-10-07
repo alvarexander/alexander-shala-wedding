@@ -70,6 +70,9 @@ export class RsvpComponent implements OnInit {
 
     protected readonly title = 'RSVP';
 
+    /**
+     * Angular lifecycle hook. Sets the document title for the RSVP page.
+     */
     ngOnInit(): void {
         this._titleService.setTitle(this.title);
     }
@@ -100,6 +103,11 @@ export class RsvpComponent implements OnInit {
      * Current submission state; set to the response being submitted or null when idle.
      */
     submitting = signal<'yes' | 'no' | null>(null);
+
+    /**
+     * Rate limiting: when set, buttons are disabled until the timestamp (ms since epoch)
+     */
+    rateLimitedUntil = signal<number | null>(null);
 
     /**
      * Set of selected attending guests when there are multiple guests.
@@ -164,12 +172,31 @@ export class RsvpComponent implements OnInit {
     }
 
     /**
-     * Submits an RSVP response for the current code.
-     * @param response The user's response: 'yes' or 'no'.
-     * @param namesCsv The names as comma-separated string, if applicable.
+     * Returns true if the user is currently rate limited from submitting Yes/No actions.
+     * Compares rateLimitedUntil (a timestamp in ms) with the current time.
+     */
+    isRateLimited(): boolean {
+        const until = this.rateLimitedUntil();
+        return !!until && until > Date.now();
+    }
+
+    /**
+     * Submits the user's RSVP decision to the backend.
+     * - Applies simple client-side gating based on rateLimitedUntil to prevent spamming.
+     * - For multi-guest invites, includes the selected attending_guest_names; for a single-guest
+     *   invite, a "yes" implies that sole guest is attending.
+     * - Optionally accepts a CSV list of guest names which, when provided with "yes",
+     *   will be sent as guest_names to update the record.
+     * - Shows a toast and refreshes current info on success; sets submitMessage on errors.
+     * @param response 'yes' to accept; 'no' to decline.
+     * @param namesCsv Optional comma-separated list of guest names to include with a "yes".
      */
     rsvp(response: 'yes' | 'no', namesCsv?: string) {
         if (this.submitting()) return;
+        if (this.isRateLimited()) {
+            this.submitMessage.set("You've done that too many times in a row. Please wait and try again later.");
+            return;
+        }
         this.submitting.set(response);
         this.submitMessage.set(null);
 
@@ -220,7 +247,15 @@ export class RsvpComponent implements OnInit {
                     // Refresh info to reflect updates
                     this.fetchInfo();
                 } else if (res) {
-                    this.submitMessage.set(res.error || 'Failed to submit RSVP.');
+                    // Handle explicit rate-limit responses
+                    const anyRes: any = res as any;
+                    if (anyRes.rate_limited) {
+                        const retry = typeof anyRes.retry_after === 'number' ? anyRes.retry_after : 60;
+                        this.rateLimitedUntil.set(Date.now() + retry * 1000);
+                        this.submitMessage.set("You've done that too many times in a row. Please wait and try again later.");
+                    } else {
+                        this.submitMessage.set(res.error || 'Failed to submit RSVP.');
+                    }
                 } else {
                     const hint = this._deriveNonJsonHint(txt);
                     this.submitMessage.set(
@@ -230,7 +265,29 @@ export class RsvpComponent implements OnInit {
                 this.submitting.set(null);
             },
             error: (err) => {
-                this.submitMessage.set(err?.error?.error || 'Failed to submit RSVP.');
+                // Try to parse JSON error if responseType was text
+                let message = 'Failed to submit RSVP.';
+                let retrySec: number | null = null;
+                if (err && typeof err.error === 'string') {
+                    const parsed = this._parseJsonSafe<any>(err.error);
+                    if (parsed) {
+                        if (parsed.error) message = parsed.error;
+                        if (parsed.rate_limited) {
+                            retrySec = typeof parsed.retry_after === 'number' ? parsed.retry_after : 60;
+                        }
+                    }
+                } else if (err && typeof err.error === 'object' && err.error) {
+                    if (err.error.error) message = err.error.error;
+                    if (err.error.rate_limited) {
+                        retrySec = typeof err.error.retry_after === 'number' ? err.error.retry_after : 60;
+                    }
+                }
+                if (err && err.status === 429) {
+                    if (retrySec === null) retrySec = 60;
+                    this.rateLimitedUntil.set(Date.now() + (retrySec || 60) * 1000);
+                    message = "You've done that too many times in a row. Please wait and try again later.";
+                }
+                this.submitMessage.set(message);
                 this.submitting.set(null);
             },
         });

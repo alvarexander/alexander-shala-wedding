@@ -89,7 +89,7 @@
                             mat-flat-button
                             color="primary"
                             class="yes rsvp__split-button"
-                            [disabled]="submitting() === 'yes'"
+                            [disabled]="submitting() === 'yes' || isRateLimited()"
                             (click)="rsvp('yes')"
                         >
                             Yes, I will attend
@@ -98,7 +98,7 @@
                             mat-stroked-button
                             color="warn"
                             class="no rsvp__split-button"
-                            [disabled]="submitting() === 'no'"
+                            [disabled]="submitting() === 'no' || isRateLimited()"
                             (click)="rsvp('no')"
                         >
                             No, I can't attend
@@ -108,7 +108,7 @@
                             mat-flat-button
                             color="primary"
                             class="yes rsvp__only-button"
-                            [disabled]="submitting() === 'yes'"
+                            [disabled]="submitting() === 'yes' || isRateLimited()"
                             (click)="rsvp('yes')"
                         >
                             Confirm
