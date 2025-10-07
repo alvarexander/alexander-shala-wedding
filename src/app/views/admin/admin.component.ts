@@ -355,7 +355,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
         const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
         const absolute = `${window.location.origin}${path}#${relative}`;
 
-        console.log('Opening invite link:', absolute);
         window.open(absolute, '_blank', 'noopener');
     }
 }
