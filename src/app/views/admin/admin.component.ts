@@ -348,7 +348,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
      */
     openInvite(row: AdminRow): void {
         // Build an absolute URL to the RSVP route using the invite code as a path param
-        const tree = this._router.createUrlTree(['#/rsvp', row.invite_code]);
+        const tree = this._router.createUrlTree(['#/rsvp/', row.invite_code]);
         const relative = this._router.serializeUrl(tree); // e.g. "/rsvp/ABC123"
         const absolute = `${window.location.origin}${relative}`;
         window.open(absolute, '_blank', 'noopener');
