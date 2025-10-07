@@ -347,10 +347,15 @@ export class AdminComponent implements OnInit, AfterViewInit {
      * @param row The row to copy the invite link from
      */
     openInvite(row: AdminRow): void {
-        // Build an absolute URL to the RSVP route using the invite code as a path param
-        const tree = this._router.createUrlTree(['#/rsvp/', row.invite_code]);
-        const relative = this._router.serializeUrl(tree); // e.g. "/rsvp/ABC123"
-        const absolute = `${window.location.origin}${relative}`;
+        // Build an absolute URL to the RSVP route using the invite code as a path param (HashLocationStrategy assumed)
+        const tree = this._router.createUrlTree(['/rsvp', row.invite_code]);
+        const relative = this._router.serializeUrl(tree);
+
+        // Always use hash-based routing and preserve any sub-path (e.g., /app/)
+        const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
+        const absolute = `${window.location.origin}${path}#${relative}`;
+
+        console.log('Opening invite link:', absolute);
         window.open(absolute, '_blank', 'noopener');
     }
 }
