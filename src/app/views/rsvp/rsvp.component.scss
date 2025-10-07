@@ -47,9 +47,14 @@
     }
 
     &__loading,
-    &__error,
-    &__message {
+    &__error{
         margin-top: 12px;
+    }
+
+    &__message {
+        @extend .rsvp__error;
+       padding: 1rem;
+        font-style: italic;
     }
 
     &__error {
