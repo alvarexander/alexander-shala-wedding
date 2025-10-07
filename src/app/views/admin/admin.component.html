@@ -24,9 +24,9 @@
         <div class="admin__table-card">
             <div class="admin__table-scroll">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
-                    <!-- Invite Code -->
+                    <!-- Invite Link -->
                     <ng-container matColumnDef="invite_link">
-                        <th mat-header-cell *matHeaderCellDef>Invite Code</th>
+                        <th mat-header-cell *matHeaderCellDef>Invite Link</th>
                         <td mat-cell *matCellDef="let row">
                             <button mat-icon-button aria-label="Copy code" (click)="openInvite(row)">
                                 <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>
