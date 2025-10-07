@@ -25,11 +25,11 @@
             <div class="admin__table-scroll">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
                     <!-- Invite Code -->
-                    <ng-container matColumnDef="invite_code">
+                    <ng-container matColumnDef="invite_link">
                         <th mat-header-cell *matHeaderCellDef>Invite Code</th>
                         <td mat-cell *matCellDef="let row">
-                            <button mat-icon-button aria-label="Copy code" (click)="copyInvite(row)">
-                                <mat-icon class="material-symbols-outlined">content_copy</mat-icon>
+                            <button mat-icon-button aria-label="Copy code" (click)="openInvite(row)">
+                                <mat-icon class="material-symbols-outlined">open_in_new</mat-icon>
                             </button>
                         </td>
                     </ng-container>

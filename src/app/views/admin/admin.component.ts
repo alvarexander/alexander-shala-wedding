@@ -16,7 +16,7 @@ import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { Title } from '@angular/platform-browser';
 import { MatTooltip } from '@angular/material/tooltip';
 
@@ -77,7 +77,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
     private readonly _dialog = inject(MatDialog);
     private readonly _router = inject(Router);
     private readonly _snackBar = inject(MatSnackBar);
-    private readonly _clipboard = inject(Clipboard);
     private readonly _titleService = inject(Title);
 
     protected readonly title = 'Invitation Manager';
@@ -86,7 +85,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
      * Columns displayed in the Material table.
      */
     displayedColumns = [
-        'invite_code',
+        'invite_link',
         'guest_names',
         'attending_guest_names',
         'status',
@@ -335,32 +334,22 @@ export class AdminComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Resolves a human-friendly status label from a status code.
+     * Resolves a human-friendly status label from a status code
+     * @param code The status code to resolve
      */
     statusLabel(code: string): string {
         const found = this.statuses.find((s) => s.code === code);
         return found?.label || code;
     }
 
-    /** Copies the row's invite code to clipboard and shows a confirmation snackbar. */
-    copyInvite(row: AdminRow): void {
-        const ok = this._clipboard.copy(row.invite_code);
-        if (ok) {
-            this._snackBar.open('Invite code copied', undefined, { duration: 2000 });
-        } else {
-            // Fallback attempt using navigator if available
-            if (navigator && 'clipboard' in navigator && (navigator as any)._clipboard?.writeText) {
-                (navigator as any)._clipboard
-                    .writeText(row.invite_code)
-                    .then(() =>
-                        this._snackBar.open('Invite code copied', undefined, { duration: 2000 }),
-                    )
-                    .catch(() =>
-                        this._snackBar.open('Failed to copy', undefined, { duration: 2000 }),
-                    );
-            } else {
-                this._snackBar.open('Failed to copy', undefined, { duration: 2000 });
-            }
-        }
+    /**
+     * Opens the invite link in a new tab
+     * @param row The row to copy the invite link from
+     */
+    openInvite(row: AdminRow): void {
+        const url = this._router.serializeUrl(
+            this._router.createUrlTree(['/rsvp/', row.invite_code])
+        );
+        window.open(url, '_blank');
     }
 }
