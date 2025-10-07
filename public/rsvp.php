@@ -214,8 +214,16 @@ try {
         $selCount = count($sel);
 
         if ($selCount === 0) {
-            $finalStatus = 'no';
-            $attendingJson = json_encode([], JSON_UNESCAPED_UNICODE);
+            // If user clicked "yes" but provided no attending selection:
+            // For single-guest invites, treat as full YES for that one guest.
+            if ($listedCount === 1) {
+                $finalStatus = 'yes';
+                $attendingJson = json_encode($listedGuests, JSON_UNESCAPED_UNICODE);
+            } else {
+                // For multi-guest with no selection, keep as NO to avoid accidental confirmations.
+                $finalStatus = 'no';
+                $attendingJson = json_encode([], JSON_UNESCAPED_UNICODE);
+            }
         } elseif ($listedCount > 0 && $selCount === $listedCount) {
             $finalStatus = 'yes';
             $attendingJson = json_encode($sel, JSON_UNESCAPED_UNICODE);
