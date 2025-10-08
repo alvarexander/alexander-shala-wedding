@@ -25,26 +25,26 @@
     user-select: none !important;
     height: 48px !important;
     padding-inline: 16px !important;
-    border-radius: 24px !important; /* half of 48px */
+    border-radius: 24px !important;
     transition: padding 0.25s cubic-bezier(0.42, 1.67, 0.21, 0.9),
     border-radius 0.25s cubic-bezier(0.42, 1.67, 0.21, 0.9) !important;
 
     &:active {
         border-radius: 4px !important;
-        padding-inline: 24px !important; /* 16px + 8px */
+        padding-inline: 24px !important;
 
         &:first-child,
         &:last-child {
-            padding-inline: 20px !important; /* 16px + 0.5 * 8px */
+            padding-inline: 20px !important;
         }
     }
 
     &:has(+ mat-mdc-button:active) {
-        padding-inline: 12px; /* 16px - 0.5 * 8px */
+        padding-inline: 12px !important;
     }
 
     mat-mdc-button:active + mat-mdc-button {
-        padding-inline: 12px; /* 16px - 0.5 * 8px */
+        padding-inline: 12px !important;
     }
 }
 
