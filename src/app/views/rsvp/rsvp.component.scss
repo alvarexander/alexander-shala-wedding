@@ -16,14 +16,14 @@
 
     &__only-button {
         width: 100%;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         padding-top: 2rem;
         padding-bottom: 2rem;
     }
 
     &__split-button {
         width: 50%;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         padding-top: 2rem;
         padding-bottom: 2rem;
     }
@@ -109,5 +109,21 @@
             height: 220px;
         }
         /* Button sizes intentionally unchanged across breakpoints */
+    }
+}
+
+@media (min-width: 992px) {
+    .rsvp {
+        &__card {
+            flex-direction: row;
+            width: 100%;
+        }
+
+        &__img {
+            height: auto;
+            object-fit: cover;
+            width: 350px;
+            border-radius: inherit;
+        }
     }
 }
