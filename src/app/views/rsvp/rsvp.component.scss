@@ -123,7 +123,8 @@
             height: auto;
             object-fit: cover;
             width: 350px;
-            border-radius: inherit;
+            border-bottom-left-radius: inherit;
+            border-top-right-radius: 0 !important;
         }
     }
 }
