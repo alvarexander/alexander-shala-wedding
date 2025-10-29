@@ -68,8 +68,6 @@
         position: sticky;
         top: 0;
         background-color: var(--mat-card-outlined-outline-color);
-        filter: brightness(107%);
-        backdrop-filter: blur(10px); // Adds a subtle blur effect
 
         @media (prefers-color-scheme: dark) {
             filter: brightness(150%);
