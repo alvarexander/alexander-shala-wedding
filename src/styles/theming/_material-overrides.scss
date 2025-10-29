@@ -67,9 +67,7 @@
 }
 
 .mat-drawer-container {
-    @media (prefers-color-scheme: dark) {
-        background-color: #1c1f1c !important;
-    }
+    background-color: transparent !important;
 }
 
 .mat-drawer {
