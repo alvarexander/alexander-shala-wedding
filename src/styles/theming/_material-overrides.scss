@@ -13,10 +13,11 @@
     white-space: nowrap;
     direction: ltr;
 
-    font-variation-settings: 'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 48;
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48;
 }
 
 .mat-mdc-button,
@@ -26,8 +27,9 @@
     height: 48px !important;
     padding-inline: 16px !important;
     border-radius: 24px !important;
-    transition: padding 0.25s cubic-bezier(0.42, 1.67, 0.21, 0.9),
-    border-radius 0.25s cubic-bezier(0.42, 1.67, 0.21, 0.9) !important;
+    transition:
+        padding 0.25s cubic-bezier(0.42, 1.67, 0.21, 0.9),
+        border-radius 0.25s cubic-bezier(0.42, 1.67, 0.21, 0.9) !important;
 
     &:active {
         border-radius: 4px !important;
@@ -53,6 +55,18 @@
     min-width: fit-content !important;
 }
 
+.mat-drawer-inner-container {
+    @media (prefers-color-scheme: dark) {
+        background-color: #16231c;
+    }
+}
+
+.mat-drawer-container {
+    @media (prefers-color-scheme: dark) {
+        background-color: #16231c !important;
+    }
+}
+
 .mat-mdc-card-title {
     font-weight: bold !important;
 }
@@ -62,19 +76,15 @@
 }
 
 .mat-drawer-backdrop.mat-drawer-shown {
-    background-color: rgba(0, 0, 0, .5) !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
     backdrop-filter: contrast(0.7);
-}
-
-.mat-drawer-container {
-    background-color: transparent !important;
 }
 
 .mat-drawer {
     max-width: 80%;
     background-color: var(
-            --mat-sidenav-container-background-color,
-            var(--mat-sys-surface)
+        --mat-sidenav-container-background-color,
+        var(--mat-sys-surface)
     ) !important;
     border-top-right-radius: 2.5rem !important;
     border-bottom-right-radius: 2.5rem !important;

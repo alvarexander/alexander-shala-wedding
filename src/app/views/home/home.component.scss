@@ -9,7 +9,6 @@
     &__date {
         font-weight: bolder;
         font-style: italic;
-        font-family: 'Instrument Serif', serif !important;
         font-size: 22px;
         margin: auto;
         width: 100%;
@@ -17,6 +16,15 @@
         text-align: center;
         @media (min-width: 992px) {
             font-size: 28px;
+        }
+    }
+
+    &__registry-link {
+        font-size: 1.6rem;
+        mat-icon {
+            font-size: 1.6rem;
+            height: 1.6rem;
+            width: 1.6rem;
         }
     }
 

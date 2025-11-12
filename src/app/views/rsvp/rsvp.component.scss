@@ -47,13 +47,13 @@
     }
 
     &__loading,
-    &__error{
+    &__error {
         margin-top: 12px;
     }
 
     &__message {
         @extend .rsvp__error;
-       padding: 1rem;
+        padding: 1rem;
         font-style: italic;
     }
 

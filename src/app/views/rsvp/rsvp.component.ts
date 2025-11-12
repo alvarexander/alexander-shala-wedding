@@ -194,7 +194,9 @@ export class RsvpComponent implements OnInit {
     rsvp(response: 'yes' | 'no', namesCsv?: string) {
         if (this.submitting()) return;
         if (this.isRateLimited()) {
-            this.submitMessage.set("You've done that too many times in a row. Please wait and try again later.");
+            this.submitMessage.set(
+                "You've done that too many times in a row. Please wait and try again later.",
+            );
             return;
         }
         this.submitting.set(response);
@@ -250,9 +252,12 @@ export class RsvpComponent implements OnInit {
                     // Handle explicit rate-limit responses
                     const anyRes: any = res as any;
                     if (anyRes.rate_limited) {
-                        const retry = typeof anyRes.retry_after === 'number' ? anyRes.retry_after : 60;
+                        const retry =
+                            typeof anyRes.retry_after === 'number' ? anyRes.retry_after : 60;
                         this.rateLimitedUntil.set(Date.now() + retry * 1000);
-                        this.submitMessage.set("You've done that too many times in a row. Please wait and try again later.");
+                        this.submitMessage.set(
+                            "You've done that too many times in a row. Please wait and try again later.",
+                        );
                     } else {
                         this.submitMessage.set(res.error || 'Failed to submit RSVP.');
                     }
@@ -273,19 +278,22 @@ export class RsvpComponent implements OnInit {
                     if (parsed) {
                         if (parsed.error) message = parsed.error;
                         if (parsed.rate_limited) {
-                            retrySec = typeof parsed.retry_after === 'number' ? parsed.retry_after : 60;
+                            retrySec =
+                                typeof parsed.retry_after === 'number' ? parsed.retry_after : 60;
                         }
                     }
                 } else if (err && typeof err.error === 'object' && err.error) {
                     if (err.error.error) message = err.error.error;
                     if (err.error.rate_limited) {
-                        retrySec = typeof err.error.retry_after === 'number' ? err.error.retry_after : 60;
+                        retrySec =
+                            typeof err.error.retry_after === 'number' ? err.error.retry_after : 60;
                     }
                 }
                 if (err && err.status === 429) {
                     if (retrySec === null) retrySec = 60;
                     this.rateLimitedUntil.set(Date.now() + (retrySec || 60) * 1000);
-                    message = "You've done that too many times in a row. Please wait and try again later.";
+                    message =
+                        "You've done that too many times in a row. Please wait and try again later.";
                 }
                 this.submitMessage.set(message);
                 this.submitting.set(null);

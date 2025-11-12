@@ -352,7 +352,9 @@ export class AdminComponent implements OnInit, AfterViewInit {
         const relative = this._router.serializeUrl(tree);
 
         // Always use hash-based routing and preserve any sub-path (e.g., /app/)
-        const path = window.location.pathname.endsWith('/') ? window.location.pathname : `${window.location.pathname}/`;
+        const path = window.location.pathname.endsWith('/')
+            ? window.location.pathname
+            : `${window.location.pathname}/`;
         const absolute = `${window.location.origin}${path}#${relative}`;
 
         window.open(absolute, '_blank', 'noopener');
